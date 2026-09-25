@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ecfdf5;
+  --brand: #047857;
+  --brand-soft: #ecfdf5;
+  --brand-muted: #d1fae5;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --surface: #ffffff;
+  --background: #f0fdf4;
   --foreground: #0f172a;
+  --border: #a7f3d0;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: var(--brand);
+  --color-ink: var(--ink);
+  --font-sans: var(--font-plus-jakarta);
 }
 
 * {
@@ -25,30 +33,58 @@ body {
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
 }
 
-:where(a) {
+/* Default: no underline on links (nav, cards, buttons, footer) */
+a {
   text-decoration: none;
+}
+
+/* Only prose / content links should look like classic hyperlinks */
+.prose-links a,
+a.content-link {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.prose-links a:hover,
+a.content-link:hover {
+  color: #065f46;
+  text-decoration-thickness: 2px;
 }
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 button,
 a,
 input,
-select {
+select,
+textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
-input[type="date"] {
-  color-scheme: light;
-}
-
 ::selection {
-  background: rgba(16, 185, 129, 0.28);
+  background: rgba(4, 120, 87, 0.22);
 }

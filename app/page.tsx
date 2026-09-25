@@ -1,26 +1,33 @@
 import type { Metadata } from "next";
 import HomeClient from "./home-client";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
+  /\/$/,
+  "",
+);
+
 export const metadata: Metadata = {
-  title: "BMI Calculator | Free BMI, TDEE & Health Tools",
+  title: "Free BMI Calculator & Health Tools",
   description:
-    "Use BMI Wellness Pro to calculate BMI, healthy weight range, TDEE calories, macros, body fat, pregnancy due date, and ovulation window.",
+    "Free online BMI calculator plus TDEE/BMR, body fat, macro planner, pregnancy due date, and ovulation tools. Instant results with guides for every calculator.",
   keywords: [
     "BMI calculator",
+    "free BMI calculator",
     "body mass index calculator",
-    "health calculator",
     "TDEE calculator",
+    "BMR calculator",
     "macro calculator",
     "body fat calculator",
-    "healthy weight calculator",
+    "due date calculator",
+    "ovulation calculator",
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "BMI Calculator | BMI Wellness Pro",
+    title: "Free BMI Calculator & Health Tools | BMI Wellness Pro",
     description:
-      "Free BMI, calorie, macro, body fat, pregnancy, and ovulation calculators with simple health guidance.",
+      "Calculate BMI, daily calories, body fat, macros, due date, and ovulation in one place—free and easy to use.",
     url: "/",
     siteName: "BMI Wellness Pro",
     type: "website",
@@ -31,25 +38,44 @@ export default function Page() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
+    "@id": `${siteUrl}/#webapp`,
     name: "BMI Wellness Pro",
+    alternateName: "BMI Calculator Suite",
     applicationCategory: "HealthApplication",
+    applicationSubCategory: "Body Mass Index and Wellness Calculators",
     operatingSystem: "Any",
-    url: "/",
+    browserRequirements: "Requires JavaScript",
+    url: `${siteUrl}/`,
+    image: `${siteUrl}/icon.svg`,
     description:
-      "Free BMI, calorie, macro, body fat, pregnancy, and ovulation calculators with practical health guidance.",
+      "BMI Wellness Pro helps people calculate Body Mass Index (BMI), total daily energy expenditure (TDEE), body fat percentage, nutrition macros, pregnancy due date, and ovulation fertile window using established formulas.",
+    about: [
+      "Body Mass Index",
+      "Calorie and TDEE planning",
+      "Body composition",
+      "Pregnancy dating",
+      "Fertility window estimates",
+    ],
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
     },
     featureList: [
-      "BMI calculator",
-      "TDEE calculator",
-      "Macro calculator",
-      "Body fat calculator",
+      "BMI calculator with healthy weight range",
+      "TDEE and BMR calculator (Mifflin St Jeor)",
+      "Macro planner for protein, carbs, and fat",
+      "Body fat calculator (U.S. Navy method)",
       "Pregnancy due date calculator",
-      "Ovulation calculator",
+      "Ovulation and fertile window calculator",
     ],
+    isAccessibleForFree: true,
+    inLanguage: "en-US",
+    provider: {
+      "@type": "Organization",
+      name: "BMI Wellness Pro",
+      url: siteUrl,
+    },
   };
 
   return (

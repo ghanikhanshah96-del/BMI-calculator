@@ -18,12 +18,36 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  CustomSelect,
+  DatePicker,
+  FieldShell,
+  NumberStepper,
+} from "./components/form-controls";
 import SiteFooter from "./components/site-footer";
 import SiteHeader from "./components/site-header";
 
 type ToolId = "bmi" | "tdee" | "body-fat" | "macro" | "pregnancy" | "ovulation";
+
+const TOOL_IDS: ToolId[] = [
+  "bmi",
+  "tdee",
+  "body-fat",
+  "macro",
+  "pregnancy",
+  "ovulation",
+];
+
+function isToolId(value: string): value is ToolId {
+  return TOOL_IDS.includes(value as ToolId);
+}
+
+function parseToolFromHash(hash: string): ToolId | null {
+  const value = hash.replace(/^#/, "");
+  if (value === "tools") return "bmi";
+  return isToolId(value) ? value : null;
+}
 
 type ActivityLevel =
   | "sedentary"
@@ -123,22 +147,22 @@ const bmiGuide = [
 
 const blogPosts = [
   {
-    title: "BMI is a starting point, not your full health story",
-    href: "/blog#bmi-starting-point",
+    title: "BMI Calculator Guide: What Body Mass Index Really Means",
+    href: "/blog/bmi",
     summary:
-      "Learn where BMI is useful, where it falls short, and what measurements add better context.",
+      "Learn the BMI formula, adult categories, and how to use the number as a starting point, not a diagnosis.",
   },
   {
-    title: "How to set a calorie target you can actually follow",
-    href: "/blog#calorie-target",
+    title: "TDEE & BMR Explained with Mifflin St Jeor",
+    href: "/blog/tdee",
     summary:
-      "A simple way to turn TDEE into a realistic plan for fat loss, maintenance, or lean gain.",
+      "See how basal metabolism and activity multipliers create a practical daily calorie estimate.",
   },
   {
-    title: "Healthy progress signals beyond the scale",
-    href: "/blog#progress-signals",
+    title: "Body Fat Percentage with the U.S. Navy Method",
+    href: "/blog/body-fat",
     summary:
-      "Energy, waist size, strength, sleep, and consistency often tell a richer story than weight alone.",
+      "Understand circumference based body fat estimates and how to measure waist and neck consistently.",
   },
 ];
 
@@ -170,25 +194,6 @@ function getBodyFatCategory(gender: "male" | "female", bodyFat: number) {
   if (bodyFat < 25) return "Fit";
   if (bodyFat < 32) return "Average";
   return "High";
-}
-
-function FieldShell({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <label className="block rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-      <span className="mb-2 block font-medium">{label}</span>
-      {children}
-    </label>
-  );
-}
-
-function inputClass() {
-  return "w-full bg-transparent text-lg font-semibold text-slate-950 outline-none placeholder:text-slate-400";
 }
 
 export default function Home() {
@@ -226,6 +231,54 @@ export default function Home() {
     lastPeriod: "2025-08-18",
   });
 
+  const activateTool = (toolId: ToolId, options?: { updateHash?: boolean; scroll?: boolean }) => {
+    const updateHash = options?.updateHash ?? true;
+    const scroll = options?.scroll ?? true;
+
+    setActiveTool(toolId);
+
+    if (updateHash && typeof window !== "undefined") {
+      const nextHash = `#${toolId}`;
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, "", nextHash);
+      }
+    }
+
+    if (scroll && typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        document
+          .getElementById("tools")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  };
+
+  useEffect(() => {
+    const applyHash = (scroll: boolean) => {
+      const toolId = parseToolFromHash(window.location.hash);
+      if (!toolId) return;
+      activateTool(toolId, { updateHash: false, scroll });
+    };
+
+    applyHash(Boolean(window.location.hash));
+
+    const onHashChange = () => applyHash(true);
+    const onActivateTool = (event: Event) => {
+      const detail = (event as CustomEvent<{ tool?: string }>).detail;
+      const toolId = detail?.tool ? parseToolFromHash(detail.tool) : null;
+      if (!toolId) return;
+      activateTool(toolId, { updateHash: true, scroll: true });
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    window.addEventListener("bmi-activate-tool", onActivateTool);
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      window.removeEventListener("bmi-activate-tool", onActivateTool);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only hash sync
+  }, []);
+
   const bmiResult = useMemo(() => {
     const heightM = bmiForm.height / 100;
     const bmi = bmiForm.height > 0 ? bmiForm.weight / (heightM * heightM) : 0;
@@ -256,14 +309,14 @@ export default function Home() {
   }, [tdeeForm]);
 
   const bodyFatResult = useMemo(() => {
-    const waist = bodyFatForm.waist;
-    const neck = bodyFatForm.neck;
-    const height = bodyFatForm.height;
-    const hip = bodyFatForm.hip;
+    const waistCm = bodyFatForm.waist;
+    const neckCm = bodyFatForm.neck;
+    const heightCm = bodyFatForm.height;
+    const hipCm = bodyFatForm.hip;
     const canCalculate =
-      height > 0 &&
-      waist > neck &&
-      (bodyFatForm.gender === "male" || waist + hip > neck);
+      heightCm > 0 &&
+      waistCm > neckCm &&
+      (bodyFatForm.gender === "male" || waistCm + hipCm > neckCm);
 
     if (!canCalculate) {
       return {
@@ -272,22 +325,24 @@ export default function Home() {
       };
     }
 
-    const logWaistNeck = Math.log10(waist - neck);
-    const logWaistHipNeck = Math.log10(waist + hip - neck);
+    // U.S. Navy / DoD circumference method — coefficients require inches
+    const toInches = (cm: number) => cm / 2.54;
+    const waist = toInches(waistCm);
+    const neck = toInches(neckCm);
+    const height = toInches(heightCm);
+    const hip = toInches(hipCm);
 
     let fat = 0;
     if (bodyFatForm.gender === "male") {
       fat =
-        495 /
-          (1.0324 - 0.19077 * logWaistNeck + 0.15456 * Math.log10(height)) -
-        450;
+        86.01 * Math.log10(waist - neck) -
+        70.041 * Math.log10(height) +
+        36.76;
     } else {
       fat =
-        495 /
-          (1.29579 -
-            0.35004 * logWaistHipNeck +
-            0.221 * Math.log10(height)) -
-        450;
+        163.205 * Math.log10(waist + hip - neck) -
+        97.684 * Math.log10(height) -
+        78.387;
     }
 
     return {
@@ -326,23 +381,36 @@ export default function Home() {
         ? new Date(lmpDate.getTime() + 280 * 24 * 60 * 60 * 1000)
         : new Date(conceptionDate.getTime() + 266 * 24 * 60 * 60 * 1000);
     const startDate = pregnancyForm.mode === "lmp" ? lmpDate : conceptionDate;
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const msPerWeek = 7 * msPerDay;
     const weeksPregnant = Math.max(
       0,
-      Math.floor(
-        (calculationTime - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000),
-      ),
+      Math.floor((calculationTime - startDate.getTime()) / msPerWeek),
     );
+    const isPastDue =
+      !Number.isNaN(dueDate.getTime()) && calculationTime > dueDate.getTime();
+    const daysPastDue = isPastDue
+      ? Math.floor((calculationTime - dueDate.getTime()) / msPerDay)
+      : 0;
+    const weeksPastDue = isPastDue ? Math.floor(daysPastDue / 7) : 0;
+
+    let trimester = "Trimester 3";
+    if (isPastDue) {
+      trimester = "Past due date";
+    } else if (weeksPregnant < 14) {
+      trimester = "Trimester 1";
+    } else if (weeksPregnant < 28) {
+      trimester = "Trimester 2";
+    }
 
     return {
       dueDate,
       isValid: !Number.isNaN(dueDate.getTime()),
       weeksPregnant,
-      trimester:
-        weeksPregnant < 14
-          ? "Trimester 1"
-          : weeksPregnant < 28
-            ? "Trimester 2"
-            : "Trimester 3",
+      trimester,
+      isPastDue,
+      daysPastDue,
+      weeksPastDue,
     };
   }, [calculationTime, pregnancyForm]);
 
@@ -389,13 +457,13 @@ export default function Home() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="#tools"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 font-bold text-white shadow-lg shadow-emerald-800/20 transition hover:bg-emerald-700"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 font-bold !text-white shadow-lg shadow-emerald-800/20 transition hover:bg-emerald-700"
               >
                 Open calculators <ArrowRight className="h-4 w-4" />
               </a>
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-5 py-3 font-bold text-emerald-800 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-5 py-3 font-bold !text-emerald-800 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
               >
                 Read health guides <BookOpen className="h-4 w-4" />
               </Link>
@@ -411,7 +479,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-emerald-100 bg-white p-5 shadow-2xl shadow-emerald-900/10">
+          <div className="rounded-lg border border-emerald-100 bg-white p-5 shadow-sm">
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 { label: "BMI range", value: "18.5-24.9", icon: Scale },
@@ -474,18 +542,13 @@ export default function Home() {
                 aria-controls="calculator-panel"
                 aria-pressed={activeTool === id}
                 onClick={() => {
-                  setActiveTool(id);
-                  window.requestAnimationFrame(() => {
-                    document
-                      .getElementById("calculator-panel")
-                      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                  });
+                  activateTool(id);
                 }}
                 className={[
-                  "group flex min-h-20 items-center justify-between rounded-lg border px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300",
+                  "group flex min-h-16 items-center justify-between rounded-lg border px-4 py-3 text-left transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
                   activeTool === id
-                    ? "border-emerald-600 bg-emerald-600 text-white shadow-xl shadow-emerald-600/20 ring-4 ring-emerald-100"
-                    : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900",
+                    ? "border-emerald-600 bg-emerald-600 text-white"
+                    : "border-slate-200 bg-white text-slate-800 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900",
                 ].join(" ")}
               >
                 <span className="flex items-center gap-3">
@@ -497,14 +560,7 @@ export default function Home() {
                   >
                     <Icon className="h-4 w-4" />
                   </span>
-                  <span>
-                    <span className="block font-black">{label}</span>
-                    {activeTool === id && (
-                      <span className="mt-1 inline-flex rounded-full bg-white/15 px-2 py-0.5 text-xs font-black uppercase tracking-[0.14em] text-white">
-                        Active
-                      </span>
-                    )}
-                  </span>
+                  <span className="font-bold">{label}</span>
                 </span>
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </button>
@@ -513,13 +569,13 @@ export default function Home() {
 
           <section
             id="calculator-panel"
-            className="rounded-lg border-2 border-emerald-700 bg-white p-5 shadow-2xl shadow-emerald-900/10 md:p-7"
+            className="rounded-lg border border-emerald-200 bg-white p-5 shadow-sm md:p-7"
           >
-            <div className="mb-6 flex flex-col gap-2 rounded-lg bg-slate-950 px-4 py-3 text-white sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">
-                Active calculator
+            <div className="mb-6 flex flex-col gap-1 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3 text-slate-900 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                Calculator
               </p>
-              <p className="text-lg font-black">{activeToolDetails.label}</p>
+              <p className="text-lg font-bold">{activeToolDetails.label}</p>
             </div>
             {activeTool === "bmi" && (
               <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -536,19 +592,21 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Weight (kg)">
-                      <input
-                        type="number"
+                      <NumberStepper
                         value={bmiForm.weight}
-                        onChange={(e) => setBmiForm({ ...bmiForm, weight: Number(e.target.value) || 0 })}
-                        className={inputClass()}
+                        min={20}
+                        max={300}
+                        step={0.5}
+                        onChange={(weight) => setBmiForm({ ...bmiForm, weight })}
                       />
                     </FieldShell>
                     <FieldShell label="Height (cm)">
-                      <input
-                        type="number"
+                      <NumberStepper
                         value={bmiForm.height}
-                        onChange={(e) => setBmiForm({ ...bmiForm, height: Number(e.target.value) || 0 })}
-                        className={inputClass()}
+                        min={90}
+                        max={250}
+                        step={1}
+                        onChange={(height) => setBmiForm({ ...bmiForm, height })}
                       />
                     </FieldShell>
                   </div>
@@ -584,29 +642,59 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Weight (kg)">
-                      <input type="number" value={tdeeForm.weight} onChange={(e) => setTdeeForm({ ...tdeeForm, weight: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={tdeeForm.weight}
+                        min={20}
+                        max={300}
+                        step={0.5}
+                        onChange={(weight) => setTdeeForm({ ...tdeeForm, weight })}
+                      />
                     </FieldShell>
                     <FieldShell label="Height (cm)">
-                      <input type="number" value={tdeeForm.height} onChange={(e) => setTdeeForm({ ...tdeeForm, height: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={tdeeForm.height}
+                        min={90}
+                        max={250}
+                        step={1}
+                        onChange={(height) => setTdeeForm({ ...tdeeForm, height })}
+                      />
                     </FieldShell>
                     <FieldShell label="Age">
-                      <input type="number" value={tdeeForm.age} onChange={(e) => setTdeeForm({ ...tdeeForm, age: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={tdeeForm.age}
+                        min={10}
+                        max={100}
+                        step={1}
+                        onChange={(age) => setTdeeForm({ ...tdeeForm, age })}
+                      />
                     </FieldShell>
                     <FieldShell label="Gender">
-                      <select value={tdeeForm.gender} onChange={(e) => setTdeeForm({ ...tdeeForm, gender: e.target.value as "male" | "female" })} className={inputClass()}>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
+                      <CustomSelect
+                        value={tdeeForm.gender}
+                        onChange={(gender) =>
+                          setTdeeForm({ ...tdeeForm, gender: gender as "male" | "female" })
+                        }
+                        options={[
+                          { value: "male", label: "Male" },
+                          { value: "female", label: "Female" },
+                        ]}
+                      />
                     </FieldShell>
                   </div>
                   <FieldShell label="Activity level">
-                    <select value={tdeeForm.activity} onChange={(e) => setTdeeForm({ ...tdeeForm, activity: e.target.value as ActivityLevel })} className={inputClass()}>
-                      <option value="sedentary">Sedentary</option>
-                      <option value="light">Light activity</option>
-                      <option value="moderate">Moderate activity</option>
-                      <option value="active">Active</option>
-                      <option value="athlete">Athlete</option>
-                    </select>
+                    <CustomSelect
+                      value={tdeeForm.activity}
+                      onChange={(activity) =>
+                        setTdeeForm({ ...tdeeForm, activity: activity as ActivityLevel })
+                      }
+                      options={[
+                        { value: "sedentary", label: "Sedentary" },
+                        { value: "light", label: "Light activity" },
+                        { value: "moderate", label: "Moderate activity" },
+                        { value: "active", label: "Active" },
+                        { value: "athlete", label: "Athlete" },
+                      ]}
+                    />
                   </FieldShell>
                 </div>
 
@@ -616,6 +704,7 @@ export default function Home() {
                     <div>
                       <p className="text-sm text-emerald-50">BMR</p>
                       <p className="text-3xl font-black">{tdeeResult.bmr} kcal</p>
+                      <p className="mt-1 text-xs text-emerald-100/90">Mifflin St Jeor (kg, cm)</p>
                     </div>
                     <div>
                       <p className="text-sm text-emerald-50">TDEE</p>
@@ -647,23 +736,53 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Gender">
-                      <select value={bodyFatForm.gender} onChange={(e) => setBodyFatForm({ ...bodyFatForm, gender: e.target.value as "male" | "female" })} className={inputClass()}>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
+                      <CustomSelect
+                        value={bodyFatForm.gender}
+                        onChange={(gender) =>
+                          setBodyFatForm({ ...bodyFatForm, gender: gender as "male" | "female" })
+                        }
+                        options={[
+                          { value: "male", label: "Male" },
+                          { value: "female", label: "Female" },
+                        ]}
+                      />
                     </FieldShell>
                     <FieldShell label="Height (cm)">
-                      <input type="number" value={bodyFatForm.height} onChange={(e) => setBodyFatForm({ ...bodyFatForm, height: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={bodyFatForm.height}
+                        min={90}
+                        max={250}
+                        step={1}
+                        onChange={(height) => setBodyFatForm({ ...bodyFatForm, height })}
+                      />
                     </FieldShell>
                     <FieldShell label="Waist (cm)">
-                      <input type="number" value={bodyFatForm.waist} onChange={(e) => setBodyFatForm({ ...bodyFatForm, waist: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={bodyFatForm.waist}
+                        min={40}
+                        max={200}
+                        step={0.5}
+                        onChange={(waist) => setBodyFatForm({ ...bodyFatForm, waist })}
+                      />
                     </FieldShell>
                     <FieldShell label="Neck (cm)">
-                      <input type="number" value={bodyFatForm.neck} onChange={(e) => setBodyFatForm({ ...bodyFatForm, neck: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={bodyFatForm.neck}
+                        min={20}
+                        max={80}
+                        step={0.5}
+                        onChange={(neck) => setBodyFatForm({ ...bodyFatForm, neck })}
+                      />
                     </FieldShell>
                     {bodyFatForm.gender === "female" && (
                       <FieldShell label="Hip (cm)">
-                        <input type="number" value={bodyFatForm.hip} onChange={(e) => setBodyFatForm({ ...bodyFatForm, hip: Number(e.target.value) || 0 })} className={inputClass()} />
+                        <NumberStepper
+                          value={bodyFatForm.hip}
+                          min={40}
+                          max={200}
+                          step={0.5}
+                          onChange={(hip) => setBodyFatForm({ ...bodyFatForm, hip })}
+                        />
                       </FieldShell>
                     )}
                   </div>
@@ -675,6 +794,7 @@ export default function Home() {
                     <span className="text-5xl font-black">{bodyFatResult.bodyFat}%</span>
                   </div>
                   <p className="mt-4 text-lg font-bold">{bodyFatResult.category}</p>
+                  <p className="mt-2 text-xs text-emerald-100/90">U.S. Navy / DoD circumference method</p>
                   <p className="mt-6 text-sm leading-6 text-emerald-50">
                     Body composition trends can help explain fitness progress when scale weight is slow to change.
                   </p>
@@ -697,19 +817,35 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Body weight (kg)">
-                      <input type="number" value={macroForm.weight} onChange={(e) => setMacroForm({ ...macroForm, weight: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={macroForm.weight}
+                        min={20}
+                        max={300}
+                        step={0.5}
+                        onChange={(weight) => setMacroForm({ ...macroForm, weight })}
+                      />
                     </FieldShell>
                     <FieldShell label="Calories">
-                      <input type="number" value={macroForm.calories} onChange={(e) => setMacroForm({ ...macroForm, calories: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={macroForm.calories}
+                        min={800}
+                        max={6000}
+                        step={50}
+                        onChange={(calories) => setMacroForm({ ...macroForm, calories })}
+                      />
                     </FieldShell>
                   </div>
 
                   <FieldShell label="Goal">
-                    <select value={macroForm.goal} onChange={(e) => setMacroForm({ ...macroForm, goal: e.target.value as GoalType })} className={inputClass()}>
-                      <option value="fat-loss">Fat loss</option>
-                      <option value="maintenance">Maintenance</option>
-                      <option value="muscle-gain">Muscle gain</option>
-                    </select>
+                    <CustomSelect
+                      value={macroForm.goal}
+                      onChange={(goal) => setMacroForm({ ...macroForm, goal: goal as GoalType })}
+                      options={[
+                        { value: "fat-loss", label: "Fat loss" },
+                        { value: "maintenance", label: "Maintenance" },
+                        { value: "muscle-gain", label: "Muscle gain" },
+                      ]}
+                    />
                   </FieldShell>
                 </div>
 
@@ -746,18 +882,35 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Method">
-                      <select value={pregnancyForm.mode} onChange={(e) => setPregnancyForm({ ...pregnancyForm, mode: e.target.value as "lmp" | "conception" })} className={inputClass()}>
-                        <option value="lmp">Last menstrual period</option>
-                        <option value="conception">Conception date</option>
-                      </select>
+                      <CustomSelect
+                        value={pregnancyForm.mode}
+                        onChange={(mode) =>
+                          setPregnancyForm({
+                            ...pregnancyForm,
+                            mode: mode as "lmp" | "conception",
+                          })
+                        }
+                        options={[
+                          { value: "lmp", label: "Last menstrual period" },
+                          { value: "conception", label: "Conception date" },
+                        ]}
+                      />
                     </FieldShell>
                     {pregnancyForm.mode === "lmp" ? (
                       <FieldShell label="LMP date">
-                        <input type="date" value={pregnancyForm.lmp} onChange={(e) => setPregnancyForm({ ...pregnancyForm, lmp: e.target.value })} className={inputClass()} />
+                        <DatePicker
+                          value={pregnancyForm.lmp}
+                          onChange={(lmp) => setPregnancyForm({ ...pregnancyForm, lmp })}
+                        />
                       </FieldShell>
                     ) : (
                       <FieldShell label="Conception date">
-                        <input type="date" value={pregnancyForm.conceptionDate} onChange={(e) => setPregnancyForm({ ...pregnancyForm, conceptionDate: e.target.value })} className={inputClass()} />
+                        <DatePicker
+                          value={pregnancyForm.conceptionDate}
+                          onChange={(conceptionDate) =>
+                            setPregnancyForm({ ...pregnancyForm, conceptionDate })
+                          }
+                        />
                       </FieldShell>
                     )}
                   </div>
@@ -767,8 +920,26 @@ export default function Home() {
                   <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Estimated due date</p>
                   <div className="mt-6 space-y-4">
                     <p className="text-3xl font-black">{formatDate(pregnancyResult.dueDate)}</p>
-                    <p className="text-sm text-emerald-50">Current timeline: {pregnancyResult.weeksPregnant} weeks</p>
-                    <p className="text-sm text-emerald-50">{pregnancyResult.trimester}</p>
+                    {pregnancyResult.isPastDue ? (
+                      <>
+                        <p className="text-sm text-emerald-50">
+                          Past due by {pregnancyResult.daysPastDue} day
+                          {pregnancyResult.daysPastDue === 1 ? "" : "s"}
+                          {pregnancyResult.weeksPastDue > 0
+                            ? ` (${pregnancyResult.weeksPastDue} week${pregnancyResult.weeksPastDue === 1 ? "" : "s"})`
+                            : ""}
+                        </p>
+                        <p className="text-sm font-bold text-emerald-50">Past due date</p>
+                        <p className="text-sm leading-6 text-emerald-50/90">
+                          The estimated due date has passed. This timeline no longer shows a pregnancy trimester.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-emerald-50">Current timeline: {pregnancyResult.weeksPregnant} weeks</p>
+                        <p className="text-sm text-emerald-50">{pregnancyResult.trimester}</p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -789,10 +960,23 @@ export default function Home() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldShell label="Cycle length (days)">
-                      <input type="number" value={ovulationForm.cycleLength} onChange={(e) => setOvulationForm({ ...ovulationForm, cycleLength: Number(e.target.value) || 0 })} className={inputClass()} />
+                      <NumberStepper
+                        value={ovulationForm.cycleLength}
+                        min={20}
+                        max={45}
+                        step={1}
+                        onChange={(cycleLength) =>
+                          setOvulationForm({ ...ovulationForm, cycleLength })
+                        }
+                      />
                     </FieldShell>
                     <FieldShell label="Last period">
-                      <input type="date" value={ovulationForm.lastPeriod} onChange={(e) => setOvulationForm({ ...ovulationForm, lastPeriod: e.target.value })} className={inputClass()} />
+                      <DatePicker
+                        value={ovulationForm.lastPeriod}
+                        onChange={(lastPeriod) =>
+                          setOvulationForm({ ...ovulationForm, lastPeriod })
+                        }
+                      />
                     </FieldShell>
                   </div>
                 </div>
@@ -839,7 +1023,7 @@ export default function Home() {
             </p>
             <Link
               href="/blog"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-bold text-emerald-800"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-bold !text-emerald-800"
             >
               Visit blog <ArrowRight className="h-4 w-4" />
             </Link>
@@ -849,7 +1033,7 @@ export default function Home() {
               <Link
                 key={post.title}
                 href={post.href}
-                className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
+                className="rounded-lg border border-slate-200 bg-white p-5 text-slate-900 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
               >
                 <h3 className="text-lg font-black text-slate-950">{post.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{post.summary}</p>
@@ -862,19 +1046,25 @@ export default function Home() {
         </section>
 
         <section className="grid gap-4 py-8 md:grid-cols-2">
-          <Link href="/privacy" className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:border-emerald-300">
+          <Link href="/privacy" className="rounded-lg border border-slate-200 bg-white p-5 text-slate-900 shadow-sm hover:border-emerald-300">
             <ShieldCheck className="h-7 w-7 text-emerald-700" />
-            <h2 className="mt-4 text-2xl font-black text-slate-950">Privacy-first health tools</h2>
+            <h2 className="mt-4 text-2xl font-black text-slate-950">Privacy first health tools</h2>
             <p className="mt-3 leading-7 text-slate-600">
               Calculator inputs are handled in the browser experience and the privacy page explains how data, cookies, and contact messages are treated.
             </p>
+            <span className="mt-4 inline-block text-sm font-semibold text-emerald-700">
+              Read privacy policy
+            </span>
           </Link>
-          <Link href="/terms" className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:border-emerald-300">
+          <Link href="/terms" className="rounded-lg border border-slate-200 bg-white p-5 text-slate-900 shadow-sm hover:border-emerald-300">
             <FileText className="h-7 w-7 text-emerald-700" />
             <h2 className="mt-4 text-2xl font-black text-slate-950">Transparent terms</h2>
             <p className="mt-3 leading-7 text-slate-600">
               The terms page explains educational use, health disclaimers, acceptable use, and the limits of calculator estimates.
             </p>
+            <span className="mt-4 inline-block text-sm font-semibold text-emerald-700">
+              Read terms of use
+            </span>
           </Link>
         </section>
       </div>
