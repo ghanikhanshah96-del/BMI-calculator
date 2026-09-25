@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 
 const tools = [
   { href: "/#bmi", label: "BMI Calculator", aim: "Calculate Body Mass Index and healthy weight range" },
-  { href: "/#tdee", label: "TDEE Calculator", aim: "Estimate BMR and daily calorie needs (Mifflin St Jeor)" },
-  { href: "/#macro", label: "Macro Planner", aim: "Plan protein, carbs, and fat from your calorie target" },
-  { href: "/#body-fat", label: "Body Fat Calculator", aim: "Estimate body fat with the U.S. Navy method" },
-  { href: "/#pregnancy", label: "Due Date Calculator", aim: "Estimate pregnancy due date and timeline" },
-  { href: "/#ovulation", label: "Ovulation Calculator", aim: "Estimate ovulation day and fertile window" },
+  { href: "/#tdee", label: "TDEE Calculator", aim: "Estimate BMR/TDEE (Mifflin or Katch–McArdle), macros, BMI, ideal weight" },
+  { href: "/#macro", label: "Macro Planner", aim: "Estimate calories + protein/carbs/fat from Mifflin or Katch–McArdle" },
+  { href: "/#body-fat", label: "Body Fat Calculator", aim: "U.S. Navy method with ACE categories and BMI estimate" },
+  { href: "/#pregnancy", label: "Due Date Calculator", aim: "Due date from LMP, conception, ultrasound, or IVF" },
+  { href: "/#ovulation", label: "Ovulation Calculator", aim: "Fertile window, test day, and next 6 cycles" },
 ];
 
 export default function HtmlSitemapPage() {

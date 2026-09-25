@@ -42,7 +42,27 @@ export function NumberStepper({
   step = 1,
   suffix,
 }: NumberStepperProps) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const focused = draft !== null;
+  const display = focused ? draft : Number.isFinite(value) ? String(value) : "";
+
   const clamp = (next: number) => Math.min(max, Math.max(min, next));
+
+  const commitDraft = (raw: string) => {
+    const cleaned = raw.replace(/[^\d.]/g, "");
+    if (cleaned === "" || cleaned === ".") {
+      onChange(min);
+      setDraft(null);
+      return;
+    }
+    const parsed = Number(cleaned);
+    if (Number.isNaN(parsed)) {
+      setDraft(null);
+      return;
+    }
+    onChange(clamp(parsed));
+    setDraft(null);
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -54,23 +74,43 @@ export function NumberStepper({
       >
         <Minus className="h-4 w-4" />
       </button>
-      <div className="flex min-w-0 flex-1 items-baseline gap-1">
+      <div
+        className={[
+          "flex min-w-0 flex-1 items-center gap-2 rounded-lg border bg-slate-50 px-3 py-2 transition",
+          focused
+            ? "border-emerald-500 ring-2 ring-emerald-100"
+            : "border-slate-200 hover:border-emerald-300",
+        ].join(" ")}
+      >
         <input
           type="text"
           inputMode="decimal"
-          value={Number.isFinite(value) ? String(value) : ""}
-          onChange={(e) => {
-            const raw = e.target.value.replace(/[^\d.]/g, "");
-            if (raw === "" || raw === ".") {
-              onChange(min);
-              return;
-            }
-            const parsed = Number(raw);
-            if (!Number.isNaN(parsed)) onChange(clamp(parsed));
+          value={display}
+          aria-label="Enter a number"
+          onFocus={(e) => {
+            setDraft(Number.isFinite(value) ? String(value) : "");
+            const input = e.currentTarget;
+            requestAnimationFrame(() => input.select());
           }}
-          className="w-full bg-transparent text-lg font-semibold text-slate-950 outline-none"
+          onBlur={() => commitDraft(draft ?? "")}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw !== "" && !/^\d*\.?\d*$/.test(raw)) return;
+            setDraft(raw);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.currentTarget.blur();
+            }
+          }}
+          className="w-full min-w-0 bg-transparent text-lg font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400"
+          placeholder="Type a value"
         />
-        {suffix ? <span className="text-sm font-medium text-slate-500">{suffix}</span> : null}
+        {suffix ? (
+          <span className="shrink-0 rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
+            {suffix}
+          </span>
+        ) : null}
       </div>
       <button
         type="button"

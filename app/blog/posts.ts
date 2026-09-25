@@ -67,23 +67,25 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "tdee",
-    title: "TDEE & BMR Explained: Daily Calories with Mifflin St Jeor",
+    title: "TDEE & BMR Explained: Mifflin–St Jeor & Katch–McArdle",
     excerpt:
-      "Understand basal metabolic rate (BMR), total daily energy expenditure (TDEE), and how our calculator uses the official Mifflin St Jeor equation.",
+      "Understand basal metabolic rate (BMR), total daily energy expenditure (TDEE), macros, and when our calculator switches from Mifflin–St Jeor to Katch–McArdle.",
     description:
-      "Learn BMR and TDEE using the Mifflin St Jeor formula, activity multipliers, and practical calorie targets for maintaining, losing, or gaining weight.",
+      "Learn BMR and TDEE using Mifflin–St Jeor or Katch–McArdle, activity multipliers, macros, ideal weight, BMI, and muscular potential estimates.",
     toolId: "tdee",
     toolLabel: "TDEE Calculator",
     toolHref: "/#tdee",
     publishedAt: "2026-02-02",
-    updatedAt: "2026-09-25",
+    updatedAt: "2026-09-26",
     image: "/blog/tdee.jpg",
     imageAlt: "Healthy meal prep bowls representing daily calorie planning",
     keywords: [
       "TDEE calculator",
       "BMR calculator",
       "Mifflin St Jeor",
+      "Katch McArdle",
       "daily calorie needs",
+      "macro calculator",
     ],
     sections: [
       {
@@ -94,10 +96,23 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "Official Mifflin St Jeor formula",
+        heading: "Mifflin–St Jeor (default)",
         paragraphs: [
-          "Men: BMR = 10 times weight(kg) + 6.25 times height(cm) minus 5 times age + 5. Women: BMR = 10 times weight(kg) + 6.25 times height(cm) minus 5 times age minus 161.",
-          "Our TDEE tool uses these equations exactly, then applies standard activity multipliers (sedentary through athlete) to estimate maintenance calories and suggested ranges for fat loss or lean gain.",
+          "Men: BMR = 10 × weight(kg) + 6.25 × height(cm) − 5 × age + 5. Women: BMR = 10 × weight(kg) + 6.25 × height(cm) − 5 × age − 161.",
+          "When body fat is not entered, we use Mifflin–St Jeor, then apply standard activity multipliers (sedentary 1.2 through athlete 1.9).",
+        ],
+      },
+      {
+        heading: "Katch–McArdle (with body fat %)",
+        paragraphs: [
+          "When you enter body fat percentage, we switch to Katch–McArdle: BMR = 370 + 21.6 × lean body mass (kg). Lean mass = weight × (1 − body fat ÷ 100).",
+          "This is often more accurate for people who know their body composition. We also show Revised Harris–Benedict as a secondary reference.",
+        ],
+      },
+      {
+        heading: "What else the TDEE tool shows",
+        paragraphs: [
+          "Maintenance calories (daily and weekly), calories at every activity level, cut/maintain/bulk targets with macronutrient splits, ideal weight from Hamwi/Devine/Robinson/Miller, BMI category, and Martin Berkhan muscular potential estimates.",
         ],
       },
       {
@@ -165,16 +180,16 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "macro",
-    title: "Macro Planner: Protein, Carbs, and Fat Made Simple",
+    title: "Macro Planner: Calories, Protein, Carbs, and Fat",
     excerpt:
-      "Build a practical macro split from your calorie target and goal, fat loss, maintenance, or muscle gain, without overcomplicating meals.",
+      "Estimate daily calories from Mifflin–St Jeor or Katch–McArdle, adjust for your goal, then split carbs, protein, and fat with clear ratio presets.",
     description:
-      "How to plan protein, carbohydrate, and fat macros from daily calories. Use the BMI Wellness Pro macro planner for fat loss, maintenance, or muscle gain goals.",
+      "How our macro calculator builds daily calories from BMR and activity, applies weight goals, and assigns protein, carbs, and fat using balanced, low-carb, high-carb, or high-protein splits.",
     toolId: "macro",
     toolLabel: "Macro Planner",
     toolHref: "/#macro",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-09-25",
+    updatedAt: "2026-09-26",
     image: "/blog/macro.jpg",
     imageAlt: "Balanced plate with protein vegetables and whole grains",
     keywords: [
@@ -182,54 +197,57 @@ export const blogPosts: BlogPost[] = [
       "protein carbs fat",
       "macro planner",
       "nutrition macros",
+      "Mifflin St Jeor",
     ],
     sections: [
       {
         heading: "What macros are",
         paragraphs: [
-          "Macronutrients, protein, carbohydrates, and fat, are the calorie providing nutrients in food. Planning them helps you hit a calorie target while supporting satiety, training, and recovery.",
-          "Protein is prioritized first in our planner because it supports lean mass and fullness. Fat is set as a share of calories, and carbohydrates fill the remainder.",
+          "Macronutrients—protein, carbohydrates, and fat—are the calorie-providing nutrients in food. Planning them helps you hit a calorie target while supporting satiety, training, and recovery.",
+          "Our planner starts with estimated daily calories, then applies a ratio preset so you can see grams and calories for each macro at a glance.",
         ],
       },
       {
         heading: "How our planner works",
         paragraphs: [
-          "Enter body weight, daily calories, and a goal. Fat loss uses about 1.8 g protein/kg, muscle gain about 2.1 g/kg, and maintenance about 1.6 g/kg. About 28% of calories are allocated to fat; carbs make up the rest.",
-          "These are practical starting points, not rigid medical prescriptions. Adjust based on hunger, performance, and preference.",
+          "Enter gender, age, height, weight, and activity. We estimate BMR with Mifflin–St Jeor (or Katch–McArdle when body fat % is provided), multiply by activity for TDEE, then adjust for goals such as mild loss (−250), weight loss (−500), extreme loss (−1000), mild gain (+250), or weight gain (+500).",
+          "Choose Balanced (40/30/30), Low carb (20/40/40), High carb (50/25/25), or High protein (30/40/30). These are practical starting points, not rigid medical prescriptions.",
         ],
       },
       {
         heading: "Getting started",
         paragraphs: [
-          "Pair this tool with the TDEE calculator to choose calories, then translate grams into familiar foods. Focus on weekly averages rather than perfect daily hits.",
+          "Use the TDEE tool if you only need maintenance calories, or stay in the Macro planner when you want calories and grams together. Adjust from real-world hunger, performance, and weekly averages.",
         ],
       },
       {
         heading: "Limits",
         paragraphs: [
-          "Individual needs vary with sport, medical conditions, and food access. People with kidney disease, diabetes, or eating disorder history should get personalized clinical guidance.",
+          "Individual needs vary with sport, medical conditions, and food access. People with kidney disease, diabetes, or eating-disorder history should get personalized clinical guidance.",
         ],
       },
     ],
   },
   {
     slug: "pregnancy",
-    title: "Pregnancy Due Date Calculator: Timeline and Trimesters",
+    title: "Pregnancy Due Date Calculator: LMP, Ultrasound, and IVF",
     excerpt:
-      "Estimate your due date from last menstrual period (LMP) or conception date, understand trimesters, and see what happens after the due date passes.",
+      "Estimate your due date from LMP, conception, ultrasound dating, or IVF transfer, then see gestational age, trimester, and days remaining.",
     description:
-      "How pregnancy due dates are estimated (LMP + 280 days or conception + 266 days), trimester ranges, and how our due date calculator handles past due timelines.",
+      "How pregnancy due dates are estimated (LMP + 280 days, conception + 266 days, ultrasound and IVF adjustments), trimester ranges, and past-due messaging.",
     toolId: "pregnancy",
     toolLabel: "Due Date Calculator",
     toolHref: "/#pregnancy",
     publishedAt: "2026-03-22",
-    updatedAt: "2026-09-25",
+    updatedAt: "2026-09-26",
     image: "/blog/pregnancy.jpg",
     imageAlt: "Calendar and prenatal planning for pregnancy due date",
     keywords: [
       "due date calculator",
       "pregnancy timeline",
       "LMP due date",
+      "IVF due date",
+      "ultrasound dating",
       "trimesters",
     ],
     sections: [
@@ -237,14 +255,14 @@ export const blogPosts: BlogPost[] = [
         heading: "How due dates are estimated",
         paragraphs: [
           "From last menstrual period (LMP), the common estimate is LMP + 280 days (40 weeks). From conception date, many tools use conception + 266 days (38 weeks).",
-          "These are population averages. Only a minority of births occur exactly on the estimated due date.",
+          "Ultrasound dating uses the scan date plus the remaining days to 280 after subtracting gestational age at the scan. IVF day-3 and day-5 transfers use transfer + 263 or + 261 days respectively.",
         ],
       },
       {
         heading: "Trimesters in our tool",
         paragraphs: [
           "While the pregnancy is ongoing, we map gestational weeks to Trimester 1 (under 14 weeks), Trimester 2 (under 28 weeks), and Trimester 3 thereafter, aligned with common clinical banding.",
-          "If today is after the estimated due date, the calculator shows a past due status with days overdue instead of continuing to label the timeline as Trimester 3.",
+          "If today is after the estimated due date, the calculator shows a past-due status with days overdue instead of continuing to label the timeline as Trimester 3.",
         ],
       },
       {
@@ -263,16 +281,16 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "ovulation",
-    title: "Ovulation Calculator: Fertile Window Basics",
+    title: "Ovulation Calculator: Fertile Window and Next Cycles",
     excerpt:
-      "Estimate ovulation day and a fertile window from cycle length and last period, useful for planning, with clear limits of calendar methods.",
+      "Estimate ovulation, fertile days, pregnancy-test timing, next period, and due date if pregnant—plus the next six cycles from your LMP and cycle length.",
     description:
-      "Learn how ovulation and fertile window estimates work from cycle length and last menstrual period, and how to use the BMI Wellness Pro ovulation calculator.",
+      "Learn how ovulation and fertile-window estimates work from cycle length and last menstrual period, including multi-cycle projections in the BMI Wellness Pro ovulation calculator.",
     toolId: "ovulation",
     toolLabel: "Ovulation Calculator",
     toolHref: "/#ovulation",
     publishedAt: "2026-04-05",
-    updatedAt: "2026-09-25",
+    updatedAt: "2026-09-26",
     image: "/blog/ovulation.jpg",
     imageAlt: "Calendar marking menstrual cycle and fertile window",
     keywords: [
@@ -280,19 +298,20 @@ export const blogPosts: BlogPost[] = [
       "fertile window",
       "menstrual cycle",
       "ovulation estimate",
+      "pregnancy test timing",
     ],
     sections: [
       {
-        heading: "Calendar based ovulation estimates",
+        heading: "How the estimate works",
         paragraphs: [
-          "Many simple tools estimate ovulation about 14 days before the next period. With a known cycle length and last period start date, you can project ovulation and a fertile window.",
-          "Our calculator estimates ovulation as last period + (cycle length minus 14) days, then shows a fertile window starting several days before ovulation.",
+          "Most probable ovulation is estimated as LMP + (cycle length − 14). The ovulation window spans about two days before and after that peak. The intercourse / fertile window typically runs from five days before ovulation through the day after.",
+          "We also estimate next period (LMP + cycle length), a pregnancy-test day around ovulation + 10 days, and a due date if pregnant (LMP + 280 days).",
         ],
       },
       {
-        heading: "How to use the results",
+        heading: "Multi-cycle view",
         paragraphs: [
-          "Treat the dates as a planning guide. Track a few cycles to see your personal pattern. Combine with cervical mucus or ovulation tests if you need higher confidence.",
+          "The calculator projects the next six cycles assuming a steady average cycle length. Use it for planning conversations, not as contraception.",
         ],
       },
       {
