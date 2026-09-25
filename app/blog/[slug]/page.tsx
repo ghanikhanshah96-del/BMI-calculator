@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import { getSiteUrl } from "../../lib/site-url";
 import { blogPosts, getAllSlugs, getPostBySlug } from "../posts";
 
 type PageProps = {
@@ -49,7 +50,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const related = blogPosts.filter((item) => item.slug !== post.slug).slice(0, 3);
 
   const articleJsonLd = {

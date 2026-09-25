@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import HomeClient from "./home-client";
+import { getSiteUrl } from "./lib/site-url";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
-  /\/$/,
-  "",
-);
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Free BMI Calculator & Health Tools",

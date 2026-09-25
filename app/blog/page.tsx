@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
+import { getSiteUrl } from "../lib/site-url";
 import { blogPosts } from "./posts";
 
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   const itemListJsonLd = {
     "@context": "https://schema.org",
