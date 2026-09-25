@@ -43,7 +43,7 @@ export default function BlogIndexPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-slate-900">
+    <div className="min-h-screen bg-background text-slate-900">
       <SiteHeader activePage="blog" />
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <header className="mb-10 max-w-4xl">
@@ -65,7 +65,7 @@ export default function BlogIndexPage() {
               className="overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm transition hover:border-emerald-300"
             >
               <Link href={`/blog/${post.slug}`} className="block text-slate-900">
-                <div className="relative aspect-[16/10] bg-emerald-50">
+                <div className="relative aspect-video bg-emerald-50">
                   <Image
                     src={post.image}
                     alt={post.imageAlt}

@@ -23,7 +23,7 @@ const tools = [
 
 export default function HtmlSitemapPage() {
   return (
-    <div className="min-h-screen bg-[var(--background)] text-slate-900">
+    <div className="min-h-screen bg-background text-slate-900">
       <SiteHeader activePage="sitemap" />
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">

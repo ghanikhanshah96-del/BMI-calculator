@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-slate-900">
+    <div className="min-h-screen bg-background text-slate-900">
       <SiteHeader activePage="blog" />
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-500">
@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           </header>
 
-          <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-xl border border-emerald-100 bg-emerald-50">
+          <div className="relative mt-8 aspect-video overflow-hidden rounded-xl border border-emerald-100 bg-emerald-50">
             <Image
               src={post.image}
               alt={post.imageAlt}
@@ -149,7 +149,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
             <Link
               href={post.toolHref}
-              className="mt-4 inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold !text-white transition hover:bg-emerald-800"
+              className="mt-4 inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800"
             >
               Open {post.toolLabel}
             </Link>

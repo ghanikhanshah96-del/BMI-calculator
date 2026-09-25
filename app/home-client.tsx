@@ -276,7 +276,6 @@ export default function Home() {
       window.removeEventListener("hashchange", onHashChange);
       window.removeEventListener("bmi-activate-tool", onActivateTool);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only hash sync
   }, []);
 
   const bmiResult = useMemo(() => {
@@ -457,13 +456,13 @@ export default function Home() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="#tools"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 font-bold !text-white shadow-lg shadow-emerald-800/20 transition hover:bg-emerald-700"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 font-bold text-white shadow-lg shadow-emerald-800/20 transition hover:bg-emerald-700"
               >
                 Open calculators <ArrowRight className="h-4 w-4" />
               </a>
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-5 py-3 font-bold !text-emerald-800 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-5 py-3 font-bold text-emerald-800 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
               >
                 Read health guides <BookOpen className="h-4 w-4" />
               </Link>
@@ -1023,7 +1022,7 @@ export default function Home() {
             </p>
             <Link
               href="/blog"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-bold !text-emerald-800"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-bold text-emerald-800"
             >
               Visit blog <ArrowRight className="h-4 w-4" />
             </Link>

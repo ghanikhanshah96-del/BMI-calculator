@@ -194,15 +194,12 @@ type DatePickerProps = {
 };
 
 export function DatePicker({ value, onChange }: DatePickerProps) {
-  const [open, setOpen] = useState(false);
   const selected = parseIsoDate(value);
-  const [view, setView] = useState(() => new Date(selected.getFullYear(), selected.getMonth(), 1));
+  const [open, setOpen] = useState(false);
+  const [view, setView] = useState(
+    () => new Date(selected.getFullYear(), selected.getMonth(), 1),
+  );
   const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    setView(new Date(selected.getFullYear(), selected.getMonth(), 1));
-  }, [open, selected]);
 
   useEffect(() => {
     if (!open) return;
@@ -247,11 +244,19 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
     year: "numeric",
   }).format(view);
 
+  const toggleOpen = () => {
+    if (!open) {
+      const next = parseIsoDate(value);
+      setView(new Date(next.getFullYear(), next.getMonth(), 1));
+    }
+    setOpen(!open);
+  };
+
   return (
     <div ref={rootRef} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggleOpen}
         className="flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-lg font-semibold text-slate-950 transition hover:border-emerald-300 hover:bg-emerald-50/60"
       >
         <span>{formatDisplayDate(value)}</span>
