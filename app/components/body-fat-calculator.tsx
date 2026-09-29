@@ -1,7 +1,24 @@
 "use client";
 
-import { Eraser, HeartPulse, Play } from "lucide-react";
+import { HeartPulse } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  ResultTable,
+  SegmentedControl,
+  StatGrid,
+  StatTile,
+} from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 
 type UnitMode = "us" | "metric" | "other";
@@ -197,7 +214,7 @@ function UsLengthInputs({
   maxFeet?: number;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid gap-2 sm:grid-cols-2">
       <NumberStepper
         value={value.feet}
         min={0}
@@ -251,7 +268,7 @@ function BodyFatGauge({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-lg bg-slate-50 px-3 py-3 ring-1 ring-slate-100">
+      <div className="rounded-xl bg-linear-to-b from-slate-50 to-white px-3 py-3 ring-1 ring-slate-200/70">
         <div className="relative pt-8 pb-1">
           {/* Marker */}
           <div
@@ -349,52 +366,49 @@ function UnitConverter() {
   const units = kind === "length" ? LENGTH_UNITS : WEIGHT_UNITS;
 
   return (
-    <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-      <p className="text-sm font-semibold text-slate-800">Unit converter</p>
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
-            kind === "length" ? "bg-emerald-700 text-white" : "bg-white ring-1 ring-slate-200"
-          }`}
-          onClick={() => {
-            setKind("length");
+    <div className="space-y-3 rounded-2xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-4 ring-1 ring-emerald-100">
+      <p className="text-sm font-semibold text-emerald-900">Unit converter</p>
+      <SegmentedControl
+        label="Converter type"
+        size="sm"
+        options={[
+          { value: "length", label: "Length" },
+          { value: "weight", label: "Weight" },
+        ]}
+        value={kind}
+        onChange={(id) => {
+          setKind(id);
+          if (id === "length") {
             setFromUnit("in");
             setToUnit("cm");
-          }}
-        >
-          Length
-        </button>
-        <button
-          type="button"
-          className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
-            kind === "weight" ? "bg-emerald-700 text-white" : "bg-white ring-1 ring-slate-200"
-          }`}
-          onClick={() => {
-            setKind("weight");
+          } else {
             setFromUnit("lb");
             setToUnit("kg");
-          }}
-        >
-          Weight
-        </button>
+          }
+        }}
+      />
+      <FieldShell label="Amount">
+        <NumberStepper value={amount} min={0} max={99999} step={0.1} onChange={setAmount} />
+      </FieldShell>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <FieldShell label="From">
+          <CustomSelect
+            value={fromUnit}
+            onChange={setFromUnit}
+            options={units.map((u) => ({ value: u.value, label: u.label }))}
+          />
+        </FieldShell>
+        <FieldShell label="To">
+          <CustomSelect
+            value={toUnit}
+            onChange={setToUnit}
+            options={units.map((u) => ({ value: u.value, label: u.label }))}
+          />
+        </FieldShell>
       </div>
-      <NumberStepper value={amount} min={0} max={99999} step={0.1} onChange={setAmount} />
-      <div className="grid grid-cols-2 gap-2">
-        <CustomSelect
-          value={fromUnit}
-          onChange={setFromUnit}
-          options={units.map((u) => ({ value: u.value, label: u.label }))}
-        />
-        <CustomSelect
-          value={toUnit}
-          onChange={setToUnit}
-          options={units.map((u) => ({ value: u.value, label: u.label }))}
-        />
-      </div>
-      <p className="text-lg font-black text-slate-950">
+      <p className="rounded-xl bg-white px-4 py-3 text-lg font-semibold text-slate-950 ring-1 ring-emerald-100">
         {Number.isFinite(converted) ? converted.toFixed(4) : "—"}{" "}
-        <span className="text-sm font-semibold text-slate-500">{toUnit}</span>
+        <span className="text-sm font-semibold text-slate-600">{toUnit}</span>
       </p>
     </div>
   );
@@ -499,52 +513,32 @@ export default function BodyFatCalculator() {
     setResult(null);
   };
 
-  const tabClass = (active: boolean) =>
-    [
-      "rounded-lg px-3 py-2 text-sm font-semibold transition",
-      active
-        ? "bg-emerald-700 text-white"
-        : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-    ].join(" ");
-
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
-      <div className="min-w-0 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <HeartPulse className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">Body fat</p>
-            <h3 className="text-xl font-black text-slate-950 sm:text-2xl">Body composition</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={HeartPulse}
+          eyebrow="Body fat"
+          title="Body composition"
+          description="U.S. Navy tape-measure method with ACE categories."
+        />
 
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className={tabClass(unitMode === "us")} onClick={() => setUnitMode("us")}>
-            US Units
-          </button>
-          <button
-            type="button"
-            className={tabClass(unitMode === "metric")}
-            onClick={() => setUnitMode("metric")}
-          >
-            Metric Units
-          </button>
-          <button
-            type="button"
-            className={tabClass(unitMode === "other")}
-            onClick={() => setUnitMode("other")}
-          >
-            Other Units
-          </button>
-        </div>
+        <SegmentedControl
+          label="Unit system"
+          options={[
+            { value: "us", label: "US Units" },
+            { value: "metric", label: "Metric" },
+            { value: "other", label: "Other" },
+          ]}
+          value={unitMode}
+          onChange={setUnitMode}
+        />
 
         {unitMode === "other" ? (
           <UnitConverter />
         ) : (
-          <div className="space-y-3">
-            <div className="grid gap-3 sm:grid-cols-2">
+          <>
+            <InputGroup step={1} title="Your details">
               <FieldShell label="Gender">
                 <CustomSelect
                   value={inputs.gender}
@@ -564,10 +558,10 @@ export default function BodyFatCalculator() {
                   onChange={(age) => setInputs({ ...inputs, age })}
                 />
               </FieldShell>
-            </div>
+            </InputGroup>
 
             {unitMode === "us" ? (
-              <>
+              <InputGroup step={2} title="Measurements" hint="lb · ft · in" columns={1}>
                 <FieldShell label="Weight">
                   <NumberStepper
                     value={inputs.weightLb}
@@ -608,191 +602,137 @@ export default function BodyFatCalculator() {
                     />
                   </FieldShell>
                 ) : null}
-              </>
+              </InputGroup>
             ) : (
-              <>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <FieldShell label="Weight">
+              <InputGroup step={2} title="Measurements" hint="kg · cm">
+                <FieldShell label="Weight">
+                  <NumberStepper
+                    value={inputs.weightKg}
+                    min={25}
+                    max={250}
+                    step={0.5}
+                    suffix="kg"
+                    onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
+                  />
+                </FieldShell>
+                <FieldShell label="Height">
+                  <NumberStepper
+                    value={inputs.heightCm}
+                    min={100}
+                    max={250}
+                    step={0.5}
+                    suffix="cm"
+                    onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
+                  />
+                </FieldShell>
+                <FieldShell label="Neck">
+                  <NumberStepper
+                    value={inputs.neckCm}
+                    min={20}
+                    max={80}
+                    step={0.5}
+                    suffix="cm"
+                    onChange={(neckCm) => setInputs({ ...inputs, neckCm })}
+                  />
+                </FieldShell>
+                <FieldShell label="Waist">
+                  <NumberStepper
+                    value={inputs.waistCm}
+                    min={40}
+                    max={200}
+                    step={0.5}
+                    suffix="cm"
+                    onChange={(waistCm) => setInputs({ ...inputs, waistCm })}
+                  />
+                </FieldShell>
+                {inputs.gender === "female" ? (
+                  <FieldShell label="Hip">
                     <NumberStepper
-                      value={inputs.weightKg}
-                      min={25}
-                      max={250}
-                      step={0.5}
-                      suffix="kg"
-                      onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
-                    />
-                  </FieldShell>
-                  <FieldShell label="Height">
-                    <NumberStepper
-                      value={inputs.heightCm}
-                      min={100}
-                      max={250}
-                      step={0.5}
-                      suffix="cm"
-                      onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
-                    />
-                  </FieldShell>
-                  <FieldShell label="Neck">
-                    <NumberStepper
-                      value={inputs.neckCm}
-                      min={20}
-                      max={80}
-                      step={0.5}
-                      suffix="cm"
-                      onChange={(neckCm) => setInputs({ ...inputs, neckCm })}
-                    />
-                  </FieldShell>
-                  <FieldShell label="Waist">
-                    <NumberStepper
-                      value={inputs.waistCm}
+                      value={inputs.hipCm}
                       min={40}
                       max={200}
                       step={0.5}
                       suffix="cm"
-                      onChange={(waistCm) => setInputs({ ...inputs, waistCm })}
+                      onChange={(hipCm) => setInputs({ ...inputs, hipCm })}
                     />
                   </FieldShell>
-                  {inputs.gender === "female" ? (
-                    <FieldShell label="Hip">
-                      <NumberStepper
-                        value={inputs.hipCm}
-                        min={40}
-                        max={200}
-                        step={0.5}
-                        suffix="cm"
-                        onChange={(hipCm) => setInputs({ ...inputs, hipCm })}
-                      />
-                    </FieldShell>
-                  ) : null}
-                </div>
-              </>
+                ) : null}
+              </InputGroup>
             )}
-          </div>
+          </>
         )}
 
-        {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
+        <FormError message={error} />
 
-        {unitMode !== "other" ? (
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={calculate}
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800 active:scale-[0.98]"
-            >
-              <Play className="h-4 w-4 fill-current" />
-              Calculate
-            </button>
-            <button
-              type="button"
-              onClick={clear}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98]"
-            >
-              <Eraser className="h-4 w-4" />
-              Clear
-            </button>
-          </div>
-        ) : null}
-      </div>
+        {unitMode !== "other" ? <ActionBar onCalculate={calculate} onClear={clear} /> : null}
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
-      >
-        <div className="shrink-0 rounded-t-lg bg-emerald-700 px-4 py-3">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 lg:max-h-[min(70vh,680px)]">
-          {!result ? (
-            <div className="space-y-3 text-sm leading-6 text-slate-600">
-              <p className="text-lg font-semibold text-slate-900">No result yet</p>
-              <p>
+      <ResultCard resultRef={resultRef}>
+        {!result ? (
+          <EmptyResult
+            icon={HeartPulse}
+            text={
+              <>
                 Enter gender, age, weight, height, neck, and waist
-                {inputs.gender === "female" ? " (plus hip)" : ""}, then press{" "}
-                <strong>Calculate</strong> for U.S. Navy body fat, ACE category, lean mass, and BMI
-                method estimate.
-              </p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>Primary: U.S. Navy circumference method</li>
-                <li>Also: BMI-based body fat estimate</li>
-                <li>Ideal % from Jackson &amp; Pollock by age</li>
-              </ul>
-            </div>
-          ) : (
-            <div
-              key={animationKey}
-              className="space-y-5"
-              style={{ animation: "bmiResultIn 0.35s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
-            >
-              <p className="text-2xl font-black text-emerald-700 sm:text-3xl">
-                Body Fat: {result.navyPct}%
-              </p>
+                {inputs.gender === "female" ? " (plus hip)" : ""}, then press <strong>Calculate</strong> for
+                U.S. Navy body fat, ACE category, lean mass, and a BMI-method estimate.
+              </>
+            }
+            formulas={["U.S. Navy method", "BMI-based estimate", "Jackson & Pollock ideal %"]}
+          />
+        ) : (
+          <ResultBody animationKey={animationKey}>
+            <ResultHero label="Body fat (U.S. Navy)" value={`${result.navyPct}%`} badge={result.category}>
+              Ideal for your age: {result.idealPct}%
+            </ResultHero>
 
-              <BodyFatGauge
-                percent={result.navyPct}
-                gender={result.gender}
-                category={result.category}
-                animationKey={animationKey}
-              />
+            <BodyFatGauge
+              percent={result.navyPct}
+              gender={result.gender}
+              category={result.category}
+              animationKey={animationKey}
+            />
 
-              <div className="overflow-hidden rounded-lg ring-1 ring-slate-200">
-                <table className="w-full text-left text-sm">
-                  <tbody>
-                    {(
-                      [
-                        ["Body Fat (U.S. Navy Method)", `${result.navyPct}%`],
-                        ["Body Fat Category", result.category],
-                        ["Body Fat Mass", `${result.fatMass} ${result.weightUnit}`],
-                        ["Lean Body Mass", `${result.leanMass} ${result.weightUnit}`],
-                        [
-                          "Ideal Body Fat for Given Age (Jackson & Pollock)",
-                          `${result.idealPct}%`,
-                        ],
-                        [
-                          "Body Fat to Lose to Reach Ideal",
-                          result.fatToLose > 0
-                            ? `${result.fatToLose} ${result.weightUnit}`
-                            : "At or below ideal",
-                        ],
-                        ["Body Fat (BMI method)", `${result.bmiPct}%`],
-                      ] as const
-                    ).map(([label, value]) => (
-                      <tr key={label} className="border-b border-slate-100 last:border-0">
-                        <td className="px-3 py-2.5 text-slate-600">{label}</td>
-                        <td
-                          className={`whitespace-nowrap px-3 py-2.5 text-right font-semibold text-slate-950 ${
-                            label === "Body Fat Category" ? result.categoryTone : ""
-                          }`}
-                        >
-                          {value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <StatGrid>
+              <StatTile tone="amber" label="Fat mass" value={`${result.fatMass} ${result.weightUnit}`} />
+              <StatTile tone="emerald" label="Lean mass" value={`${result.leanMass} ${result.weightUnit}`} />
+            </StatGrid>
 
-              <div className="rounded-lg bg-slate-50 px-3 py-3 text-xs leading-5 text-slate-500">
-                <p className="font-semibold text-slate-700">ACE body fat categories</p>
-                <p className="mt-1">
-                  {result.gender === "male"
-                    ? "Men: Essential 2–5% · Athletes 6–13% · Fitness 14–17% · Average 18–24% · Obese 25%+"
-                    : "Women: Essential 10–13% · Athletes 14–20% · Fitness 21–24% · Average 25–31% · Obese 32%+"}
-                </p>
-              </div>
+            <ResultTable
+              caption="Body fat details"
+              align={["left", "right"]}
+              rows={[
+                { key: "navy", cells: ["Body Fat (U.S. Navy Method)", `${result.navyPct}%`] },
+                {
+                  key: "category",
+                  cells: ["Body Fat Category", <span key="c" className={result.categoryTone}>{result.category}</span>],
+                },
+                { key: "ideal", cells: ["Ideal Body Fat for Age (Jackson & Pollock)", `${result.idealPct}%`] },
+                {
+                  key: "lose",
+                  cells: [
+                    "Body Fat to Lose to Reach Ideal",
+                    result.fatToLose > 0 ? `${result.fatToLose} ${result.weightUnit}` : "At or below ideal",
+                  ],
+                },
+                { key: "bmi", cells: ["Body Fat (BMI method)", `${result.bmiPct}%`] },
+              ]}
+            />
 
-              <p className="text-[11px] leading-4 text-slate-400">
-                Estimates only — not medical advice. Tape measure placement affects Navy results;
-                DEXA or hydrostatic weighing is more precise.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <ResultNote tone="info">
+              <strong>ACE body fat categories — </strong>
+              {result.gender === "male"
+                ? "Men: Essential 2–5% · Athletes 6–13% · Fitness 14–17% · Average 18–24% · Obese 25%+"
+                : "Women: Essential 10–13% · Athletes 14–20% · Fitness 21–24% · Average 25–31% · Obese 32%+"}
+            </ResultNote>
+
+            <ResultNote>
+              Estimates only — not medical advice. Tape measure placement affects Navy results; DEXA or
+              hydrostatic weighing is more precise.
+            </ResultNote>
+          </ResultBody>
+        )}
+      </ResultCard>
+    </CalcLayout>
   );
 }

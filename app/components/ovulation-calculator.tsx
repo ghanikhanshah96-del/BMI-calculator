@@ -1,7 +1,25 @@
 "use client";
 
-import { Eraser, Play, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  ResultTable,
+  SectionTitle,
+  SegmentedControl,
+  StatGrid,
+  StatTile,
+} from "./calc-ui";
 import { CustomSelect, DatePicker, FieldShell } from "./form-controls";
 
 type CycleRow = {
@@ -132,26 +150,17 @@ export default function OvulationCalculator() {
     setResultTab("dates");
   };
 
-  const chipClass = (active: boolean) =>
-    [
-      "shrink-0 rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3",
-      active ? "bg-white text-emerald-800 shadow-sm" : "text-emerald-50/90 hover:bg-white/10",
-    ].join(" ");
-
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
-      <div className="min-w-0 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">Ovulation</p>
-            <h3 className="text-xl font-black text-slate-950 sm:text-2xl">Fertile window</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={Sparkles}
+          eyebrow="Ovulation"
+          title="Fertile window"
+          description="Predict ovulation, your fertile days, and the next six cycles."
+        />
 
-        <div className="space-y-3">
+        <InputGroup step={1} title="Your cycle" columns={1}>
           <FieldShell label="First day of your last period">
             <DatePicker value={lmp} onChange={setLmp} />
           </FieldShell>
@@ -162,193 +171,133 @@ export default function OvulationCalculator() {
               options={CYCLE_OPTIONS}
             />
           </FieldShell>
-        </div>
+        </InputGroup>
 
-        {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
+        <FormError message={error} />
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={calculate}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800 active:scale-[0.98]"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Calculate
-          </button>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98]"
-          >
-            <Eraser className="h-4 w-4" />
-            Clear
-          </button>
-        </div>
+        <ActionBar onCalculate={calculate} onClear={clear} />
 
-        <p className="text-xs leading-5 text-slate-500">
+        <ResultNote tone="info">
           This tool estimates fertile days from cycle tracking. It should not be used as birth control.
-        </p>
-      </div>
+        </ResultNote>
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+      <ResultCard
+        resultRef={resultRef}
+        toolbar={
+          result ? (
+            <SegmentedControl
+              role="tablist"
+              label="Result sections"
+              size="sm"
+              options={[
+                { value: "dates", label: "This cycle" },
+                { value: "cycles", label: "Next 6 cycles" },
+              ]}
+              value={resultTab}
+              onChange={setResultTab}
+            />
+          ) : null
+        }
       >
-        <div className="shrink-0 bg-emerald-700 px-3 py-3 sm:px-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-            {result ? (
-              <div className="flex gap-1" role="tablist" aria-label="Result sections">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={resultTab === "dates"}
-                  className={chipClass(resultTab === "dates")}
-                  onClick={() => setResultTab("dates")}
-                >
-                  This cycle
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={resultTab === "cycles"}
-                  className={chipClass(resultTab === "cycles")}
-                  onClick={() => setResultTab("cycles")}
-                >
-                  Next 6 cycles
-                </button>
-              </div>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 lg:max-h-[min(68vh,640px)]">
-          {!result ? (
-            <div className="space-y-3 text-sm leading-6 text-slate-600">
-              <p className="text-lg font-semibold text-slate-900">No result yet</p>
-              <p>
+        {!result ? (
+          <EmptyResult
+            icon={Sparkles}
+            text={
+              <>
                 Enter the first day of your last period and average cycle length, then press{" "}
-                <strong>Calculate</strong> for ovulation, fertile window, test day, and the next six
-                cycles.
-              </p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>Ovulation ≈ cycle day (length − 14)</li>
-                <li>Fertile window ≈ ovulation − 5 through +1 day</li>
-                <li>Due date if pregnant ≈ LMP + 280 days</li>
-              </ul>
-            </div>
-          ) : (
-            <div
-              key={`${animationKey}-${resultTab}`}
-              className="space-y-4"
-              style={{ animation: "bmiResultIn 0.28s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
-            >
-              {resultTab === "dates" ? (
-                <>
-                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-5 ring-1 ring-emerald-100">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-                      Most probable ovulation
-                    </p>
-                    <p className="mt-1 text-2xl font-black tracking-tight text-slate-950">
-                      {formatShort(result.current.ovulationPeak)}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Window {formatRange(result.current.ovulationStart, result.current.ovulationEnd)}
-                    </p>
-                  </div>
+                <strong>Calculate</strong> for ovulation, fertile window, test day, and the next six cycles.
+              </>
+            }
+            formulas={["Ovulation ≈ day (length − 14)", "Fertile: −5 to +1 day", "Due date ≈ LMP + 280"]}
+          />
+        ) : (
+          <ResultBody animationKey={`${animationKey}-${resultTab}`}>
+            {resultTab === "dates" ? (
+              <>
+                <ResultHero
+                  label="Most probable ovulation"
+                  value={<span className="text-3xl sm:text-4xl">{formatShort(result.current.ovulationPeak)}</span>}
+                  badge={`${cycleLength}-day cycle`}
+                >
+                  Window {formatRange(result.current.ovulationStart, result.current.ovulationEnd)}
+                </ResultHero>
 
-                  <div className="flex flex-wrap gap-2">
-                    {(
-                      [
-                        ["Fertile", formatRange(result.current.fertileStart, result.current.fertileEnd), "bg-emerald-50 text-emerald-900"],
-                        ["Test day", formatShort(result.current.pregnancyTest), "bg-sky-50 text-sky-900"],
-                        ["Next period", formatShort(result.current.nextPeriod), "bg-amber-50 text-amber-900"],
-                      ] as const
-                    ).map(([label, value, tone]) => (
-                      <div key={label} className={`rounded-lg px-3 py-2 text-xs ${tone}`}>
-                        <p className="font-semibold uppercase tracking-wide opacity-80">{label}</p>
-                        <p className="mt-0.5 text-sm font-bold">{value}</p>
-                      </div>
-                    ))}
-                  </div>
+                <StatGrid columns={3}>
+                  <StatTile
+                    tone="emerald"
+                    label="Fertile"
+                    value={<span className="text-sm sm:text-base">{formatRange(result.current.fertileStart, result.current.fertileEnd)}</span>}
+                  />
+                  <StatTile
+                    tone="sky"
+                    label="Test day"
+                    value={<span className="text-sm sm:text-base">{formatShort(result.current.pregnancyTest)}</span>}
+                  />
+                  <StatTile
+                    tone="amber"
+                    label="Next period"
+                    value={<span className="text-sm sm:text-base">{formatShort(result.current.nextPeriod)}</span>}
+                  />
+                </StatGrid>
 
-                  <div className="overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                    <table className="w-full min-w-[280px] text-left text-sm">
-                      <tbody>
-                        {(
-                          [
-                            [
-                              "Ovulation window",
-                              formatRange(result.current.ovulationStart, result.current.ovulationEnd),
-                            ],
-                            ["Most probable ovulation date", formatShort(result.current.ovulationPeak)],
-                            [
-                              "Intercourse window for pregnancy",
-                              formatRange(result.current.fertileStart, result.current.fertileEnd),
-                            ],
-                            ["Pregnancy test", formatShort(result.current.pregnancyTest)],
-                            ["Next period start", formatShort(result.current.nextPeriod)],
-                            ["Due date if pregnant", formatShort(result.current.dueDate)],
-                          ] as const
-                        ).map(([label, value]) => (
-                          <tr key={label} className="border-b border-slate-100 last:border-0">
-                            <td className="px-3 py-2.5 text-slate-600">{label}</td>
-                            <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-slate-950">
-                              {value}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Important dates for the next 6 cycles</h4>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Assumes a steady {cycleLength}-day cycle starting from your LMP.
-                  </p>
-                  <div className="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                    <table className="w-full min-w-[420px] text-left text-sm">
-                      <thead>
-                        <tr className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                          <th className="px-3 py-2 font-semibold">Period start</th>
-                          <th className="px-3 py-2 font-semibold">Ovulation window</th>
-                          <th className="px-3 py-2 font-semibold">Due date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {result.cycles.map((row) => (
-                          <tr key={row.periodStart.toISOString()} className="border-t border-slate-100 text-slate-700">
-                            <td className="whitespace-nowrap px-3 py-2.5 font-semibold text-slate-900">
-                              {formatShort(row.periodStart)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2.5">
-                              {formatRange(row.ovulationStart, row.ovulationEnd)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2.5">
-                              {formatShort(row.dueDate)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+                <ResultTable
+                  caption="Key dates for this cycle"
+                  align={["left", "right"]}
+                  rows={[
+                    {
+                      key: "window",
+                      cells: ["Ovulation window", formatRange(result.current.ovulationStart, result.current.ovulationEnd)],
+                    },
+                    {
+                      key: "peak",
+                      selected: true,
+                      cells: ["Most probable ovulation date", formatShort(result.current.ovulationPeak)],
+                    },
+                    {
+                      key: "fertile",
+                      cells: [
+                        "Intercourse window for pregnancy",
+                        formatRange(result.current.fertileStart, result.current.fertileEnd),
+                      ],
+                    },
+                    { key: "test", cells: ["Pregnancy test", formatShort(result.current.pregnancyTest)] },
+                    { key: "next", cells: ["Next period start", formatShort(result.current.nextPeriod)] },
+                    { key: "due", cells: ["Due date if pregnant", formatShort(result.current.dueDate)] },
+                  ]}
+                />
+              </>
+            ) : (
+              <>
+                <SectionTitle
+                  title="Important dates for the next 6 cycles"
+                  hint={`Assumes a steady ${cycleLength}-day cycle starting from your LMP.`}
+                />
+                <ResultTable
+                  caption="Next six cycles"
+                  head={["Period start", "Ovulation window", "Due date"]}
+                  minWidth={420}
+                  rows={result.cycles.map((row) => ({
+                    key: row.periodStart.toISOString(),
+                    cells: [
+                      <span key="p" className="whitespace-nowrap font-semibold text-slate-900">
+                        {formatShort(row.periodStart)}
+                      </span>,
+                      formatRange(row.ovulationStart, row.ovulationEnd),
+                      formatShort(row.dueDate),
+                    ],
+                  }))}
+                />
+              </>
+            )}
 
-              <p className="border-t border-slate-100 pt-3 text-[11px] leading-4 text-slate-400">
-                Estimates only — not contraception or medical advice. Irregular cycles and hormone
-                testing can change timing.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <ResultNote>
+              Estimates only — not contraception or medical advice. Irregular cycles and hormone testing can
+              change timing.
+            </ResultNote>
+          </ResultBody>
+        )}
+      </ResultCard>
+    </CalcLayout>
   );
 }

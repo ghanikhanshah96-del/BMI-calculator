@@ -1,7 +1,25 @@
 "use client";
 
-import { CalendarHeart, Eraser, Play } from "lucide-react";
+import { CalendarHeart } from "lucide-react";
 import { useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  ResultTable,
+  SectionTitle,
+  SegmentedControl,
+  StatGrid,
+  StatTile,
+} from "./calc-ui";
 import { CustomSelect, DatePicker, FieldShell, NumberStepper } from "./form-controls";
 
 type MethodId = "lmp" | "conception" | "ultrasound" | "ivf";
@@ -189,11 +207,13 @@ function TimelineBar({ result }: { result: DueDateResult }) {
     <div className="space-y-2">
       <div className="relative h-3 overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full bg-emerald-600 transition-all duration-500"
+          className="h-full rounded-full bg-linear-to-r from-emerald-500 via-teal-500 to-lime-400 transition-all duration-700"
           style={{ width: `${pct}%` }}
         />
+        <span aria-hidden="true" className="absolute inset-y-0 left-[35%] w-px bg-white/80" />
+        <span aria-hidden="true" className="absolute inset-y-0 left-[70%] w-px bg-white/80" />
       </div>
-      <div className="flex justify-between text-[10px] font-semibold text-slate-500">
+      <div className="flex justify-between text-[11px] font-semibold text-slate-600">
         <span>LMP</span>
         <span>T1 · 14w</span>
         <span>T2 · 28w</span>
@@ -231,49 +251,32 @@ export default function DueDateCalculator() {
     setResult(null);
   };
 
-  const methodTab = (id: MethodId, label: string) => (
-    <button
-      key={id}
-      type="button"
-      className={[
-        "rounded-lg px-3 py-2 text-sm font-semibold transition",
-        inputs.method === id
-          ? "bg-emerald-700 text-white"
-          : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-      ].join(" ")}
-      onClick={() => setInputs({ ...inputs, method: id })}
-    >
-      {label}
-    </button>
-  );
-
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
-      <div className="min-w-0 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <CalendarHeart className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">Due date</p>
-            <h3 className="text-xl font-black text-slate-950 sm:text-2xl">Pregnancy timeline</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={CalendarHeart}
+          eyebrow="Due date"
+          title="Pregnancy timeline"
+          description="Estimate your due date, gestational age, and trimester."
+        />
 
-        <div className="flex flex-wrap gap-2">
-          {methodTab("lmp", "LMP")}
-          {methodTab("conception", "Conception")}
-          {methodTab("ultrasound", "Ultrasound")}
-          {methodTab("ivf", "IVF")}
-        </div>
+        <SegmentedControl
+          label="Calculation method"
+          options={[
+            { value: "lmp", label: "LMP" },
+            { value: "conception", label: "Conception" },
+            { value: "ultrasound", label: "Ultrasound" },
+            { value: "ivf", label: "IVF" },
+          ]}
+          value={inputs.method}
+          onChange={(method) => setInputs({ ...inputs, method })}
+        />
 
-        <div className="space-y-3">
+        <InputGroup step={1} title="Key dates" columns={1}>
           {inputs.method === "lmp" ? (
             <FieldShell label="First day of last menstrual period">
-              <DatePicker
-                value={inputs.lmp}
-                onChange={(lmp) => setInputs({ ...inputs, lmp })}
-              />
+              <DatePicker value={inputs.lmp} onChange={(lmp) => setInputs({ ...inputs, lmp })} />
             </FieldShell>
           ) : null}
 
@@ -322,17 +325,12 @@ export default function DueDateCalculator() {
           {inputs.method === "ivf" ? (
             <>
               <FieldShell label="Embryo transfer date">
-                <DatePicker
-                  value={inputs.ivfDate}
-                  onChange={(ivfDate) => setInputs({ ...inputs, ivfDate })}
-                />
+                <DatePicker value={inputs.ivfDate} onChange={(ivfDate) => setInputs({ ...inputs, ivfDate })} />
               </FieldShell>
               <FieldShell label="Embryo age at transfer">
                 <CustomSelect
                   value={inputs.ivfEmbryo}
-                  onChange={(ivfEmbryo) =>
-                    setInputs({ ...inputs, ivfEmbryo: ivfEmbryo as IvfEmbryo })
-                  }
+                  onChange={(ivfEmbryo) => setInputs({ ...inputs, ivfEmbryo: ivfEmbryo as IvfEmbryo })}
                   options={[
                     { value: "day3", label: "Day 3 embryo" },
                     { value: "day5", label: "Day 5 embryo" },
@@ -341,138 +339,84 @@ export default function DueDateCalculator() {
               </FieldShell>
             </>
           ) : null}
-        </div>
+        </InputGroup>
 
-        {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
+        <FormError message={error} />
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={calculate}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800 active:scale-[0.98]"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Calculate
-          </button>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98]"
-          >
-            <Eraser className="h-4 w-4" />
-            Clear
-          </button>
-        </div>
-      </div>
+        <ActionBar onCalculate={calculate} onClear={clear} />
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
-      >
-        <div className="shrink-0 bg-emerald-700 px-4 py-3">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 lg:max-h-[min(68vh,640px)]">
-          {!result ? (
-            <div className="space-y-3 text-sm leading-6 text-slate-600">
-              <p className="text-lg font-semibold text-slate-900">No result yet</p>
-              <p>
-                Choose a method, enter the date details, then press <strong>Calculate</strong> for an
-                estimated due date, gestational age, and trimester timeline.
-              </p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>LMP: due date = LMP + 280 days</li>
-                <li>Conception: due date = conception + 266 days</li>
-                <li>Ultrasound / IVF: adjusted from scan or transfer date</li>
-              </ul>
-            </div>
-          ) : (
-            <div
-              key={animationKey}
-              className="space-y-5"
-              style={{ animation: "bmiResultIn 0.35s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+      <ResultCard resultRef={resultRef}>
+        {!result ? (
+          <EmptyResult
+            icon={CalendarHeart}
+            text={
+              <>
+                Choose a method, enter the date details, then press <strong>Calculate</strong> for an estimated
+                due date, gestational age, and trimester timeline.
+              </>
+            }
+            formulas={["LMP + 280 days", "Conception + 266 days", "Ultrasound / IVF adjusted"]}
+          />
+        ) : (
+          <ResultBody animationKey={animationKey}>
+            <ResultHero
+              label="Estimated due date"
+              value={<span className="text-3xl sm:text-4xl">{formatDate(result.dueDate)}</span>}
+              badge={result.trimester}
             >
-              <div className="rounded-xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-5 ring-1 ring-emerald-100">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-                  Estimated due date
-                </p>
-                <p className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                  {formatDate(result.dueDate)}
-                </p>
-                <p className="mt-1 text-xs text-slate-500">Based on {result.methodLabel}</p>
-              </div>
+              Based on {result.methodLabel}
+            </ResultHero>
 
-              {result.isPastDue ? (
-                <div className="rounded-lg bg-amber-50 px-3 py-3 text-sm text-amber-900">
-                  Past due by {result.daysPastDue} day{result.daysPastDue === 1 ? "" : "s"}
-                  {result.weeksPastDue > 0
-                    ? ` (${result.weeksPastDue} week${result.weeksPastDue === 1 ? "" : "s"})`
-                    : ""}
-                  . Only about 4% of births occur on the exact due date.
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="rounded-lg bg-slate-50 px-3 py-2.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                      Gestational age
-                    </p>
-                    <p className="text-xl font-black text-slate-950">
-                      {result.gestationalWeeks}w {result.gestationalDays}d
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-slate-50 px-3 py-2.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                      Days remaining
-                    </p>
-                    <p className="text-xl font-black text-slate-950">{result.daysRemaining}</p>
-                  </div>
-                </div>
-              )}
+            {result.isPastDue ? (
+              <ResultNote tone="warning">
+                Past due by {result.daysPastDue} day{result.daysPastDue === 1 ? "" : "s"}
+                {result.weeksPastDue > 0
+                  ? ` (${result.weeksPastDue} week${result.weeksPastDue === 1 ? "" : "s"})`
+                  : ""}
+                . Only about 4% of births occur on the exact due date.
+              </ResultNote>
+            ) : (
+              <StatGrid>
+                <StatTile
+                  tone="emerald"
+                  label="Gestational age"
+                  value={`${result.gestationalWeeks}w ${result.gestationalDays}d`}
+                />
+                <StatTile label="Days remaining" value={result.daysRemaining} />
+              </StatGrid>
+            )}
 
-              <p className="text-sm font-semibold text-slate-800">{result.trimester}</p>
-              <TimelineBar result={result} />
+            <SectionTitle title={result.trimester} />
+            <TimelineBar result={result} />
 
-              <div className="overflow-hidden rounded-lg ring-1 ring-slate-200">
-                <table className="w-full text-left text-sm">
-                  <tbody>
-                    {(
-                      [
-                        ["Estimated due date", formatShort(result.dueDate)],
-                        ["Estimated conception", formatShort(result.conceptionEstimate)],
-                        ["Estimated LMP", formatShort(result.lmpEstimate)],
-                        [
-                          "Gestational age today",
-                          result.isPastDue
-                            ? "Past due"
-                            : `${result.gestationalWeeks} weeks, ${result.gestationalDays} days`,
-                        ],
-                        ["Trimester", result.trimester],
-                      ] as const
-                    ).map(([label, value]) => (
-                      <tr key={label} className="border-b border-slate-100 last:border-0">
-                        <td className="px-3 py-2.5 text-slate-600">{label}</td>
-                        <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-slate-950">
-                          {value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <ResultTable
+              caption="Pregnancy dates"
+              align={["left", "right"]}
+              rows={[
+                { key: "due", selected: true, cells: ["Estimated due date", formatShort(result.dueDate)] },
+                { key: "conception", cells: ["Estimated conception", formatShort(result.conceptionEstimate)] },
+                { key: "lmp", cells: ["Estimated LMP", formatShort(result.lmpEstimate)] },
+                {
+                  key: "age",
+                  cells: [
+                    "Gestational age today",
+                    result.isPastDue
+                      ? "Past due"
+                      : `${result.gestationalWeeks} weeks, ${result.gestationalDays} days`,
+                  ],
+                },
+                { key: "trimester", cells: ["Trimester", result.trimester] },
+              ]}
+            />
 
-              <p className="text-[11px] leading-4 text-slate-400">
-                Estimates only — not medical advice. Confirm dates with your clinician; most births
-                occur within about two weeks of the estimated due date.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <ResultNote>
+              Estimates only — not medical advice. Confirm dates with your clinician; most births occur within
+              about two weeks of the estimated due date.
+            </ResultNote>
+          </ResultBody>
+        )}
+      </ResultCard>
+    </CalcLayout>
   );
 }

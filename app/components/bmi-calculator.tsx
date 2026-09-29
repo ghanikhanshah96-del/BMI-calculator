@@ -1,7 +1,23 @@
 "use client";
 
-import { Eraser, Play, Scale } from "lucide-react";
+import { Scale } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  SegmentedControl,
+  StatGrid,
+  StatTile,
+} from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 
 type UnitMode = "metric" | "us" | "other";
@@ -183,7 +199,7 @@ function BmiGauge({ bmi, animationKey }: { bmi: number; animationKey: number }) 
   }, [animationKey, targetAngle]);
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-gradient-to-b from-slate-50 to-white p-2">
+    <div className="relative overflow-hidden rounded-xl bg-linear-to-b from-slate-50 to-white p-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 300 163"
@@ -305,7 +321,7 @@ function UnitConverter() {
   }, [kind, fromValue, fromUnit, toUnit]);
 
   return (
-    <div className="rounded-lg border border-emerald-100 bg-emerald-50/70 p-4">
+    <div className="rounded-2xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-4 ring-1 ring-emerald-100">
       <p className="text-sm font-semibold text-emerald-900">
         Unit converter
       </p>
@@ -313,38 +329,28 @@ function UnitConverter() {
         Convert values, then switch to Metric or US Units and enter them in the calculator.
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        {(
-          [
-            ["length", "Length"],
-            ["weight", "Weight"],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => {
-              setKind(id);
-              if (id === "length") {
-                setFromUnit("cm");
-                setToUnit("m");
-                setFromValue(180);
-              } else {
-                setFromUnit("kg");
-                setToUnit("lb");
-                setFromValue(65);
-              }
-            }}
-            className={[
-              "rounded-lg px-3 py-1.5 text-sm font-semibold transition",
-              kind === id
-                ? "bg-emerald-700 text-white"
-                : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-            ].join(" ")}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mt-3">
+        <SegmentedControl
+          label="Converter type"
+          size="sm"
+          options={[
+            { value: "length", label: "Length" },
+            { value: "weight", label: "Weight" },
+          ]}
+          value={kind}
+          onChange={(id) => {
+            setKind(id);
+            if (id === "length") {
+              setFromUnit("cm");
+              setToUnit("m");
+              setFromValue(180);
+            } else {
+              setFromUnit("kg");
+              setToUnit("lb");
+              setFromValue(65);
+            }
+          }}
+        />
       </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -436,50 +442,32 @@ export default function BmiCalculator() {
     setResult(null);
   };
 
-  const tabClass = (active: boolean) =>
-    [
-      "rounded-lg px-3 py-2 text-sm font-semibold transition",
-      active
-        ? "bg-emerald-700 text-white"
-        : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-    ].join(" ");
+  const unitOptions = [
+    { value: "us", label: "US Units" },
+    { value: "metric", label: "Metric" },
+    { value: "other", label: "Other" },
+  ] as const;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-      <div className="space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Scale className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">BMI</p>
-            <h3 className="text-2xl font-black text-slate-950">Body Mass Index</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={Scale}
+          eyebrow="BMI"
+          title="Body Mass Index"
+          description="Check your BMI category and healthy weight range in seconds."
+        />
 
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className={tabClass(unitMode === "us")} onClick={() => setUnitMode("us")}>
-            US Units
-          </button>
-          <button
-            type="button"
-            className={tabClass(unitMode === "metric")}
-            onClick={() => setUnitMode("metric")}
-          >
-            Metric Units
-          </button>
-          <button
-            type="button"
-            className={tabClass(unitMode === "other")}
-            onClick={() => setUnitMode("other")}
-          >
-            Other Units
-          </button>
-        </div>
+        <SegmentedControl
+          label="Unit system"
+          options={unitOptions}
+          value={unitMode}
+          onChange={setUnitMode}
+        />
 
         {unitMode === "other" && <UnitConverter />}
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <InputGroup step={1} title="Your details">
           <FieldShell label="Age">
             <NumberStepper
               value={inputs.age}
@@ -488,7 +476,7 @@ export default function BmiCalculator() {
               step={1}
               onChange={(age) => setInputs({ ...inputs, age })}
             />
-            <p className="mt-1 text-xs text-slate-500">Ages: 2 – 120</p>
+            <p className="mt-1.5 text-xs text-slate-600">Ages 2 – 120</p>
           </FieldShell>
           <FieldShell label="Gender">
             <CustomSelect
@@ -500,153 +488,118 @@ export default function BmiCalculator() {
               ]}
             />
           </FieldShell>
-        </div>
+        </InputGroup>
 
-        {unitMode === "us" ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FieldShell label="Height (feet)">
-              <NumberStepper
-                value={inputs.heightFeet}
-                min={0}
-                max={8}
-                step={1}
-                suffix="ft"
-                onChange={(heightFeet) => setInputs({ ...inputs, heightFeet })}
-              />
-            </FieldShell>
-            <FieldShell label="Height (inches)">
-              <NumberStepper
-                value={inputs.heightInches}
-                min={0}
-                max={11}
-                step={1}
-                suffix="in"
-                onChange={(heightInches) => setInputs({ ...inputs, heightInches })}
-              />
-            </FieldShell>
-            <FieldShell label="Weight (pounds)">
-              <NumberStepper
-                value={inputs.weightLb}
-                min={1}
-                max={1400}
-                step={0.5}
-                suffix="lb"
-                onChange={(weightLb) => setInputs({ ...inputs, weightLb })}
-              />
-            </FieldShell>
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FieldShell label="Height (cm)">
-              <NumberStepper
-                value={inputs.heightCm}
-                min={50}
-                max={300}
-                step={1}
-                suffix="cm"
-                onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
-              />
-            </FieldShell>
-            <FieldShell label="Weight (kg)">
-              <NumberStepper
-                value={inputs.weightKg}
-                min={1}
-                max={500}
-                step={0.1}
-                suffix="kg"
-                onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
-              />
-            </FieldShell>
-          </div>
-        )}
+        <InputGroup step={2} title="Measurements" hint={unitMode === "us" ? "ft · in · lb" : "cm · kg"}>
+          {unitMode === "us" ? (
+            <>
+              <FieldShell label="Height (feet)">
+                <NumberStepper
+                  value={inputs.heightFeet}
+                  min={0}
+                  max={8}
+                  step={1}
+                  suffix="ft"
+                  onChange={(heightFeet) => setInputs({ ...inputs, heightFeet })}
+                />
+              </FieldShell>
+              <FieldShell label="Height (inches)">
+                <NumberStepper
+                  value={inputs.heightInches}
+                  min={0}
+                  max={11}
+                  step={1}
+                  suffix="in"
+                  onChange={(heightInches) => setInputs({ ...inputs, heightInches })}
+                />
+              </FieldShell>
+              <FieldShell label="Weight (pounds)">
+                <NumberStepper
+                  value={inputs.weightLb}
+                  min={1}
+                  max={1400}
+                  step={0.5}
+                  suffix="lb"
+                  onChange={(weightLb) => setInputs({ ...inputs, weightLb })}
+                />
+              </FieldShell>
+            </>
+          ) : (
+            <>
+              <FieldShell label="Height (cm)">
+                <NumberStepper
+                  value={inputs.heightCm}
+                  min={50}
+                  max={300}
+                  step={1}
+                  suffix="cm"
+                  onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
+                />
+              </FieldShell>
+              <FieldShell label="Weight (kg)">
+                <NumberStepper
+                  value={inputs.weightKg}
+                  min={1}
+                  max={500}
+                  step={0.1}
+                  suffix="kg"
+                  onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
+                />
+              </FieldShell>
+            </>
+          )}
+        </InputGroup>
 
-        {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        )}
+        <FormError message={error} />
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={calculate}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Calculate
-          </button>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          >
-            <Eraser className="h-4 w-4" />
-            Clear
-          </button>
-        </div>
-      </div>
+        <ActionBar onCalculate={calculate} onClear={clear} />
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        id="bmi-result-panel"
-        className="rounded-lg border border-emerald-100 bg-white p-5 shadow-sm"
-      >
-        <div className="flex items-center justify-between rounded-lg bg-emerald-700 px-4 py-3 text-white">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-        </div>
-
+      <ResultCard resultRef={resultRef} id="bmi-result-panel">
         {!result ? (
-          <div className="mt-8 space-y-3 text-sm leading-6 text-slate-600">
-            <p className="text-lg font-semibold text-slate-900">No result yet</p>
-            <p>
-              Enter age, gender, height, and weight, then press <strong>Calculate</strong> to see BMI,
-              category, healthy ranges, BMI Prime, and Ponderal Index.
-            </p>
-            <ul className="list-disc space-y-1 pl-5">
-              <li>Metric: BMI = kg / m²</li>
-              <li>US: BMI = 703 × lb / in²</li>
-              <li>BMI Prime = BMI / 25</li>
-              <li>Ponderal Index = kg / m³</li>
-            </ul>
-          </div>
+          <EmptyResult
+            icon={Scale}
+            text={
+              <>
+                Enter your age, gender, height, and weight, then press <strong>Calculate</strong> to see
+                your BMI, category, healthy range, BMI Prime, and Ponderal Index.
+              </>
+            }
+            formulas={["BMI = kg / m²", "US: 703 × lb / in²", "BMI Prime = BMI / 25", "PI = kg / m³"]}
+          />
         ) : (
-          <div
-            key={animationKey}
-            className="mt-5 space-y-4"
-            style={{ animation: "bmiResultIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
-          >
-            <p className="text-xl font-bold text-slate-900 sm:text-2xl">
-              BMI = {result.bmi} kg/m²{" "}
-              <span className={result.categoryTone}>({result.category})</span>
-            </p>
+          <ResultBody animationKey={animationKey}>
+            <ResultHero label="Body Mass Index" value={result.bmi} unit="kg/m²" badge={result.category}>
+              Healthy BMI range: {result.healthyBmiMin} – {result.healthyBmiMax} kg/m²
+            </ResultHero>
 
             <BmiGauge bmi={result.bmi} animationKey={animationKey} />
 
-            <ul className="space-y-2 text-sm leading-6 text-slate-700">
-              <li>
-                Healthy BMI range: {result.healthyBmiMin} kg/m² – {result.healthyBmiMax} kg/m²
-              </li>
-              <li>
-                Healthy weight for the height: {result.healthyWeightMinDisplay} –{" "}
-                {result.healthyWeightMaxDisplay} {result.weightUnitLabel}
-              </li>
-              <li>BMI Prime: {result.bmiPrime}</li>
-              <li>Ponderal Index: {result.ponderalIndex} kg/m³</li>
-            </ul>
+            <StatGrid>
+              <StatTile
+                tone="emerald"
+                label="Healthy weight"
+                value={`${result.healthyWeightMinDisplay} – ${result.healthyWeightMaxDisplay}`}
+                hint={`${result.weightUnitLabel} for your height`}
+              />
+              <StatTile label="Category" value={<span className={result.categoryTone}>{result.category}</span>} hint="WHO adult scale" />
+              <StatTile label="BMI Prime" value={result.bmiPrime} hint="BMI ÷ 25" />
+              <StatTile label="Ponderal Index" value={result.ponderalIndex} hint="kg/m³" />
+            </StatGrid>
 
             {result.isYouth && (
-              <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900">
-                Age {inputs.age} is under 20. CDC uses BMI-for-age percentiles for children and teens.
-                The WHO adult category above is shown for reference only.
-              </p>
+              <ResultNote tone="warning">
+                Age {inputs.age} is under 20. CDC uses BMI-for-age percentiles for children and teens. The WHO
+                adult category above is shown for reference only.
+              </ResultNote>
             )}
 
-            <p className="text-xs leading-5 text-slate-500">
+            <ResultNote>
               Gender is collected for completeness. Adult WHO BMI cutoffs are the same for men and women.
-            </p>
-          </div>
+            </ResultNote>
+          </ResultBody>
         )}
-      </div>
-    </div>
+      </ResultCard>
+    </CalcLayout>
   );
 }

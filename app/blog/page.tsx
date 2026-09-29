@@ -1,6 +1,9 @@
+import { ArrowRight, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import PageHero from "../components/page-hero";
+import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import { getSiteUrl } from "../lib/site-url";
@@ -9,7 +12,7 @@ import { blogPosts } from "./posts";
 export const metadata: Metadata = {
   title: "Health Calculator Blog",
   description:
-    "In-depth guides for BMI, TDEE, body fat, macros, pregnancy due date, and ovulation calculators from BMI Wellness Pro.",
+    "In-depth guides for BMI, TDEE, body fat, macros, pregnancy due date, and ovulation calculators from FitnessCalculatorPro.com.",
   keywords: [
     "BMI blog",
     "TDEE guide",
@@ -20,9 +23,9 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Health Calculator Blog | BMI Wellness Pro",
+    title: "Health Calculator Blog | FitnessCalculatorPro.com",
     description:
-      "Detailed articles for every BMI Wellness Pro calculator tool.",
+      "Detailed articles for every FitnessCalculatorPro.com calculator tool.",
     url: "/blog",
     type: "website",
   },
@@ -43,60 +46,61 @@ export default function BlogIndexPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-slate-900">
+    <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <header className="mb-10 max-w-4xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
-            Blog
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Guides for every calculator
-          </h1>
-          <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg">
-            Clear overviews of BMI, TDEE, body fat, macros, due date, and ovulation so you know what each tool measures and how to use results responsibly.
-          </p>
-        </header>
-
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <PageHero
+        image="/images/blog-hero.jpg"
+        imageAlt="Colorful bowl of fresh vegetables and greens"
+        eyebrow="Blog"
+        icon={BookOpen}
+        title="Guides for every calculator"
+        description="Clear overviews of BMI, TDEE, body fat, macros, due date, and ovulation so you know what each tool measures and how to use results responsibly."
+      />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
           {blogPosts.map((post, index) => (
-            <article
+            <Reveal
+              as="article"
               key={post.slug}
-              className="overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm transition hover:border-emerald-300"
+              delay={(index % 3) * 110}
+              className="h-full"
             >
-              <Link href={`/blog/${post.slug}`} className="block text-slate-900">
-                <div className="relative aspect-video bg-emerald-50">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="spotlight group card-lift flex h-full flex-col overflow-hidden rounded-2xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-900/5"
+              >
+                <div className="relative aspect-video overflow-hidden bg-emerald-50">
                   <Image
                     src={post.image}
                     alt={post.imageAlt}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    className="object-cover"
-                    priority={index === 0}
+                    className="object-cover transition duration-700 ease-out group-hover:scale-105"
+                    fetchPriority={index === 0 ? "high" : "auto"}
                   />
-                </div>
-                <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
+                  <span className="absolute left-4 top-4 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white shadow-md">
                     {post.toolLabel}
-                  </p>
-                  <h2 className="mt-2 text-lg font-bold leading-snug text-slate-900">
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <h2 className="font-sans text-lg font-semibold leading-snug tracking-normal text-slate-900 transition group-hover:text-emerald-800">
                     {post.title}
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
                     {post.excerpt}
                   </p>
-                  <span className="mt-4 inline-block text-sm font-semibold text-emerald-700">
-                    Read guide
-                  </span>
-                  <time
-                    dateTime={post.updatedAt}
-                    className="mt-2 block text-xs text-slate-500"
-                  >
-                    Updated {post.updatedAt}
-                  </time>
+                  <div className="mt-auto flex items-center justify-between pt-5">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                      Read guide <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                    </span>
+                    <time dateTime={post.updatedAt} className="text-xs text-slate-500">
+                      Updated {post.updatedAt}
+                    </time>
+                  </div>
                 </div>
               </Link>
-            </article>
+            </Reveal>
           ))}
         </div>
       </main>

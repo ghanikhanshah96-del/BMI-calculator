@@ -21,7 +21,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Learn how BMI is calculated, what the categories mean, and how to use our free BMI calculator as a starting point, not a diagnosis.",
     description:
-      "Complete guide to Body Mass Index (BMI): formula, adult categories, healthy weight ranges, limits of BMI, and how to use the BMI Wellness Pro calculator.",
+      "Complete guide to Body Mass Index (BMI): formula, adult categories, healthy weight ranges, limits of BMI, and how to use the FitnessCalculatorPro.com calculator.",
     toolId: "bmi",
     toolLabel: "BMI Calculator",
     toolHref: "/#bmi",
@@ -285,7 +285,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Estimate ovulation, fertile days, pregnancy-test timing, next period, and due date if pregnant—plus the next six cycles from your LMP and cycle length.",
     description:
-      "Learn how ovulation and fertile-window estimates work from cycle length and last menstrual period, including multi-cycle projections in the BMI Wellness Pro ovulation calculator.",
+      "Learn how ovulation and fertile-window estimates work from cycle length and last menstrual period, including multi-cycle projections in the FitnessCalculatorPro.com ovulation calculator.",
     toolId: "ovulation",
     toolLabel: "Ovulation Calculator",
     toolHref: "/#ovulation",

@@ -1,7 +1,23 @@
 "use client";
 
-import { Apple, Eraser, Play } from "lucide-react";
+import { Apple } from "lucide-react";
 import { useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  ResultTable,
+  SectionTitle,
+  SegmentedControl,
+} from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 
 type UnitMode = "metric" | "us";
@@ -203,17 +219,17 @@ function MacroBar({
   color: string;
 }) {
   return (
-    <div className="space-y-1.5">
-      <div className="flex items-baseline justify-between gap-2 text-sm">
+    <div className="group space-y-1.5 rounded-xl px-3 py-2.5 transition duration-300 hover:bg-slate-50">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-2 text-sm">
         <span className="font-semibold text-slate-800">{label}</span>
-        <span className="font-black text-slate-950">
-          {grams}g <span className="font-medium text-slate-500">· {kcal} kcal · {pct}%</span>
+        <span className="font-semibold text-slate-950">
+          {grams}g <span className="font-medium text-slate-600">· {kcal} kcal · {pct}%</span>
         </span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+      <div className="h-3 overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${pct}%`, backgroundColor: color }}
+          className={`h-full rounded-full bg-linear-to-r shadow-sm transition-all duration-700 group-hover:brightness-110 ${color}`}
+          style={{ width: `${pct}%` }}
         />
       </div>
     </div>
@@ -250,65 +266,56 @@ export default function MacroCalculator() {
     setResult(null);
   };
 
-  const tabClass = (active: boolean) =>
-    [
-      "rounded-lg px-3 py-2 text-sm font-semibold transition",
-      active
-        ? "bg-emerald-700 text-white"
-        : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-    ].join(" ");
-
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
-      <div className="min-w-0 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Apple className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">Macros</p>
-            <h3 className="text-xl font-black text-slate-950 sm:text-2xl">Nutrition guidance</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={Apple}
+          eyebrow="Macros"
+          title="Nutrition guidance"
+          description="Daily calories plus protein, carb, and fat targets for your goal."
+        />
 
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className={tabClass(unitMode === "us")} onClick={() => setUnitMode("us")}>
-            US Units
-          </button>
-          <button
-            type="button"
-            className={tabClass(unitMode === "metric")}
-            onClick={() => setUnitMode("metric")}
-          >
-            Metric Units
-          </button>
-        </div>
+        <SegmentedControl
+          label="Unit system"
+          options={[
+            { value: "us", label: "US Units" },
+            { value: "metric", label: "Metric" },
+          ]}
+          value={unitMode}
+          onChange={setUnitMode}
+        />
 
-        <div className="space-y-3">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <FieldShell label="Gender">
-              <CustomSelect
-                value={inputs.gender}
-                onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
-                options={[
-                  { value: "male", label: "Male" },
-                  { value: "female", label: "Female" },
-                ]}
-              />
-            </FieldShell>
-            <FieldShell label="Age">
-              <NumberStepper
-                value={inputs.age}
-                min={15}
-                max={120}
-                step={1}
-                onChange={(age) => setInputs({ ...inputs, age })}
-              />
-            </FieldShell>
-          </div>
+        <InputGroup step={1} title="Your details">
+          <FieldShell label="Gender">
+            <CustomSelect
+              value={inputs.gender}
+              onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
+              options={[
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+              ]}
+            />
+          </FieldShell>
+          <FieldShell label="Age">
+            <NumberStepper
+              value={inputs.age}
+              min={15}
+              max={120}
+              step={1}
+              onChange={(age) => setInputs({ ...inputs, age })}
+            />
+          </FieldShell>
+        </InputGroup>
 
+        <InputGroup
+          step={2}
+          title="Measurements"
+          hint={unitMode === "metric" ? "kg · cm" : "lb · ft · in"}
+          columns={unitMode === "metric" ? 2 : 1}
+        >
           {unitMode === "metric" ? (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <>
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightKg}
@@ -329,9 +336,9 @@ export default function MacroCalculator() {
                   onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
                 />
               </FieldShell>
-            </div>
+            </>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <>
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightLb}
@@ -343,7 +350,7 @@ export default function MacroCalculator() {
                 />
               </FieldShell>
               <FieldShell label="Height">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid gap-2 sm:grid-cols-2">
                   <NumberStepper
                     value={inputs.heightFeet}
                     min={4}
@@ -362,9 +369,11 @@ export default function MacroCalculator() {
                   />
                 </div>
               </FieldShell>
-            </div>
+            </>
           )}
+        </InputGroup>
 
+        <InputGroup step={3} title="Goal & preferences" columns={1}>
           <FieldShell label="Activity">
             <CustomSelect
               value={inputs.activity}
@@ -395,160 +404,107 @@ export default function MacroCalculator() {
           </FieldShell>
 
           <FieldShell label="Body fat % (optional)">
-            <div className="flex items-center gap-2">
+            <div className="field-input flex min-h-12 items-center gap-2 rounded-xl px-3.5">
               <input
                 type="text"
                 inputMode="decimal"
                 value={inputs.bodyFat}
                 placeholder="e.g. 15"
                 maxLength={4}
-                aria-label="Body fat percentage optional"
+                aria-label="Body fat percentage (optional)"
                 onChange={(e) => {
                   const raw = e.target.value;
                   if (raw !== "" && !/^\d*\.?\d*$/.test(raw)) return;
                   setInputs({ ...inputs, bodyFat: raw });
                 }}
-                className="w-full min-w-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-lg font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className="w-full min-w-0 bg-transparent text-base font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400 sm:text-lg"
               />
-              <span className="shrink-0 rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800">
+              <span className="shrink-0 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
                 %
               </span>
             </div>
-            <p className="mt-2 text-xs leading-5 text-slate-500">
+            <p className="mt-2 text-xs leading-5 text-slate-600">
               Blank = Mifflin–St Jeor. With % = Katch–McArdle.
             </p>
           </FieldShell>
-        </div>
+        </InputGroup>
 
-        {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
+        <FormError message={error} />
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={calculate}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800 active:scale-[0.98]"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Calculate
-          </button>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98]"
-          >
-            <Eraser className="h-4 w-4" />
-            Clear
-          </button>
-        </div>
-      </div>
+        <ActionBar onCalculate={calculate} onClear={clear} />
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
-      >
-        <div className="shrink-0 bg-emerald-700 px-4 py-3">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 lg:max-h-[min(68vh,640px)]">
-          {!result ? (
-            <div className="space-y-3 text-sm leading-6 text-slate-600">
-              <p className="text-lg font-semibold text-slate-900">No result yet</p>
-              <p>
-                Enter your stats, activity, goal, and macro style, then press <strong>Calculate</strong>{" "}
-                for daily calories and protein / carbs / fat targets.
-              </p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>BMR via Mifflin–St Jeor (or Katch–McArdle with body fat)</li>
-                <li>TDEE = BMR × activity, then adjust for your goal</li>
-                <li>Macros from your preferred carb/protein/fat split</li>
-              </ul>
-            </div>
-          ) : (
-            <div
-              key={animationKey}
-              className="space-y-5"
-              style={{ animation: "bmiResultIn 0.35s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+      <ResultCard resultRef={resultRef}>
+        {!result ? (
+          <EmptyResult
+            icon={Apple}
+            text={
+              <>
+                Enter your stats, activity, goal, and macro style, then press <strong>Calculate</strong> for
+                daily calories and protein / carbs / fat targets.
+              </>
+            }
+            formulas={["Mifflin–St Jeor BMR", "TDEE = BMR × activity", "Custom macro split"]}
+          />
+        ) : (
+          <ResultBody animationKey={animationKey}>
+            <ResultHero
+              label="Daily calories"
+              value={formatCalories(result.calories)}
+              unit="kcal/day"
+              badge={result.goalLabel}
             >
-              <div className="rounded-xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-5 ring-1 ring-emerald-100">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-                  Daily calories
-                </p>
-                <p className="mt-1 text-3xl font-black tracking-tight text-slate-950">
-                  {formatCalories(result.calories)}
-                  <span className="ml-1 text-base font-semibold text-slate-600">kcal/day</span>
-                </p>
-                <p className="mt-1 text-xs text-slate-500">
-                  {result.goalLabel} · {result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"}{" "}
-                  · maintenance {formatCalories(result.tdee)} kcal
-                </p>
-              </div>
+              {result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"} · maintenance{" "}
+              {formatCalories(result.tdee)} kcal
+            </ResultHero>
 
-              <div>
-                <p className="mb-3 text-sm font-bold text-slate-900">
-                  Macronutrients · {result.prefLabel}
-                </p>
-                <div className="space-y-3">
-                  <MacroBar
-                    label="Carbs"
-                    grams={result.carbsG}
-                    kcal={result.carbsKcal}
-                    pct={result.carbsPct}
-                    color="#059669"
-                  />
-                  <MacroBar
-                    label="Protein"
-                    grams={result.proteinG}
-                    kcal={result.proteinKcal}
-                    pct={result.proteinPct}
-                    color="#0284c7"
-                  />
-                  <MacroBar
-                    label="Fat"
-                    grams={result.fatG}
-                    kcal={result.fatKcal}
-                    pct={result.fatPct}
-                    color="#d97706"
-                  />
-                </div>
+            <div className="space-y-1">
+              <SectionTitle title={`Macronutrients · ${result.prefLabel}`} />
+              <div className="-mx-3">
+                <MacroBar
+                  label="Carbs"
+                  grams={result.carbsG}
+                  kcal={result.carbsKcal}
+                  pct={result.carbsPct}
+                  color="from-emerald-500 to-lime-400"
+                />
+                <MacroBar
+                  label="Protein"
+                  grams={result.proteinG}
+                  kcal={result.proteinKcal}
+                  pct={result.proteinPct}
+                  color="from-teal-500 to-sky-500"
+                />
+                <MacroBar
+                  label="Fat"
+                  grams={result.fatG}
+                  kcal={result.fatKcal}
+                  pct={result.fatPct}
+                  color="from-amber-400 to-orange-400"
+                />
               </div>
-
-              <div className="overflow-hidden rounded-lg ring-1 ring-slate-200">
-                <table className="w-full text-left text-sm">
-                  <tbody>
-                    {(
-                      [
-                        ["BMR", `${formatCalories(result.bmr)} kcal`],
-                        ["Maintenance (TDEE)", `${formatCalories(result.tdee)} kcal`],
-                        ["Target calories", `${formatCalories(result.calories)} kcal`],
-                        ["Carbs", `${result.carbsG} g (${result.carbsPct}%)`],
-                        ["Protein", `${result.proteinG} g (${result.proteinPct}%)`],
-                        ["Fat", `${result.fatG} g (${result.fatPct}%)`],
-                      ] as const
-                    ).map(([label, value]) => (
-                      <tr key={label} className="border-b border-slate-100 last:border-0">
-                        <td className="px-3 py-2.5 text-slate-600">{label}</td>
-                        <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-slate-950">
-                          {value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <p className="text-[11px] leading-4 text-slate-400">
-                Estimates only — not medical advice. Recalculate when weight or activity changes, and
-                adjust from real-world progress over 2–4 weeks.
-              </p>
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+
+            <ResultTable
+              caption="Calorie and macro summary"
+              align={["left", "right"]}
+              rows={[
+                { key: "bmr", cells: ["BMR", `${formatCalories(result.bmr)} kcal`] },
+                { key: "tdee", cells: ["Maintenance (TDEE)", `${formatCalories(result.tdee)} kcal`] },
+                { key: "target", selected: true, cells: ["Target calories", `${formatCalories(result.calories)} kcal`] },
+                { key: "carbs", cells: ["Carbs", `${result.carbsG} g (${result.carbsPct}%)`] },
+                { key: "protein", cells: ["Protein", `${result.proteinG} g (${result.proteinPct}%)`] },
+                { key: "fat", cells: ["Fat", `${result.fatG} g (${result.fatPct}%)`] },
+              ]}
+            />
+
+            <ResultNote>
+              Estimates only — not medical advice. Recalculate when weight or activity changes, and adjust from
+              real-world progress over 2–4 weeks.
+            </ResultNote>
+          </ResultBody>
+        )}
+      </ResultCard>
+    </CalcLayout>
   );
 }

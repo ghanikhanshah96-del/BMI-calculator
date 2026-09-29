@@ -7,9 +7,11 @@
   --ink: #0f172a;
   --ink-muted: #475569;
   --surface: #ffffff;
-  --background: #f0fdf4;
+  --background: #f6fbf8;
   --foreground: #0f172a;
   --border: #a7f3d0;
+  --gradient-brand: linear-gradient(120deg, #059669 0%, #0d9488 55%, #0e7490 100%);
+  --gradient-fresh: linear-gradient(135deg, #10b981 0%, #14b8a6 50%, #a3e635 100%);
 }
 
 @theme inline {
@@ -18,13 +20,49 @@
   --color-brand: var(--brand);
   --color-ink: var(--ink);
   --font-sans: var(--font-plus-jakarta);
+  --font-display: var(--font-fraunces), Georgia, serif;
+
+  --animate-float-a: float-a 7s ease-in-out infinite;
+  --animate-float-b: float-b 9s ease-in-out infinite;
+  --animate-float-c: float-c 8s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-gradient-pan: gradient-pan 10s ease infinite;
+  --animate-blob: blob 18s ease-in-out infinite;
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(8px, -10px, 0); }
+  66% { transform: translate3d(-6px, -4px, 0); }
+}
+@keyframes float-c {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-8px, 12px, 0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.08); }
+  66% { transform: translate(-25px, 20px) scale(0.95); }
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
+/* Enabled after load so deep links (e.g. /#tools) land instantly. */
+html.smooth-scroll {
   scroll-behavior: smooth;
 }
 
@@ -43,9 +81,16 @@ a {
   text-decoration: none;
 }
 
-/* Only prose / content links should look like classic hyperlinks.
-   Kept in the base layer so Tailwind utilities (e.g. button links with text-white) override it. */
+/* Prose/heading defaults stay in the base layer so Tailwind utilities can override them. */
 @layer base {
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
+  }
+
   .prose-links a,
   a.content-link {
     color: var(--brand);
@@ -59,6 +104,436 @@ a {
   a.content-link:hover {
     color: #065f46;
     text-decoration-thickness: 2px;
+  }
+}
+
+@layer components {
+  .bg-mesh {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(at 8% 0%, rgba(16, 185, 129, 0.14) 0, transparent 45%),
+      radial-gradient(at 92% 8%, rgba(20, 184, 166, 0.14) 0, transparent 40%),
+      radial-gradient(at 50% 100%, rgba(163, 230, 53, 0.1) 0, transparent 50%);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  }
+
+  .gradient-text {
+    background-image: linear-gradient(120deg, #047857, #0d9488, #65a30d, #047857);
+    background-size: 250% 100%;
+    background-position: 0% 50%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: background-position 1.2s ease;
+  }
+
+  .gradient-text:hover,
+  .group:hover .gradient-text {
+    background-position: 100% 50%;
+  }
+
+  .bg-gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+
+  .btn-gradient {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #fff;
+    background-image: linear-gradient(120deg, #059669, #0d9488, #0e7490, #059669);
+    background-size: 220% 100%;
+    background-position: 0% 50%;
+    box-shadow: 0 10px 24px -12px rgba(5, 150, 105, 0.7);
+    transition:
+      translate 0.25s ease,
+      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.25s ease,
+      background-position 0.6s ease;
+  }
+
+  .btn-gradient::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+
+  .btn-gradient:hover {
+    translate: 0 -2px;
+    background-position: 100% 50%;
+    box-shadow: 0 16px 32px -14px rgba(13, 148, 136, 0.8);
+  }
+
+  .btn-gradient:hover::after {
+    transform: translateX(120%);
+  }
+
+  .btn-gradient:disabled {
+    translate: none;
+    transform: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .btn-outline {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #065f46;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #a7f3d0;
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease,
+      translate 0.25s ease;
+  }
+
+  .btn-outline::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--gradient-brand);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-outline:hover {
+    color: #fff;
+    border-color: transparent;
+    translate: 0 -2px;
+  }
+
+  .btn-outline:hover::before {
+    opacity: 1;
+  }
+
+  /* The gradient ring is a real border so overflow-hidden clips children
+     inside it; an overlay would be cut at the rounded corners. */
+  .card-lift {
+    position: relative;
+    border: 2px solid #fff;
+    background-image: linear-gradient(#fff, #fff), var(--gradient-fresh);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition:
+      translate 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.4s ease,
+      border-color 0.4s ease;
+  }
+
+  .card-lift:hover {
+    border-color: transparent;
+    translate: 0 -6px;
+    box-shadow: 0 24px 48px -24px rgba(4, 120, 87, 0.45);
+  }
+
+  .icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-image: var(--gradient-fresh);
+    box-shadow: 0 8px 18px -8px rgba(16, 185, 129, 0.7);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .group:hover .icon-badge {
+    transform: rotate(-8deg) scale(1.1);
+  }
+
+  .link-grow {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition:
+      background-size 0.3s ease,
+      color 0.2s ease;
+  }
+
+  .link-grow:hover {
+    background-size: 100% 1px;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.8s ease,
+      transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /*
+   * Calculator controls. Gradients can't be transitioned, so each hover
+   * gradient lives on a ::before layer and fades in via opacity.
+   */
+  .field-shell {
+    border: 1.5px solid #d5dee7;
+    background-image:
+      linear-gradient(180deg, #ffffff, #fafdfb),
+      linear-gradient(135deg, #34d399, #14b8a6 55%, #a3e635);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition:
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .field-shell:hover {
+    border-color: transparent;
+    box-shadow:
+      0 12px 28px -18px rgba(4, 120, 87, 0.55),
+      0 2px 6px -2px rgba(16, 185, 129, 0.18);
+  }
+
+  .field-shell:focus-within {
+    border-color: transparent;
+    box-shadow:
+      0 0 0 4px rgba(16, 185, 129, 0.16),
+      0 16px 32px -18px rgba(4, 120, 87, 0.6);
+  }
+
+  .field-label {
+    color: #475569;
+    transition: color 0.3s ease;
+  }
+
+  .field-shell:hover .field-label,
+  .field-shell:focus-within .field-label {
+    color: #047857;
+  }
+
+  .field-input {
+    position: relative;
+    isolation: isolate;
+    background-color: #f6f8fb;
+    box-shadow: inset 0 0 0 1.5px #cbd5e1;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .field-input::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(135deg, #ecfdf5 0%, #e6fbf6 55%, #f4fde6 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .field-input:hover::before,
+  .field-input:focus-within::before,
+  .field-input[aria-expanded="true"]::before {
+    opacity: 1;
+  }
+
+  .field-input:hover {
+    box-shadow:
+      inset 0 0 0 1.5px #10b981,
+      0 8px 20px -14px rgba(5, 150, 105, 0.75);
+  }
+
+  .field-input:focus-within,
+  .field-input[aria-expanded="true"] {
+    box-shadow:
+      inset 0 0 0 2px #059669,
+      0 0 0 4px rgba(16, 185, 129, 0.18),
+      0 10px 24px -16px rgba(5, 150, 105, 0.75);
+  }
+
+  .step-btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: #047857;
+    background: linear-gradient(135deg, #ecfdf5, #d5f7ee);
+    box-shadow: inset 0 0 0 1.5px #86e5c3;
+    transition:
+      color 0.25s ease,
+      box-shadow 0.3s ease,
+      scale 0.2s ease;
+  }
+
+  .step-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #10b981, #0d9488);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .step-btn:hover {
+    color: #fff;
+    box-shadow: 0 10px 20px -10px rgba(5, 150, 105, 0.85);
+  }
+
+  .step-btn:hover::before {
+    opacity: 1;
+  }
+
+  .step-btn:active {
+    scale: 0.94;
+  }
+
+  .step-btn:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  /* Dropdown options and calendar days. */
+  .menu-option {
+    position: relative;
+    isolation: isolate;
+    color: #1e293b;
+    transition:
+      color 0.2s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .menu-option::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(90deg, #d1fae5, #ccfbf1 60%, #ecfccb);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .menu-option:hover,
+  .menu-option:focus-visible {
+    color: #064e3b;
+    outline: none;
+    box-shadow: inset 0 0 0 1px #6ee7b7;
+  }
+
+  .menu-option:hover::before,
+  .menu-option:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* Pointer spotlight; --mx/--my are written by CursorEffects. */
+  .spotlight {
+    position: relative;
+  }
+
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      var(--spot-color, rgba(16, 185, 129, 0.12)),
+      transparent 45%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  .spotlight-light {
+    --spot-color: rgba(255, 255, 255, 0.16);
+  }
+
+  [data-magnetic] {
+    transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
+  }
+
+  [data-tilt] {
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    pointer-events: none;
+    border-radius: 9999px;
+    opacity: 0;
+    will-change: transform;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    background: linear-gradient(135deg, #10b981, #a3e635);
+    transition: opacity 0.2s ease, scale 0.2s ease;
+  }
+
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1.5px solid rgba(16, 185, 129, 0.5);
+    transition:
+      opacity 0.25s ease,
+      scale 0.2s ease,
+      border-color 0.3s ease;
+  }
+
+  html.cursor-ready .cursor-dot,
+  html.cursor-ready .cursor-ring {
+    opacity: 1;
+  }
+
+  html.cursor-hover .cursor-ring {
+    border-color: rgba(13, 148, 136, 0.8);
+  }
+
+  html.cursor-text .cursor-dot,
+  html.cursor-text .cursor-ring {
+    opacity: 0;
   }
 }
 
@@ -100,5 +575,36 @@ textarea {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+.defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-magnetic],
+  [data-tilt] {
+    transform: none !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
   }
 }

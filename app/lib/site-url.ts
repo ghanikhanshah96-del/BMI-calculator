@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "http://localhost:3000";
+const FALLBACK_SITE_URL = "https://fitnesscalculatorpro.com";
 
 /**
  * Resolve a valid absolute site URL for metadata, sitemap, and JSON-LD.

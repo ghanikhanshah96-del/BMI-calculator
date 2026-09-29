@@ -1,7 +1,25 @@
 "use client";
 
-import { Activity, Eraser, Play } from "lucide-react";
+import { Activity } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
+import {
+  ActionBar,
+  CalcForm,
+  CalcHeader,
+  CalcLayout,
+  EmptyResult,
+  FormError,
+  InputGroup,
+  ResultBody,
+  ResultCard,
+  ResultHero,
+  ResultNote,
+  ResultTable,
+  SectionTitle,
+  SegmentedControl,
+  StatGrid,
+  StatTile,
+} from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 
 type UnitMode = "metric" | "imperial";
@@ -277,20 +295,11 @@ function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result
 function MacroGrid({ calories, carb }: { calories: number; carb: MacroCarb }) {
   const macros = macrosFromCalories(calories, carb);
   return (
-    <div className="grid grid-cols-3 gap-2 text-center text-sm">
-      <div className="rounded-lg bg-emerald-50 px-2 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Carbs</p>
-        <p className="mt-1 text-lg font-black text-slate-950">{macros.carbsG}g</p>
-      </div>
-      <div className="rounded-lg bg-sky-50 px-2 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-sky-700">Protein</p>
-        <p className="mt-1 text-lg font-black text-slate-950">{macros.proteinG}g</p>
-      </div>
-      <div className="rounded-lg bg-amber-50 px-2 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Fat</p>
-        <p className="mt-1 text-lg font-black text-slate-950">{macros.fatG}g</p>
-      </div>
-    </div>
+    <StatGrid columns={3}>
+      <StatTile center tone="emerald" label="Carbs" value={`${macros.carbsG}g`} />
+      <StatTile center tone="sky" label="Protein" value={`${macros.proteinG}g`} />
+      <StatTile center tone="amber" label="Fat" value={`${macros.fatG}g`} />
+    </StatGrid>
   );
 }
 
@@ -338,82 +347,56 @@ export default function TdeeCalculator() {
     setResultTab("overview");
   };
 
-  const tabClass = (active: boolean) =>
-    [
-      "rounded-lg px-3 py-2 text-sm font-semibold transition",
-      active
-        ? "bg-emerald-700 text-white"
-        : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-emerald-50",
-    ].join(" ");
-
-  const chipClass = (active: boolean) =>
-    [
-      "rounded-lg px-3 py-1.5 text-xs font-semibold transition",
-      active
-        ? "bg-emerald-700 text-white"
-        : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-emerald-50",
-    ].join(" ");
-
-  const resultNavClass = (active: boolean) =>
-    [
-      "shrink-0 rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3",
-      active
-        ? "bg-white text-emerald-800 shadow-sm"
-        : "text-emerald-50/90 hover:bg-white/10",
-    ].join(" ");
-
   const weightDisplay = (kg: number) =>
     result?.unitMode === "imperial"
       ? `${(kg / 0.45359237).toFixed(0)} lb`
       : `${kg.toFixed(0)} kg`;
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
-      <div className="min-w-0 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Activity className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-700">TDEE</p>
-            <h3 className="text-xl font-black text-slate-950 sm:text-2xl">Daily energy needs</h3>
-          </div>
-        </div>
+    <CalcLayout>
+      <CalcForm>
+        <CalcHeader
+          icon={Activity}
+          eyebrow="TDEE"
+          title="Daily energy needs"
+          description="Estimate maintenance calories, BMR, and goal targets."
+        />
 
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className={tabClass(unitMode === "imperial")} onClick={() => setUnitMode("imperial")}>
-            Imperial
-          </button>
-          <button type="button" className={tabClass(unitMode === "metric")} onClick={() => setUnitMode("metric")}>
-            Metric
-          </button>
-        </div>
+        <SegmentedControl
+          label="Unit system"
+          options={[
+            { value: "imperial", label: "Imperial" },
+            { value: "metric", label: "Metric" },
+          ]}
+          value={unitMode}
+          onChange={setUnitMode}
+        />
 
-        <div className="space-y-3">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <FieldShell label="Gender">
-              <CustomSelect
-                value={inputs.gender}
-                onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
-                options={[
-                  { value: "male", label: "Male" },
-                  { value: "female", label: "Female" },
-                ]}
-              />
-            </FieldShell>
-            <FieldShell label="Age">
-              <NumberStepper
-                value={inputs.age}
-                min={15}
-                max={120}
-                step={1}
-                onChange={(age) => setInputs({ ...inputs, age })}
-              />
-            </FieldShell>
-          </div>
+        <InputGroup step={1} title="Your details">
+          <FieldShell label="Gender">
+            <CustomSelect
+              value={inputs.gender}
+              onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
+              options={[
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+              ]}
+            />
+          </FieldShell>
+          <FieldShell label="Age">
+            <NumberStepper
+              value={inputs.age}
+              min={15}
+              max={120}
+              step={1}
+              onChange={(age) => setInputs({ ...inputs, age })}
+            />
+          </FieldShell>
+        </InputGroup>
 
+        <InputGroup step={2} title="Measurements" hint={unitMode === "metric" ? "kg · cm" : "lb · ft/in"}>
           {unitMode === "metric" ? (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <>
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightKg}
@@ -434,9 +417,9 @@ export default function TdeeCalculator() {
                   onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
                 />
               </FieldShell>
-            </div>
+            </>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <>
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightLb}
@@ -461,9 +444,11 @@ export default function TdeeCalculator() {
                   options={IMPERIAL_HEIGHT_OPTIONS}
                 />
               </FieldShell>
-            </div>
+            </>
           )}
+        </InputGroup>
 
+        <InputGroup step={3} title="Lifestyle" columns={1}>
           <FieldShell label="Activity">
             <CustomSelect
               value={inputs.activity}
@@ -473,374 +458,220 @@ export default function TdeeCalculator() {
           </FieldShell>
 
           <FieldShell label="Body fat % (optional)">
-            <div className="flex items-center gap-2">
+            <div className="field-input flex min-h-12 items-center gap-2 rounded-xl px-3.5">
               <input
                 type="text"
                 inputMode="decimal"
                 value={inputs.bodyFat}
                 placeholder="e.g. 15"
                 maxLength={4}
-                aria-label="Body fat percentage optional"
+                aria-label="Body fat percentage (optional)"
                 onChange={(e) => {
                   const raw = e.target.value;
                   if (raw !== "" && !/^\d*\.?\d*$/.test(raw)) return;
                   setInputs({ ...inputs, bodyFat: raw });
                 }}
-                className="w-full min-w-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-lg font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className="w-full min-w-0 bg-transparent text-base font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400 sm:text-lg"
               />
-              <span className="shrink-0 rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800">
+              <span className="shrink-0 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
                 %
               </span>
             </div>
-            <p className="mt-2 text-xs leading-5 text-slate-500">
+            <p className="mt-2 text-xs leading-5 text-slate-600">
               Blank = Mifflin–St Jeor. With % = Katch–McArdle.
             </p>
           </FieldShell>
-        </div>
+        </InputGroup>
 
-        {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-            {error}
-          </p>
-        ) : null}
+        <FormError message={error} />
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={calculate}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800 active:scale-[0.98]"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Calculate
-          </button>
-          <button
-            type="button"
-            onClick={clear}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98]"
-          >
-            <Eraser className="h-4 w-4" />
-            Clear
-          </button>
-        </div>
-      </div>
+        <ActionBar onCalculate={calculate} onClear={clear} />
+      </CalcForm>
 
-      <div
-        ref={resultRef}
-        className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+      <ResultCard
+        resultRef={resultRef}
+        bodyClassName="lg:max-h-[min(70vh,680px)] lg:overflow-y-auto lg:overscroll-contain"
+        toolbar={
+          result ? (
+            <SegmentedControl
+              role="tablist"
+              label="Result sections"
+              size="sm"
+              options={[
+                { value: "overview", label: "Overview" },
+                { value: "activity", label: "Activity" },
+                { value: "macros", label: "Macros" },
+                { value: "body", label: "Body" },
+              ]}
+              value={resultTab}
+              onChange={setResultTab}
+            />
+          ) : null
+        }
       >
-        <div className="shrink-0 bg-emerald-700 px-3 py-3 sm:px-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-50">Result</p>
-            {result ? (
-              <div
-                className="flex gap-1 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                role="tablist"
-                aria-label="Result sections"
-              >
-                {(
-                  [
-                    ["overview", "Overview"],
-                    ["activity", "Activity"],
-                    ["macros", "Macros"],
-                    ["body", "Body"],
-                  ] as const
-                ).map(([id, label]) => (
-                  <button
-                    key={id}
-                    type="button"
-                    role="tab"
-                    aria-selected={resultTab === id}
-                    className={resultNavClass(resultTab === id)}
-                    onClick={() => setResultTab(id)}
-                  >
-                    {label}
-                  </button>
-                ))}
+        {!result ? (
+          <EmptyResult
+            icon={Activity}
+            text={
+              <>
+                Enter your details, then press <strong>Calculate</strong> for maintenance calories, BMR,
+                macros, ideal weight, BMI, and muscular potential.
+              </>
+            }
+            formulas={["Mifflin–St Jeor × activity", "Katch–McArdle with BF%", "Harris–Benedict reference"]}
+          />
+        ) : (
+          <ResultBody animationKey={`${animationKey}-${resultTab}`}>
+            {resultTab === "overview" ? (
+              <>
+                <ResultHero
+                  label="Maintenance calories"
+                  value={formatCalories(result.tdee)}
+                  unit="kcal/day"
+                  badge={result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"}
+                >
+                  {formatCalories(result.weekly)} kcal/week · {result.age} y/o{" "}
+                  <span className="capitalize">{result.gender}</span> · {result.heightCm} cm · {result.weightKg} kg
+                  {result.bodyFat !== null ? ` · ${result.bodyFat}% BF` : ""}
+                </ResultHero>
+
+                <StatGrid>
+                  <StatTile
+                    label="BMR"
+                    value={formatCalories(result.bmr)}
+                    hint={result.formula === "katch" ? "Katch–McArdle" : "Mifflin"}
+                  />
+                  <StatTile
+                    label="Harris–Benedict"
+                    value={formatCalories(result.harrisBenedict)}
+                    hint="Reference only"
+                  />
+                </StatGrid>
+
+                <SectionTitle title="Goal calories" />
+                <StatGrid columns={3}>
+                  <StatTile center tone="rose" label="Cut" value={formatCalories(result.cutCalories)} />
+                  <StatTile center tone="emerald" label="Maintain" value={formatCalories(result.tdee)} />
+                  <StatTile center tone="sky" label="Bulk" value={formatCalories(result.bulkCalories)} />
+                </StatGrid>
+
+                {result.formula !== "katch" ? (
+                  <ResultNote tone="info">Add your body fat % to switch to the Katch–McArdle formula.</ResultNote>
+                ) : null}
+              </>
+            ) : null}
+
+            {resultTab === "activity" ? (
+              <>
+                <SectionTitle title="Calories by activity" hint="Your activity level is highlighted." />
+                <ResultTable
+                  caption="Calories by activity level"
+                  align={["left", "right"]}
+                  rows={[
+                    { key: "bmr", cells: ["Basal Metabolic Rate", formatCalories(result.bmr)] },
+                    ...result.activityRows.map((row) => ({
+                      key: row.id,
+                      selected: row.selected,
+                      cells: [row.label, formatCalories(row.calories)],
+                    })),
+                  ]}
+                />
+              </>
+            ) : null}
+
+            {resultTab === "macros" ? (
+              <>
+                <SectionTitle title="Macronutrients" hint="Goal and carb style update grams instantly." />
+                <SegmentedControl
+                  label="Calorie goal"
+                  size="sm"
+                  options={[
+                    { value: "cut", label: "Cutting" },
+                    { value: "maintain", label: "Maintenance" },
+                    { value: "bulk", label: "Bulking" },
+                  ]}
+                  value={macroGoal}
+                  onChange={setMacroGoal}
+                />
+                <SegmentedControl
+                  label="Carb style"
+                  size="sm"
+                  options={[
+                    { value: "low", label: "Low carb" },
+                    { value: "moderate", label: "Moderate" },
+                    { value: "high", label: "High carb" },
+                  ]}
+                  value={macroCarb}
+                  onChange={setMacroCarb}
+                />
+                <p className="text-xs font-semibold text-slate-700">
+                  {formatCalories(macroCalories)} kcal · {MACRO_SPLITS[macroCarb].label}
+                </p>
+                <MacroGrid calories={macroCalories} carb={macroCarb} />
+              </>
+            ) : null}
+
+            {resultTab === "body" ? (
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <SectionTitle
+                    title={`Ideal weight: ${weightDisplay(result.idealMinKg)} – ${weightDisplay(result.idealMaxKg)}`}
+                    hint="Medical formula estimates — less accurate with high muscle mass."
+                  />
+                  <ResultTable
+                    caption="Ideal weight by formula"
+                    align={["left", "right"]}
+                    rows={result.idealWeights.map((row) => ({
+                      key: row.name,
+                      cells: [`${row.name.replace(" Formula", "")} (${row.year})`, weightDisplay(row.kg)],
+                    }))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <SectionTitle
+                    title={`BMI: ${result.bmi}`}
+                    hint={
+                      <>
+                        Classified as <strong className={result.bmiCategoryTone}>{result.bmiCategory}</strong>
+                      </>
+                    }
+                  />
+                  <ResultTable
+                    caption="BMI categories"
+                    align={["left", "right"]}
+                    rows={BMI_TABLE.map((row) => ({
+                      key: row.label,
+                      selected: result.bmiCategory === row.label,
+                      cells: [row.range, row.label],
+                    }))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <SectionTitle
+                    title="Maximum muscular potential"
+                    hint="Martin Berkhan estimate (stage-lean ≈ height cm − 100). Not a guarantee."
+                  />
+                  <ResultTable
+                    caption="Maximum muscular potential"
+                    head={["BF%", "kg", "lb"]}
+                    align={["left", "right", "right"]}
+                    rows={result.mmp.map((row) => ({
+                      key: String(row.bf),
+                      cells: [`${row.bf}%`, row.kg, row.lb],
+                    }))}
+                  />
+                </div>
               </div>
             ) : null}
-          </div>
-        </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 lg:max-h-[min(68vh,640px)]">
-          {!result ? (
-            <div className="space-y-3 text-sm leading-6 text-slate-600">
-              <p className="text-lg font-semibold text-slate-900">No result yet</p>
-              <p>
-                Enter your details, then press <strong>Calculate</strong> for maintenance calories,
-                BMR, macros, ideal weight, BMI, and muscular potential.
-              </p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>Default: Mifflin–St Jeor × activity</li>
-                <li>With body fat: Katch–McArdle × activity</li>
-                <li>Also shows Harris–Benedict for comparison</li>
-              </ul>
-            </div>
-          ) : (
-            <div
-              key={`${animationKey}-${resultTab}`}
-              className="space-y-4"
-              style={{ animation: "bmiResultIn 0.28s cubic-bezier(0.22, 0.61, 0.36, 1)" }}
-            >
-              {resultTab === "overview" ? (
-                <>
-                  <p className="text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6">
-                    <strong>{result.age}</strong> y/o{" "}
-                    <strong className="capitalize">{result.gender}</strong> ·{" "}
-                    <strong>{result.heightCm} cm</strong> · <strong>{result.weightKg} kg</strong>
-                    {result.bodyFat !== null ? (
-                      <>
-                        {" "}
-                        · <strong>{result.bodyFat}%</strong> BF
-                      </>
-                    ) : null}
-                  </p>
-
-                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-5 ring-1 ring-emerald-100">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-                      Maintenance calories
-                    </p>
-                    <p className="mt-1 text-3xl font-black tracking-tight text-slate-950">
-                      {formatCalories(result.tdee)}
-                      <span className="ml-1 text-base font-semibold text-slate-600">kcal/day</span>
-                    </p>
-                    <p className="mt-0.5 text-sm font-semibold text-slate-600">
-                      {formatCalories(result.weekly)} kcal/week
-                    </p>
-                    <p className="mt-2 text-xs text-slate-500">
-                      {result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"}
-                      {result.formula === "katch" ? " (body fat known)" : " · add BF% for Katch–McArdle"}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded-lg bg-slate-50 px-3 py-2.5">
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                        BMR
-                      </p>
-                      <p className="text-xl font-black text-slate-950">{formatCalories(result.bmr)}</p>
-                      <p className="text-[11px] text-slate-500">
-                        {result.formula === "katch" ? "Katch–McArdle" : "Mifflin"}
-                      </p>
-                    </div>
-                    <div className="rounded-lg bg-slate-50 px-3 py-2.5">
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                        Harris–Benedict
-                      </p>
-                      <p className="text-xl font-black text-slate-950">
-                        {formatCalories(result.harrisBenedict)}
-                      </p>
-                      <p className="text-[11px] text-slate-500">Reference only</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
-                      Goal calories
-                    </p>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="rounded-lg bg-rose-50 px-2 py-2.5 text-center">
-                        <p className="text-[10px] font-semibold text-rose-700">Cut</p>
-                        <p className="text-base font-black text-slate-950 sm:text-lg">
-                          {formatCalories(result.cutCalories)}
-                        </p>
-                      </div>
-                      <div className="rounded-lg bg-emerald-50 px-2 py-2.5 text-center ring-1 ring-emerald-200">
-                        <p className="text-[10px] font-semibold text-emerald-700">Maintain</p>
-                        <p className="text-base font-black text-slate-950 sm:text-lg">
-                          {formatCalories(result.tdee)}
-                        </p>
-                      </div>
-                      <div className="rounded-lg bg-sky-50 px-2 py-2.5 text-center">
-                        <p className="text-[10px] font-semibold text-sky-700">Bulk</p>
-                        <p className="text-base font-black text-slate-950 sm:text-lg">
-                          {formatCalories(result.bulkCalories)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : null}
-
-              {resultTab === "activity" ? (
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Calories by activity</h4>
-                  <p className="mt-1 text-xs text-slate-500">Your level is highlighted.</p>
-                  <div className="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                    <table className="w-full min-w-[280px] text-left text-sm">
-                      <tbody>
-                        <tr className="border-b border-slate-100 bg-slate-50">
-                          <td className="px-3 py-2 font-medium text-slate-700">Basal Metabolic Rate</td>
-                          <td className="whitespace-nowrap px-3 py-2 text-right font-semibold text-slate-900">
-                            {formatCalories(result.bmr)}
-                          </td>
-                        </tr>
-                        {result.activityRows.map((row) => (
-                          <tr
-                            key={row.id}
-                            className={
-                              row.selected
-                                ? "border-b border-emerald-100 bg-emerald-50 font-bold text-emerald-950"
-                                : "border-b border-slate-100 text-slate-700"
-                            }
-                          >
-                            <td className="px-3 py-2">{row.label}</td>
-                            <td className="whitespace-nowrap px-3 py-2 text-right">
-                              {formatCalories(row.calories)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ) : null}
-
-              {resultTab === "macros" ? (
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Macronutrients</h4>
-                  <p className="mt-1 text-xs text-slate-500">Goal and carb style update grams instantly.</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(
-                      [
-                        ["cut", "Cutting"],
-                        ["maintain", "Maintenance"],
-                        ["bulk", "Bulking"],
-                      ] as const
-                    ).map(([id, label]) => (
-                      <button
-                        key={id}
-                        type="button"
-                        className={chipClass(macroGoal === id)}
-                        onClick={() => setMacroGoal(id)}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {(
-                      [
-                        ["low", "Low carb"],
-                        ["moderate", "Moderate"],
-                        ["high", "High carb"],
-                      ] as const
-                    ).map(([id, label]) => (
-                      <button
-                        key={id}
-                        type="button"
-                        className={chipClass(macroCarb === id)}
-                        onClick={() => setMacroCarb(id)}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="mt-3 text-xs font-semibold text-slate-600">
-                    {formatCalories(macroCalories)} kcal · {MACRO_SPLITS[macroCarb].label}
-                  </p>
-                  <div className="mt-2">
-                    <MacroGrid calories={macroCalories} carb={macroCarb} />
-                  </div>
-                </div>
-              ) : null}
-
-              {resultTab === "body" ? (
-                <div className="space-y-5">
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-900">
-                      Ideal weight: {weightDisplay(result.idealMinKg)} –{" "}
-                      {weightDisplay(result.idealMaxKg)}
-                    </h4>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Medical formula estimates — less accurate with high muscle mass.
-                    </p>
-                    <div className="mt-2 overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                      <table className="w-full min-w-[260px] text-left text-sm">
-                        <tbody>
-                          {result.idealWeights.map((row) => (
-                            <tr
-                              key={row.name}
-                              className="border-b border-slate-100 text-slate-700 last:border-0"
-                            >
-                              <td className="px-3 py-2">
-                                {row.name.replace(" Formula", "")} ({row.year})
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-2 text-right font-semibold text-slate-900">
-                                {weightDisplay(row.kg)}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-900">BMI: {result.bmi}</h4>
-                    <p className="mt-1 text-sm text-slate-600">
-                      Classified as{" "}
-                      <strong className={result.bmiCategoryTone}>{result.bmiCategory}</strong>
-                    </p>
-                    <div className="mt-2 overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                      <table className="w-full min-w-[240px] text-left text-sm">
-                        <tbody>
-                          {BMI_TABLE.map((row) => {
-                            const selected = result.bmiCategory === row.label;
-                            return (
-                              <tr
-                                key={row.label}
-                                className={
-                                  selected
-                                    ? "border-b border-emerald-100 bg-emerald-50 font-bold text-emerald-950"
-                                    : "border-b border-slate-100 text-slate-700 last:border-0"
-                                }
-                              >
-                                <td className="px-3 py-2">{row.range}</td>
-                                <td className="px-3 py-2 text-right">{row.label}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-900">Maximum muscular potential</h4>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Martin Berkhan estimate (stage-lean ≈ height cm − 100). Not a guarantee.
-                    </p>
-                    <div className="mt-2 overflow-x-auto rounded-lg ring-1 ring-slate-200">
-                      <table className="w-full min-w-[220px] text-left text-sm">
-                        <thead>
-                          <tr className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                            <th className="px-3 py-2 font-semibold">BF%</th>
-                            <th className="px-3 py-2 text-right font-semibold">kg</th>
-                            <th className="px-3 py-2 text-right font-semibold">lb</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {result.mmp.map((row) => (
-                            <tr key={row.bf} className="border-t border-slate-100 text-slate-700">
-                              <td className="px-3 py-2">{row.bf}%</td>
-                              <td className="px-3 py-2 text-right font-semibold">{row.kg}</td>
-                              <td className="px-3 py-2 text-right font-semibold">{row.lb}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
-              <p className="border-t border-slate-100 pt-3 text-[11px] leading-4 text-slate-400">
-                Estimates only — not medical advice. Adjust from real weight trends over 2–4 weeks.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <ResultNote>
+              Estimates only — not medical advice. Adjust from real weight trends over 2–4 weeks.
+            </ResultNote>
+          </ResultBody>
+        )}
+      </ResultCard>
+    </CalcLayout>
   );
 }

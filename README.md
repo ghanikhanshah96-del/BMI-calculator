@@ -1,6 +1,6 @@
-# BMI Wellness Pro
+# FitnessCalculatorPro.com
 
-BMI Wellness Pro is a two-tone health calculator website built with Next.js. It includes practical calculators and educational pages for everyday wellness planning.
+FitnessCalculatorPro.com is a two-tone health calculator website built with Next.js. It includes practical calculators and educational pages for everyday wellness planning.
 
 ## Features
 

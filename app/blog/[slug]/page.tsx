@@ -1,7 +1,9 @@
+import { ArrowRight, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import PageHero from "../../components/page-hero";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { getSiteUrl } from "../../lib/site-url";
@@ -63,11 +65,11 @@ export default async function BlogPostPage({ params }: PageProps) {
     dateModified: post.updatedAt,
     author: {
       "@type": "Organization",
-      name: "BMI Wellness Pro",
+      name: "FitnessCalculatorPro.com",
     },
     publisher: {
       "@type": "Organization",
-      name: "BMI Wellness Pro",
+      name: "FitnessCalculatorPro.com",
       logo: {
         "@type": "ImageObject",
         url: `${siteUrl}/icon.svg`,
@@ -81,60 +83,52 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background text-slate-900">
+    <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-slate-500">
+      <PageHero
+        image={post.image}
+        imageAlt={post.imageAlt}
+        eyebrow={post.toolLabel}
+        icon={BookOpen}
+        title={post.title}
+        description={
+          <>
+            <p>{post.excerpt}</p>
+            <p className="mt-3 text-sm text-emerald-100">
+              <time dateTime={post.publishedAt}>Published {post.publishedAt}</time>
+              {" · "}
+              <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
+            </p>
+          </>
+        }
+      >
+        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-emerald-100">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
-              <Link href="/" className="text-emerald-700 hover:text-emerald-900">
+              <Link href="/" className="link-grow text-emerald-50 hover:text-white">
                 Home
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <Link href="/blog" className="text-emerald-700 hover:text-emerald-900">
+              <Link href="/blog" className="link-grow text-emerald-50 hover:text-white">
                 Blog
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li className="text-slate-700">{post.toolLabel}</li>
+            <li className="text-emerald-100">{post.toolLabel}</li>
           </ol>
         </nav>
+      </PageHero>
 
-        <article className="mx-auto max-w-4xl">
-          <header>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
-              {post.toolLabel}
-            </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              {post.title}
-            </h1>
-            <p className="mt-3 text-lg leading-8 text-slate-600">{post.excerpt}</p>
-            <p className="mt-3 text-sm text-slate-500">
-              <time dateTime={post.publishedAt}>Published {post.publishedAt}</time>
-              {" · "}
-              <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
-            </p>
-          </header>
-
-          <div className="relative mt-8 aspect-video overflow-hidden rounded-xl border border-emerald-100 bg-emerald-50">
-            <Image
-              src={post.image}
-              alt={post.imageAlt}
-              fill
-              priority
-              sizes="(max-width: 1280px) 100vw, 896px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="prose-links mt-10 space-y-8">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <article className="mx-auto max-w-3xl">
+          <div className="prose-links space-y-10">
             {post.sections.map((section) => (
               <section key={section.heading}>
-                <h2 className="text-2xl font-bold text-slate-900">{section.heading}</h2>
+                <h2 className="text-2xl text-slate-900 sm:text-[1.75rem]">{section.heading}</h2>
                 {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 24)} className="mt-3 text-base leading-7 text-slate-700 sm:text-lg sm:leading-8">
+                  <p key={paragraph.slice(0, 24)} className="mt-3 text-base leading-7 text-slate-700 sm:text-[1.0625rem] sm:leading-8">
                     {paragraph}
                   </p>
                 ))}
@@ -142,31 +136,50 @@ export default async function BlogPostPage({ params }: PageProps) {
             ))}
           </div>
 
-          <div className="mt-10 rounded-xl border border-emerald-100 bg-emerald-50 p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Try the {post.toolLabel}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
+          <div className="relative isolate mt-12 overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-emerald-600 to-teal-600 p-8 text-white shadow-xl shadow-emerald-900/20 sm:p-10">
+            <div className="absolute -right-16 -top-16 -z-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.16),transparent_65%)]" />
+            <div className="absolute -bottom-20 left-10 -z-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(190,242,100,0.25),transparent_65%)]" />
+            <h2 className="text-2xl text-white sm:text-[1.75rem]">Try the {post.toolLabel}</h2>
+            <p className="mt-2 max-w-lg text-sm leading-6 text-emerald-50 sm:text-base">
               Open the free calculator on the home page and get an instant educational estimate.
             </p>
             <Link
               href={post.toolHref}
-              className="mt-4 inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800"
+              className="group mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-emerald-800 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
             >
               Open {post.toolLabel}
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </Link>
           </div>
         </article>
 
         {related.length > 0 && (
-          <aside className="mx-auto mt-14 max-w-4xl border-t border-emerald-100 pt-10">
-            <h2 className="text-lg font-bold text-slate-900">Related guides</h2>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          <aside className="mx-auto mt-16 max-w-5xl">
+            <h2 className="text-2xl text-slate-900">Related guides</h2>
+            <ul className="mt-6 grid gap-5 sm:grid-cols-3">
               {related.map((item) => (
                 <li key={item.slug}>
                   <Link
                     href={`/blog/${item.slug}`}
-                    className="block rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-emerald-300 hover:text-emerald-800"
+                    className="spotlight group card-lift flex h-full flex-col overflow-hidden rounded-2xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-900/5"
                   >
-                    {item.title}
+                    <div className="relative aspect-16/10 overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={item.imageAlt}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        className="object-cover transition duration-700 ease-out group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">
+                        {item.toolLabel}
+                      </span>
+                      <span className="mt-1.5 text-sm font-semibold leading-snug text-slate-800 group-hover:text-emerald-800">
+                        {item.title}
+                      </span>
+                    </div>
                   </Link>
                 </li>
               ))}

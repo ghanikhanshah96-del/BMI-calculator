@@ -2,6 +2,8 @@
 
 import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import {
+  createContext,
+  useContext,
   useEffect,
   useId,
   useMemo,
@@ -10,6 +12,8 @@ import {
   type ReactNode,
 } from "react";
 
+const FieldContext = createContext<{ label: string; labelId: string } | null>(null);
+
 export function FieldShell({
   label,
   children,
@@ -17,13 +21,38 @@ export function FieldShell({
   label: string;
   children: ReactNode;
 }) {
+  const labelId = useId();
   return (
-    <div className="block rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-      <span className="mb-2 block font-medium text-slate-700">{label}</span>
-      {children}
-    </div>
+    <FieldContext.Provider value={{ label, labelId }}>
+      <div className="field-shell block min-w-0 rounded-2xl px-3.5 py-3 text-sm text-slate-600 sm:px-4">
+        <span
+          id={labelId}
+          className="field-label mb-2 block text-xs font-semibold uppercase tracking-[0.08em]"
+        >
+          {label}
+        </span>
+        {children}
+      </div>
+    </FieldContext.Provider>
   );
 }
+
+const triggerClass =
+  "field-input group flex min-h-12 w-full items-center justify-between gap-3 rounded-xl px-3.5 text-left text-base font-semibold text-slate-950 outline-none sm:text-lg";
+
+const popupClass =
+  "absolute left-0 z-40 mt-2 rounded-2xl bg-white p-1.5 shadow-2xl shadow-emerald-900/25 ring-1 ring-emerald-200";
+
+const activeOptionClass =
+  "bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/25";
+
+const iconTileClass = "flex h-8 w-8 flex-none items-center justify-center rounded-lg transition-all duration-300";
+
+const iconTileIdleClass =
+  "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-emerald-600/30 group-hover:ring-emerald-600";
+
+const iconTileOpenClass =
+  "bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/30 ring-1 ring-emerald-600";
 
 type NumberStepperProps = {
   value: number;
@@ -42,6 +71,12 @@ export function NumberStepper({
   step = 1,
   suffix,
 }: NumberStepperProps) {
+  const field = useContext(FieldContext);
+  const fieldLabel = field
+    ? suffix && !field.label.includes(`(${suffix})`)
+      ? `${field.label} (${suffix})`
+      : field.label
+    : null;
   const [draft, setDraft] = useState<string | null>(null);
   const focused = draft !== null;
   const display = focused ? draft : Number.isFinite(value) ? String(value) : "";
@@ -68,25 +103,18 @@ export function NumberStepper({
     <div className="flex items-center gap-2">
       <button
         type="button"
-        aria-label="Decrease"
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 transition hover:bg-emerald-100"
+        aria-label={fieldLabel ? `Decrease ${fieldLabel}` : "Decrease"}
+        className="step-btn flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
         onClick={() => onChange(clamp(Number((value - step).toFixed(4))))}
       >
-        <Minus className="h-4 w-4" />
+        <Minus className="h-4 w-4" aria-hidden="true" />
       </button>
-      <div
-        className={[
-          "flex min-w-0 flex-1 items-center gap-2 rounded-lg border bg-slate-50 px-3 py-2 transition",
-          focused
-            ? "border-emerald-500 ring-2 ring-emerald-100"
-            : "border-slate-200 hover:border-emerald-300",
-        ].join(" ")}
-      >
+      <div className="field-input flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl px-3">
         <input
           type="text"
           inputMode="decimal"
           value={display}
-          aria-label="Enter a number"
+          aria-label={fieldLabel ?? "Enter a number"}
           onFocus={(e) => {
             setDraft(Number.isFinite(value) ? String(value) : "");
             const input = e.currentTarget;
@@ -103,22 +131,22 @@ export function NumberStepper({
               e.currentTarget.blur();
             }
           }}
-          className="w-full min-w-0 bg-transparent text-lg font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400"
+          className={`w-full min-w-0 bg-transparent text-base font-semibold caret-emerald-700 outline-none placeholder:text-slate-400 sm:text-lg ${focused ? "text-emerald-900" : "text-slate-950"}`}
           placeholder="Type a value"
         />
         {suffix ? (
-          <span className="shrink-0 rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
+          <span className="shrink-0 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
             {suffix}
           </span>
         ) : null}
       </div>
       <button
         type="button"
-        aria-label="Increase"
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 transition hover:bg-emerald-100"
+        aria-label={fieldLabel ? `Increase ${fieldLabel}` : "Increase"}
+        className="step-btn flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
         onClick={() => onChange(clamp(Number((value + step).toFixed(4))))}
       >
-        <Plus className="h-4 w-4" />
+        <Plus className="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
   );
@@ -133,6 +161,7 @@ type CustomSelectProps = {
 };
 
 export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
+  const field = useContext(FieldContext);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const listId = useId();
@@ -161,19 +190,23 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
+        aria-labelledby={field ? `${field.labelId} ${listId}-value` : undefined}
         onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-lg font-semibold text-slate-950 transition hover:border-emerald-300 hover:bg-emerald-50/60"
+        className={triggerClass}
       >
-        <span>{selected?.label}</span>
-        <ChevronDown
-          className={`h-4 w-4 text-emerald-700 transition ${open ? "rotate-180" : ""}`}
-        />
+        <span id={`${listId}-value`} className="truncate">
+          {selected?.label}
+        </span>
+        <span className={`${iconTileClass} ${open ? `rotate-180 ${iconTileOpenClass}` : iconTileIdleClass}`}>
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
+        </span>
       </button>
       {open && (
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-30 mt-2 max-h-56 w-full overflow-auto rounded-lg border border-emerald-100 bg-white p-1 shadow-lg shadow-emerald-900/10"
+          className={`${popupClass} max-h-64 w-full overflow-auto`}
+          style={{ animation: "bmiResultIn 0.2s ease-out" }}
         >
           {options.map((option) => {
             const isActive = option.value === value;
@@ -184,10 +217,10 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
                   role="option"
                   aria-selected={isActive}
                   className={[
-                    "flex w-full items-center justify-between rounded-md px-3 py-2.5 text-left text-sm font-semibold transition",
+                    "flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 text-left text-sm font-semibold transition duration-200",
                     isActive
-                      ? "bg-emerald-700 text-white"
-                      : "text-slate-800 hover:bg-emerald-50 hover:text-emerald-900",
+                      ? activeOptionClass
+                      : "menu-option",
                   ].join(" ")}
                   onClick={() => {
                     onChange(option.value);
@@ -195,7 +228,7 @@ export function CustomSelect({ value, onChange, options }: CustomSelectProps) {
                   }}
                 >
                   {option.label}
-                  {isActive ? <Check className="h-4 w-4" /> : null}
+                  {isActive ? <Check className="h-4 w-4 flex-none" aria-hidden="true" /> : null}
                 </button>
               </li>
             );
@@ -234,6 +267,7 @@ type DatePickerProps = {
 };
 
 export function DatePicker({ value, onChange }: DatePickerProps) {
+  const field = useContext(FieldContext);
   const selected = parseIsoDate(value);
   const [open, setOpen] = useState(false);
   const [view, setView] = useState(
@@ -297,35 +331,45 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
       <button
         type="button"
         onClick={toggleOpen}
-        className="flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-lg font-semibold text-slate-950 transition hover:border-emerald-300 hover:bg-emerald-50/60"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-label={field ? `${field.label}: ${formatDisplayDate(value)}` : undefined}
+        className={triggerClass}
       >
-        <span>{formatDisplayDate(value)}</span>
-        <CalendarDays className="h-4 w-4 text-emerald-700" />
+        <span className="truncate">{formatDisplayDate(value)}</span>
+        <span className={`${iconTileClass} ${open ? iconTileOpenClass : iconTileIdleClass}`}>
+          <CalendarDays className="h-4 w-4" aria-hidden="true" />
+        </span>
       </button>
 
       {open && (
-        <div className="absolute z-30 mt-2 w-[min(100%,20rem)] rounded-xl border border-emerald-100 bg-white p-3 shadow-lg shadow-emerald-900/10">
-          <div className="mb-3 flex items-center justify-between gap-2">
+        <div
+          role="dialog"
+          aria-label="Choose a date"
+          className={`${popupClass} w-full p-3 sm:w-80`}
+          style={{ animation: "bmiResultIn 0.2s ease-out" }}
+        >
+          <div className="mb-3 flex items-center justify-between gap-2 rounded-xl bg-linear-to-r from-emerald-50 to-teal-50 p-1">
             <button
               type="button"
               aria-label="Previous month"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-100 text-emerald-800 hover:bg-emerald-50"
+              className="step-btn flex h-10 w-10 items-center justify-center rounded-lg"
               onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </button>
-            <p className="text-sm font-bold text-slate-900">{monthLabel}</p>
+            <p className="text-sm font-semibold text-emerald-950">{monthLabel}</p>
             <button
               type="button"
               aria-label="Next month"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-100 text-emerald-800 hover:bg-emerald-50"
+              className="step-btn flex h-10 w-10 items-center justify-center rounded-lg"
               onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
-          <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+          <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
               <span key={day}>{day}</span>
             ))}
@@ -345,12 +389,12 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
                     setOpen(false);
                   }}
                   className={[
-                    "flex h-9 items-center justify-center rounded-lg text-sm font-semibold transition",
+                    "flex h-10 items-center justify-center rounded-xl text-sm font-semibold transition duration-200",
                     !inMonth
                       ? "cursor-default text-slate-300"
                       : isSelected
-                        ? "bg-emerald-700 text-white"
-                        : "text-slate-800 hover:bg-emerald-50 hover:text-emerald-900",
+                        ? activeOptionClass
+                        : "menu-option",
                   ].join(" ")}
                 >
                   {date.getDate()}

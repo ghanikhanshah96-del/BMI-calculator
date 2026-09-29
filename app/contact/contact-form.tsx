@@ -26,9 +26,10 @@ const emptyErrors: FieldErrors = { name: null, email: null, message: null };
 const emptyTouched: Record<Field, boolean> = { name: false, email: false, message: false };
 
 const inputBaseClass =
-  "w-full rounded-lg border bg-white px-4 py-3 text-slate-900 outline-none transition focus:ring-2";
-const inputValidClass = "border-slate-200 focus:border-emerald-500 focus:ring-emerald-100";
-const inputInvalidClass = "border-red-400 focus:border-red-500 focus:ring-red-100";
+  "w-full rounded-xl border bg-slate-50/70 px-4 py-3 text-slate-900 outline-none transition duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4";
+const inputValidClass =
+  "border-slate-200 hover:border-emerald-200 focus:border-emerald-500 focus:ring-emerald-100";
+const inputInvalidClass = "border-red-400 bg-red-50/40 focus:border-red-500 focus:ring-red-100";
 
 function FieldError({ id, message }: { id: string; message: string | null }) {
   if (!message) return null;
@@ -152,16 +153,21 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-xl border border-emerald-100 bg-white p-6 shadow-sm sm:p-8"
+      className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-slate-900/5 sm:p-10"
       noValidate
     >
-      <div className="mb-6 flex items-center gap-3 text-emerald-700">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.14),transparent_70%)]"
+      />
+      <div className="relative mb-8 flex items-center gap-4">
+        <span className="icon-badge h-12 w-12 rounded-xl">
           <Mail className="h-5 w-5" />
         </span>
-        <p className="text-sm font-medium text-slate-600">
-          We typically respond within 1–2 business days.
-        </p>
+        <div>
+          <h2 className="text-2xl text-slate-900">Send us a message</h2>
+          <p className="text-sm text-slate-500">All fields are required.</p>
+        </div>
       </div>
 
       <div className="grid gap-5">
@@ -258,7 +264,8 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70"
+        data-magnetic
+        className="btn-gradient mt-8 rounded-full px-7 py-3 text-sm font-semibold"
       >
         {status === "loading" ? (
           <>
