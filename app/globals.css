@@ -43,20 +43,23 @@ a {
   text-decoration: none;
 }
 
-/* Only prose / content links should look like classic hyperlinks */
-.prose-links a,
-a.content-link {
-  color: var(--brand);
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-  transition: color 0.15s ease, text-decoration-color 0.15s ease;
-}
+/* Only prose / content links should look like classic hyperlinks.
+   Kept in the base layer so Tailwind utilities (e.g. button links with text-white) override it. */
+@layer base {
+  .prose-links a,
+  a.content-link {
+    color: var(--brand);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
 
-.prose-links a:hover,
-a.content-link:hover {
-  color: #065f46;
-  text-decoration-thickness: 2px;
+  .prose-links a:hover,
+  a.content-link:hover {
+    color: #065f46;
+    text-decoration-thickness: 2px;
+  }
 }
 
 button,

@@ -1,7 +1,12 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import {
+  getEmailDomain,
+  validateEmailFormat,
+  validateMessage,
+  validateName,
+} from "../../lib/contact-validation";
+import { checkEmailDomain } from "../../lib/email-domain";
 
 export async function POST(request: Request) {
   try {
@@ -15,23 +20,21 @@ export async function POST(request: Request) {
     const email = (body.email ?? "").trim();
     const message = (body.message ?? "").trim();
 
-    if (name.length < 2 || name.length > 100) {
-      return NextResponse.json(
-        { ok: false, error: "Please enter your name (2–100 characters)." },
-        { status: 400 },
-      );
+    const nameError = validateName(name);
+    if (nameError) {
+      return NextResponse.json({ ok: false, field: "name", error: nameError }, { status: 400 });
     }
 
-    if (!emailPattern.test(email) || email.length > 200) {
-      return NextResponse.json(
-        { ok: false, error: "Please enter a valid email address." },
-        { status: 400 },
-      );
+    const emailError =
+      validateEmailFormat(email) ?? (await checkEmailDomain(getEmailDomain(email)));
+    if (emailError) {
+      return NextResponse.json({ ok: false, field: "email", error: emailError }, { status: 400 });
     }
 
-    if (message.length < 10 || message.length > 4000) {
+    const messageError = validateMessage(message);
+    if (messageError) {
       return NextResponse.json(
-        { ok: false, error: "Please enter a message (10–4000 characters)." },
+        { ok: false, field: "message", error: messageError },
         { status: 400 },
       );
     }
