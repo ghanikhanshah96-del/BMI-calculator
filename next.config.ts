@@ -10,6 +10,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    // The persistent build cache (restored by Vercel between deploys) can serve stale globals.css output.
+    turbopackFileSystemCacheForBuild: false,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [45, 60, 75],

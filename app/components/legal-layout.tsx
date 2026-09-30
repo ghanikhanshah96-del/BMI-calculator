@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Breadcrumbs from "./breadcrumbs";
+import DocNav from "./doc-nav";
 import { ArrowRight, type IconComponent } from "./icons";
 import PageHero from "./page-hero";
 import Reveal from "./reveal";
+import SectionNav from "./section-nav";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
 
@@ -36,6 +38,7 @@ export default function LegalLayout({
   sections: LegalSection[];
   cta: { title: string; text: ReactNode };
 }) {
+  const contents = sections.map(({ id, title: sectionTitle }) => ({ id, label: sectionTitle }));
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage={page} />
@@ -56,23 +59,15 @@ export default function LegalLayout({
       </PageHero>
 
       <main className="page-main section-block">
-        <div className="grid gap-10 lg:grid-cols-[240px_1fr]">
-          <nav aria-label="On this page" className="hidden lg:block">
-            <div className="sticky top-28 rounded-2xl bg-white/90 p-5 shadow-sm ring-1 ring-slate-900/5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">On this page</p>
-              <ul className="mt-4 space-y-1 text-sm">
-                {sections.map(({ id, title: sectionTitle }) => (
-                  <li key={id}>
-                    <a href={`#${id}`} className="toc-link">
-                      {sectionTitle}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+        <div className="grid gap-10 lg:grid-cols-[272px_1fr]">
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <DocNav items={contents} />
             </div>
-          </nav>
+          </aside>
 
           <div className="min-w-0">
+            <SectionNav items={contents} className="-mt-4 mb-6 lg:hidden" />
             {notice}
             <div className="mt-6 space-y-6 first:mt-0">
               {sections.map(({ id, title: sectionTitle, icon: Icon, body }, index) => (

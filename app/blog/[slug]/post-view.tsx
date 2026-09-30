@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Breadcrumbs from "../../components/breadcrumbs";
+import DocNav from "../../components/doc-nav";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
+import SectionNav from "../../components/section-nav";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { organizationRef } from "../../lib/seo";
@@ -96,6 +98,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
       <main className="page-main section-block">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
           <article className="min-w-0">
+            <SectionNav items={contents} className="-mt-4 mb-6 lg:hidden" />
             <section id="takeaways-section" aria-labelledby="takeaways" className="card-surface mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
                 Key takeaways
@@ -134,20 +137,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
             </div>
           </article>
 
-          <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-            <nav aria-label="In this guide" className="hidden rounded-2xl bg-white/90 p-5 shadow-sm ring-1 ring-slate-900/5 lg:block">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">In this guide</p>
-              <ul className="mt-3 space-y-0.5 text-sm">
-                {contents.map((item) => (
-                  <li key={item.id}>
-                    <a href={`#${item.id}`} className="toc-link">
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
+          <aside className="space-y-6">
             <div className="cta-panel p-6 sm:p-7">
               <div className="cta-glow" />
               <h2 className="text-xl text-white sm:text-2xl">Try the {post.toolLabel}</h2>
@@ -165,6 +155,10 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 </Link>
                 .
               </p>
+            </div>
+
+            <div className="sticky top-24 hidden lg:block">
+              <DocNav items={contents} title="In this guide" />
             </div>
           </aside>
         </div>

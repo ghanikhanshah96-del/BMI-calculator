@@ -6,6 +6,13 @@ export type SectionLink = { id: string; label: string };
 
 const GAP_BELOW_NAV = 16;
 
+/** Document offset of an element, unaffected by transforms such as the reveal animation's start offset. */
+export function pageTop(el: HTMLElement) {
+  let top = 0;
+  for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) top += node.offsetTop;
+  return top;
+}
+
 /** Sections that share a panel scroll to the panel's edge, not their own. */
 function scrollTarget(id: string) {
   const section = document.getElementById(id);
@@ -13,7 +20,7 @@ function scrollTarget(id: string) {
 }
 
 /** Sticky "on this page" pills: a click scrolls the section to just below the nav, and scrolling highlights the section in view. */
-export default function SectionNav({ items }: { items: readonly SectionLink[] }) {
+export default function SectionNav({ items, className = "" }: { items: readonly SectionLink[]; className?: string }) {
   const [active, setActive] = useState(items[0]?.id ?? "");
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -72,7 +79,7 @@ export default function SectionNav({ items }: { items: readonly SectionLink[] })
     event.preventDefault();
     const navHeight = nav.getBoundingClientRect().height;
     const stickyTop = Number.parseFloat(getComputedStyle(nav).top) || 0;
-    const top = window.scrollY + target.getBoundingClientRect().top - stickyTop - navHeight - GAP_BELOW_NAV;
+    const top = pageTop(target) - stickyTop - navHeight - GAP_BELOW_NAV;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     lockUntil.current = event.timeStamp + 1500;
     setActive(id);
@@ -81,7 +88,7 @@ export default function SectionNav({ items }: { items: readonly SectionLink[] })
   };
 
   return (
-    <nav ref={navRef} aria-label="On this page" className="section-nav">
+    <nav ref={navRef} aria-label="On this page" className={`section-nav ${className}`}>
       <ul ref={listRef} className="section-nav-list">
         {items.map((item) => {
           const current = item.id === active;
