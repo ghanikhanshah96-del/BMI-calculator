@@ -16,12 +16,13 @@ import { useEffect, useRef, useState } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
 
-type ActivePage = "home" | "calculators" | "blog" | "about" | "privacy" | "terms" | "contact" | "sitemap";
+type ActivePage = "home" | "calculators" | "all-tools" | "blog" | "about" | "privacy" | "terms" | "contact" | "sitemap";
 
 const baseLinkClass = "group nav-link";
 const activeLinkClass = "nav-link-active";
 
 const links: { href: string; label: string; page: ActivePage; icon: IconComponent }[] = [
+  { href: "/calculators", label: "All Tools", page: "all-tools", icon: LayoutGrid },
   { href: "/blog", label: "Blog", page: "blog", icon: Newspaper },
   { href: "/about", label: "About", page: "about", icon: BadgeCheck },
   { href: "/contact", label: "Contact", page: "contact", icon: Mail },
@@ -157,17 +158,6 @@ export default function SiteHeader({
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/calculators"
-                  onClick={closeMenus}
-                  className="group/all menu-all"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <LayoutGrid className="h-4 w-4" aria-hidden="true" />
-                    All calculators
-                  </span>
-                  <ArrowRight className="h-4 w-4 transition group-hover/all:translate-x-1" aria-hidden="true" />
-                </Link>
               </div>
             </div>
           </div>
@@ -241,18 +231,6 @@ export default function SiteHeader({
                 );
               })}
             </ul>
-            <Link
-              href="/calculators"
-              onClick={closeMenus}
-              aria-current={pathname === "/calculators" ? "page" : undefined}
-              className="group mobile-all"
-            >
-              <span className="inline-flex items-center gap-2.5">
-                <LayoutGrid className="h-5 w-5" aria-hidden="true" />
-                All calculators
-              </span>
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
-            </Link>
 
             <p className="mobile-sheet-label">Explore</p>
             <ul className="mobile-page-list">

@@ -89,20 +89,22 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Sitemap", href: "/sitemap-page" }]} />
       </PageHero>
       <main className="page-main section-block">
-        <section aria-labelledby="site-structure" className="mb-14 max-w-3xl">
+        <section aria-labelledby="site-structure" className="card-surface mb-14 p-6 sm:p-8">
           <h2 id="site-structure" className="section-title">
             How the site is organized
           </h2>
-          <p className="body-copy mt-3">
-            Every calculator has its own page with the tool, step-by-step instructions, the formula it uses, a worked
-            example, and answers to common questions. Each calculator is paired with an in-depth guide on the blog that
-            explains the science and the limits of the result in more detail.
-          </p>
-          <p className="body-copy mt-3">
-            The tools are grouped into three areas: weight and body composition (BMI and body fat), energy and
-            nutrition (TDEE and macros), and pregnancy and fertility (due date and ovulation). All calculations run in
-            your browser, and the numbers you enter are never sent to our servers.
-          </p>
+          <div className="mt-3 grid gap-x-10 gap-y-3 lg:grid-cols-2">
+            <p className="body-copy">
+              Every calculator has its own page with the tool, step-by-step instructions, the formula it uses, a worked
+              example, and answers to common questions. Each calculator is paired with an in-depth guide on the blog that
+              explains the science and the limits of the result in more detail.
+            </p>
+            <p className="body-copy">
+              The tools are grouped into three areas: weight and body composition (BMI and body fat), energy and
+              nutrition (TDEE and macros), and pregnancy and fertility (due date and ovulation). All calculations run in
+              your browser, and the numbers you enter are never sent to our servers.
+            </p>
+          </div>
         </section>
         <SitemapSection
           title="Main pages"

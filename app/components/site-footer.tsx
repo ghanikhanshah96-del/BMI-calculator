@@ -63,7 +63,7 @@ export default function SiteFooter() {
       <div className="footer-overlay" />
       <div className="footer-glow" />
 
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-10">
           <div className="text-center md:text-left">
             <Link

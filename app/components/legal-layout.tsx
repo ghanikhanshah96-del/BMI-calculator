@@ -63,10 +63,7 @@ export default function LegalLayout({
               <ul className="mt-4 space-y-1 text-sm">
                 {sections.map(({ id, title: sectionTitle }) => (
                   <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      className="block rounded-lg border-l-2 border-transparent px-3 py-2 text-slate-600 transition hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-                    >
+                    <a href={`#${id}`} className="toc-link">
                       {sectionTitle}
                     </a>
                   </li>
@@ -75,7 +72,7 @@ export default function LegalLayout({
             </div>
           </nav>
 
-          <div className="max-w-3xl">
+          <div className="min-w-0">
             {notice}
             <div className="mt-6 space-y-6 first:mt-0">
               {sections.map(({ id, title: sectionTitle, icon: Icon, body }, index) => (

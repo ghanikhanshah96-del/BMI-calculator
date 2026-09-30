@@ -1,31 +1,61 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 
 export type SectionLink = { id: string; label: string };
 
-/** Sticky "on this page" pills that highlight the section currently in view. */
+const GAP_BELOW_NAV = 16;
+
+/** Sections that share a panel scroll to the panel's edge, not their own. */
+function scrollTarget(id: string) {
+  const section = document.getElementById(id);
+  return section?.closest<HTMLElement>("[data-scroll-group]") ?? section;
+}
+
+/** Sticky "on this page" pills: a click scrolls the section to just below the nav, and scrolling highlights the section in view. */
 export default function SectionNav({ items }: { items: readonly SectionLink[] }) {
   const [active, setActive] = useState(items[0]?.id ?? "");
+  const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  /** While a pill-triggered scroll runs, scroll-spy must not override the clicked pill. */
+  const lockUntil = useRef(0);
 
   useEffect(() => {
-    const targets = items
-      .map((item) => document.getElementById(item.id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (!targets.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
-      },
-      { rootMargin: "-140px 0px -55% 0px" },
-    );
-    targets.forEach((target) => observer.observe(target));
-    return () => observer.disconnect();
+    let frame = 0;
+    const spy = () => {
+      frame = 0;
+      if (performance.now() < lockUntil.current) return;
+      const line = (navRef.current?.getBoundingClientRect().bottom ?? 0) + GAP_BELOW_NAV + 8;
+      let current = items[0]?.id ?? "";
+      let lastTop = -Infinity;
+      for (const item of items) {
+        const el = scrollTarget(item.id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        // Side-by-side sections share a top edge; keep the first one so the pills don't flicker.
+        if (top <= line && top > lastTop + 1) {
+          current = item.id;
+          lastTop = top;
+        }
+      }
+      setActive(current);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(spy);
+    };
+    const unlock = () => {
+      lockUntil.current = 0;
+    };
+    spy();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("scrollend", unlock);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("scrollend", unlock);
+    };
   }, [items]);
 
   useEffect(() => {
@@ -35,8 +65,23 @@ export default function SectionNav({ items }: { items: readonly SectionLink[] })
     list.scrollTo({ left: link.offsetLeft - (list.clientWidth - link.offsetWidth) / 2, behavior: "smooth" });
   }, [active]);
 
+  const jump = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    const target = scrollTarget(id);
+    const nav = navRef.current;
+    if (!target || !nav) return;
+    event.preventDefault();
+    const navHeight = nav.getBoundingClientRect().height;
+    const stickyTop = Number.parseFloat(getComputedStyle(nav).top) || 0;
+    const top = window.scrollY + target.getBoundingClientRect().top - stickyTop - navHeight - GAP_BELOW_NAV;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    lockUntil.current = event.timeStamp + 1500;
+    setActive(id);
+    window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
+    history.replaceState(null, "", `#${id}`);
+  };
+
   return (
-    <nav aria-label="On this page" className="section-nav">
+    <nav ref={navRef} aria-label="On this page" className="section-nav">
       <ul ref={listRef} className="section-nav-list">
         {items.map((item) => {
           const current = item.id === active;
@@ -46,7 +91,7 @@ export default function SectionNav({ items }: { items: readonly SectionLink[] })
                 href={`#${item.id}`}
                 aria-current={current ? "location" : undefined}
                 className={current ? "section-pill section-pill-active" : "section-pill"}
-                onClick={() => setActive(item.id)}
+                onClick={(event) => jump(event, item.id)}
               >
                 {item.label}
               </a>

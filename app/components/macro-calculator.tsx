@@ -19,6 +19,16 @@ import {
   SegmentedControl,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import {
+  checkRange,
+  formatCm,
+  formatFeetInches,
+  formatKg,
+  formatLb,
+  heightQuantity,
+  useUnitConversion,
+  weightQuantity,
+} from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
 
 type UnitMode = "metric" | "us";
@@ -107,6 +117,14 @@ const EMPTY_INPUTS: MacroInputs = {
   bodyFat: null,
 };
 
+const WEIGHT_KG_RANGE = [30, 300] as const;
+const HEIGHT_CM_RANGE = [120, 230] as const;
+
+const QUANTITIES = [
+  heightQuantity<MacroInputs, UnitMode>("us", "heightCm", "heightFeet", "heightInches"),
+  weightQuantity<MacroInputs, UnitMode>("us", "weightKg", "weightLb"),
+];
+
 function roundCal(n: number) {
   return Math.round(n);
 }
@@ -125,29 +143,34 @@ function katchMcArdle(weightKg: number, bodyFatPct: number) {
   return 370 + 21.6 * lbm;
 }
 
+/** `exact` holds the unrounded metric height (cm) and weight (kg) behind the fields. */
 function buildResult(
   inputs: MacroInputs,
   unitMode: UnitMode,
+  exact: Record<string, number | null>,
 ): { ok: true; result: MacroResult } | { ok: false; error: string } {
-  const measurementRules: FieldRule[] =
-    unitMode === "metric"
-      ? [
-          { label: "weight", value: inputs.weightKg, min: 30, max: 300, unit: "kg" },
-          { label: "height", value: inputs.heightCm, min: 120, max: 230, unit: "cm" },
-        ]
-      : [
-          { label: "weight", value: inputs.weightLb, min: 66, max: 660, unit: "lb" },
-          { label: "height in feet", value: inputs.heightFeet, min: 4, max: 7, unit: "ft" },
-          { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
-        ];
-  const error = validateFields([
-    { label: "age", value: inputs.age, min: 15, max: 120 },
-    ...measurementRules,
-    { label: "gender", value: inputs.gender, kind: "choice" },
-    { label: "activity level", value: inputs.activity, kind: "choice" },
-    { label: "goal", value: inputs.goal, kind: "choice" },
-    { label: "macro preference", value: inputs.macroPref, kind: "choice" },
-  ]);
+  const imperial = unitMode === "us";
+  const measurementRules: FieldRule[] = imperial
+    ? [
+        { label: "weight", value: inputs.weightLb },
+        { label: "height in feet", value: inputs.heightFeet },
+        { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
+      ]
+    : [
+        { label: "weight", value: inputs.weightKg },
+        { label: "height", value: inputs.heightCm },
+      ];
+  const error =
+    validateFields([
+      { label: "age", value: inputs.age, min: 15, max: 120 },
+      ...measurementRules,
+      { label: "gender", value: inputs.gender, kind: "choice" },
+      { label: "activity level", value: inputs.activity, kind: "choice" },
+      { label: "goal", value: inputs.goal, kind: "choice" },
+      { label: "macro preference", value: inputs.macroPref, kind: "choice" },
+    ]) ||
+    checkRange("weight", exact.weight!, WEIGHT_KG_RANGE, imperial ? formatLb : formatKg) ||
+    checkRange("height", exact.height!, HEIGHT_CM_RANGE, imperial ? formatFeetInches : formatCm);
   if (error) return { ok: false, error };
   if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
     return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
@@ -155,9 +178,8 @@ function buildResult(
 
   const gender = inputs.gender as Gender;
   const age = inputs.age!;
-  const weightKg = unitMode === "metric" ? inputs.weightKg! : inputs.weightLb! * 0.45359237;
-  const heightCm =
-    unitMode === "metric" ? inputs.heightCm! : (inputs.heightFeet! * 12 + (inputs.heightInches ?? 0)) * 2.54;
+  const weightKg = exact.weight!;
+  const heightCm = exact.height!;
 
   const bodyFat = inputs.bodyFat;
   const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
@@ -236,27 +258,41 @@ export default function MacroCalculator() {
   const [result, setResult] = useState<MacroResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
+  const units = useUnitConversion(QUANTITIES);
   const update = (patch: Partial<MacroInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
     if ([patch.gender, patch.activity, patch.goal, patch.macroPref].includes("")) setResult(null);
   };
 
-  const calculate = () => {
-    const built = buildResult(inputs, unitMode);
+  /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
+  const run = (values: MacroInputs, mode: UnitMode, silent = false) => {
+    const built = buildResult(values, mode, units.metric(values, mode));
     if (built.ok === false) {
-      setError(built.error);
+      setError(silent ? "" : built.error);
       setResult(null);
       return;
     }
     setError("");
     setResult(built.result);
     setAnimationKey((k) => k + 1);
+    if (silent) return;
     window.requestAnimationFrame(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   };
 
+  const calculate = () => run(inputs, unitMode);
+
+  const changeUnit = (mode: UnitMode) => {
+    if (mode === unitMode) return;
+    const next = units.convert(inputs, unitMode, mode);
+    setInputs(next);
+    setUnitMode(mode);
+    run(next, mode, true);
+  };
+
   const clear = () => {
+    units.reset();
     setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
@@ -280,7 +316,7 @@ export default function MacroCalculator() {
             { value: "metric", label: "Metric" },
           ]}
           value={unitMode}
-          onChange={setUnitMode}
+          onChange={changeUnit}
         />
 
         <InputGroup step={1} title="Your details">
@@ -343,7 +379,7 @@ export default function MacroCalculator() {
                 <div className="grid grid-cols-2 gap-2">
                   <NumberStepper
                     value={inputs.heightFeet}
-                    min={4}
+                    min={3}
                     max={7}
                     step={1}
                     suffix="ft"
@@ -353,7 +389,7 @@ export default function MacroCalculator() {
                   <NumberStepper
                     value={inputs.heightInches}
                     min={0}
-                    max={11}
+                    max={11.9}
                     step={1}
                     suffix="in"
                     placeholder={9}
@@ -415,14 +451,10 @@ export default function MacroCalculator() {
       <ResultCard resultRef={resultRef}>
         {!result ? (
           <EmptyResult
-            icon={Apple}
-            text={
-              <>
-                Enter your stats, activity, goal, and macro style, then press <strong>Calculate</strong> for
-                daily calories and protein / carbs / fat targets.
-              </>
-            }
-            formulas={["Mifflin–St Jeor BMR", "TDEE = BMR × activity", "Custom macro split"]}
+            label="Daily calories"
+            unit="kcal/day"
+            stats={["Carbs", "Protein", "Fat"]}
+            rows={["BMR", "TDEE", "Target"]}
           />
         ) : (
           <ResultBody animationKey={animationKey}>

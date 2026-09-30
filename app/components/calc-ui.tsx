@@ -5,7 +5,7 @@ import type { CSSProperties, ReactNode, Ref } from "react";
 
 export function CalcLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6">
       {children}
     </div>
   );
@@ -198,39 +198,48 @@ export function ResultCard({
         </p>
         {toolbar}
       </div>
-      <div className={`rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-900/5 sm:p-5 ${bodyClassName}`}>
+      <div className={`flex-1 rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-900/5 sm:p-5 ${bodyClassName}`}>
         {children}
       </div>
     </div>
   );
 }
 
+/** The result layout with empty slots, shown until the first calculation. */
 export function EmptyResult({
-  icon: Icon,
-  text,
-  formulas,
+  label,
+  unit,
+  stats,
+  rows,
 }: {
-  icon: IconComponent;
-  text: ReactNode;
-  formulas: string[];
+  label: string;
+  unit?: string;
+  stats: string[];
+  rows: string[];
 }) {
   return (
-    <div className="py-4 text-center sm:py-6">
-      <span className="relative mx-auto flex h-16 w-16 items-center justify-center">
-        <span className="absolute inset-0 animate-ping rounded-full bg-emerald-200/50 [animation-duration:2.4s]" />
-        <span className="icon-badge relative h-16 w-16 rounded-full">
-          <Icon className="h-6 w-6" aria-hidden="true" />
-        </span>
-      </span>
-      <p className="mt-4 text-lg font-semibold text-slate-900">No result yet</p>
-      <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-slate-600">{text}</p>
-      <ul className="mt-5 flex flex-wrap justify-center gap-2">
-        {formulas.map((formula) => (
-          <li
-            key={formula}
-            className="formula-chip"
-          >
-            {formula}
+    <div className="empty-result">
+      <p className="sr-only">No result yet. Fill in the form and press Calculate.</p>
+      <div className="empty-hero" aria-hidden="true">
+        <p className="empty-label">{label}</p>
+        <p className="empty-value">
+          --
+          {unit ? <span className="empty-unit">{unit}</span> : null}
+        </p>
+      </div>
+      <ul className={`grid gap-2.5 ${stats.length === 3 ? "grid-cols-3" : "grid-cols-2"}`} aria-hidden="true">
+        {stats.map((stat) => (
+          <li key={stat} className="empty-tile">
+            <span className="empty-label">{stat}</span>
+            <span className="empty-slot" />
+          </li>
+        ))}
+      </ul>
+      <ul className="empty-rows" aria-hidden="true">
+        {rows.map((row) => (
+          <li key={row} className="empty-row">
+            <span>{row}</span>
+            <span className="empty-slot w-20" />
           </li>
         ))}
       </ul>

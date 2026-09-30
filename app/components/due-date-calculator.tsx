@@ -362,14 +362,9 @@ export default function DueDateCalculator() {
       <ResultCard resultRef={resultRef}>
         {!result ? (
           <EmptyResult
-            icon={CalendarHeart}
-            text={
-              <>
-                Choose a method, enter the date details, then press <strong>Calculate</strong> for an estimated
-                due date, gestational age, and trimester timeline.
-              </>
-            }
-            formulas={["LMP + 280 days", "Conception + 266 days", "Ultrasound / IVF adjusted"]}
+            label="Estimated due date"
+            stats={["Gestational age", "Days remaining"]}
+            rows={["Due date", "Conception date", "Last period", "Current trimester"]}
           />
         ) : (
           <ResultBody animationKey={animationKey}>

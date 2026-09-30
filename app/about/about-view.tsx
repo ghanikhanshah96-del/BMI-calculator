@@ -152,50 +152,54 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
           </ul>
         </section>
 
-        <section aria-labelledby="review" className="mx-auto section-gap max-w-3xl">
-          <div className="flex items-center gap-3">
-            <span className="icon-badge h-10 w-10 rounded-xl">
-              <RefreshCw className="h-5 w-5" />
-            </span>
-            <h2 id="review" className="section-title">
-              How we check and update content
-            </h2>
-          </div>
-          <ol className="body-copy mt-5 list-decimal space-y-3 pl-5 marker:font-semibold marker:text-emerald-700">
-            {reviewSteps.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
-        </section>
+        <div className="section-gap grid gap-10 lg:grid-cols-2">
+          <section aria-labelledby="review" className="card-surface p-6 sm:p-8">
+            <div className="flex items-center gap-3">
+              <span className="icon-badge h-10 w-10 rounded-xl">
+                <RefreshCw className="h-5 w-5" />
+              </span>
+              <h2 id="review" className="section-title">
+                How we check and update content
+              </h2>
+            </div>
+            <ol className="body-copy mt-5 list-decimal space-y-3 pl-5 marker:font-semibold marker:text-emerald-700">
+              {reviewSteps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </section>
 
-        <section aria-labelledby="limits" className="mx-auto section-gap max-w-3xl">
-          <h2 id="limits" className="section-title">
-            Limits of every estimate
-          </h2>
-          <div className="mt-5 flex gap-4 rounded-2xl border border-amber-200/70 bg-linear-to-r from-amber-50 to-orange-50 p-5 shadow-sm">
-            <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-orange-500 text-white shadow-md shadow-orange-500/30">
-              <AlertTriangle className="h-5 w-5" />
-            </span>
-            <p className="text-sm leading-6 text-slate-700">
-              Our calculators give educational estimates, not a diagnosis or treatment plan. Results can differ because of
-              medical history, body composition, medication, pregnancy details, and cycle variation. Speak with a doctor,
-              midwife, or registered dietitian before making medical decisions. Read the full{" "}
-              <Link href="/terms" className="content-link">
-                terms of use
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy" className="content-link">
-                privacy policy
-              </Link>
-              .
-            </p>
-          </div>
-        </section>
+          <section aria-labelledby="limits" className="card-surface p-6 sm:p-8">
+            <div className="flex items-center gap-3">
+              <span className="icon-badge h-10 w-10 rounded-xl">
+                <AlertTriangle className="h-5 w-5" />
+              </span>
+              <h2 id="limits" className="section-title">
+                Limits of every estimate
+              </h2>
+            </div>
+            <div className="mt-5 rounded-2xl bg-linear-to-r from-emerald-50 to-teal-50/70 p-5 ring-1 ring-emerald-100">
+              <p className="body-copy">
+                Our calculators give educational estimates, not a diagnosis or treatment plan. Results can differ because of
+                medical history, body composition, medication, pregnancy details, and cycle variation. Speak with a doctor,
+                midwife, or registered dietitian before making medical decisions. Read the full{" "}
+                <Link href="/terms" className="content-link">
+                  terms of use
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="content-link">
+                  privacy policy
+                </Link>
+                .
+              </p>
+            </div>
+          </section>
+        </div>
 
-        <aside className="cta-panel mx-auto mt-12 max-w-3xl">
+        <aside className="cta-panel mt-12">
           <div className="cta-glow" />
           <h2 className="text-2xl text-white">Spotted an error or have a suggestion?</h2>
-          <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-emerald-50 sm:text-base">
             We review every message about accuracy. You can also browse{" "}
             <Link href="/calculators" className={ctaLink}>
               all health calculators

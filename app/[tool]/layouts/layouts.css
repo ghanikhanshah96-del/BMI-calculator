@@ -1,678 +1,131 @@
 @reference "../../globals.css";
 
-/* Icons for the tool layouts' CSS-drawn tiles. */
 :root {
   --ico-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
   --ico-info-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
-  --ico-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
-  --ico-check-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
-  --ico-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 5l7 7-7 7'/%3E%3C/svg%3E");
-  --ico-arrow-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 5l7 7-7 7'/%3E%3C/svg%3E");
-  --ico-spark-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z'/%3E%3C/svg%3E");
   --ico-calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
 }
 
 @layer components {
-  /* Shared icon tiles for the tool layouts, drawn in CSS to keep repeated SVG out of the HTML. */
-  .bento-pill::before,
-  .stp-zig::before,
-  .ed-check::before,
-  .ed-limit::before,
-  .ed-note::before,
-  .jr-day::before,
-  .jr-limit::before,
-  .sp-check::before {
+  /* Icon tiles drawn in CSS to keep repeated SVG out of the HTML. */
+  .formula-line::before,
+  .limits-item::before {
     @apply block flex-none bg-center bg-no-repeat transition duration-300 ease-out;
     background-size: 55%;
     content: "";
   }
 
-  /* BMI: timeline */
-  .tl-steps {
-    @apply relative mt-6 space-y-4;
-    counter-reset: tl;
-  }
-
-  .tl-steps::before {
-    @apply absolute top-6 bottom-6 left-[calc(1.25rem-1px)] w-0.5 rounded-full bg-linear-to-b from-emerald-400 via-teal-400 to-emerald-200;
-    content: "";
-  }
-
-  .tl-step {
-    @apply relative ml-14 rounded-2xl bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:translate-x-1 hover:bg-linear-to-r hover:from-emerald-50 hover:to-white hover:text-slate-800 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:p-5 sm:text-base sm:leading-7;
-    counter-increment: tl;
-  }
-
-  .tl-step::before {
-    @apply absolute top-1/2 -left-14 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-teal-600 text-sm font-bold text-white transition duration-300 ease-out;
-    box-shadow: 0 0 0 6px #d1fae5, 0 8px 20px -6px rgb(5 150 105 / 0.6);
-    content: counter(tl);
-  }
-
-  .tl-step:hover::before {
-    @apply scale-110;
-    box-shadow: 0 0 0 8px #a7f3d0, 0 0 28px rgb(16 185 129 / 0.55);
-  }
-
-  .tl-band {
-    @apply mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0;
-  }
-
-  .tl-segment {
-    @apply relative rounded-2xl p-5 transition-all duration-300 ease-out hover:z-10 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-emerald-900/20 sm:p-6 lg:rounded-none lg:hover:rounded-2xl;
-    background-size: 200% 200%;
-  }
-
-  .tl-segment:hover {
-    background-position: 100% 100%;
-  }
-
-  .tl-segment:first-child {
-    @apply bg-linear-to-br from-emerald-50 to-emerald-100 text-slate-800 lg:rounded-l-3xl;
-  }
-
-  .tl-segment:nth-child(2) {
-    @apply bg-linear-to-br from-emerald-100 to-emerald-200 text-slate-900;
-  }
-
-  .tl-segment:nth-child(3) {
-    @apply bg-linear-to-br from-emerald-700 to-teal-700 text-white;
-  }
-
-  .tl-segment:last-child {
-    @apply bg-linear-to-br from-teal-800 to-emerald-900 text-white lg:rounded-r-3xl;
-  }
-
-  .tl-segment h3 {
-    @apply font-display text-xl font-medium;
-  }
-
-  .tl-segment p {
-    @apply mt-2 text-sm leading-6;
-  }
-
-  .tl-split {
-    @apply grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100 lg:grid-cols-2;
-  }
-
-  .tl-split-formula {
-    @apply relative isolate overflow-hidden bg-linear-to-br from-emerald-700 via-emerald-700 to-teal-700 p-6 text-white sm:p-8;
-  }
-
-  .tl-split-formula::after {
-    @apply absolute -top-20 -right-20 -z-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.2),transparent_65%)] transition duration-700 ease-out;
-    content: "";
-  }
-
-  .tl-split-formula:hover::after {
-    @apply -translate-x-10 translate-y-10 scale-125;
-  }
-
-  .tl-split-formula .section-title {
-    @apply text-white;
-  }
-
-  .tl-formula-line {
-    @apply rounded-xl bg-white/10 px-4 py-3 font-semibold text-white ring-1 ring-white/20 transition duration-300 hover:translate-x-1 hover:bg-white/20;
-  }
-
-  .tl-split-example {
-    @apply p-6 transition duration-300 hover:bg-linear-to-br hover:from-white hover:to-emerald-50/70 sm:p-8;
-  }
-
-  .tl-limits {
-    @apply mt-6 grid gap-3 sm:grid-cols-2;
-    counter-reset: tll;
-  }
-
-  .tl-limit {
-    @apply flex gap-4 rounded-2xl bg-white p-5 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300;
-    counter-increment: tll;
-  }
-
-  .tl-limit::before {
-    @apply flex-none bg-linear-to-br from-emerald-500 to-teal-700 bg-clip-text font-display text-3xl leading-none font-semibold text-transparent transition duration-300;
-    content: counter(tll, decimal-leading-zero);
-  }
-
-  .tl-limit:hover::before {
-    @apply scale-110;
-  }
-
-  /* Body fat: bento */
-  .bento-grid {
-    @apply mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
-    counter-reset: bento;
-  }
-
-  .bento-tile {
-    @apply relative isolate flex min-h-36 items-end overflow-hidden rounded-3xl bg-white p-6 text-base leading-7 text-slate-700 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-300;
-    counter-increment: bento;
-  }
-
-  .bento-tile:not(:first-child):hover {
-    @apply bg-linear-to-br from-white to-emerald-50;
-  }
-
-  .bento-tile::after {
-    @apply absolute -top-2 right-4 -z-10 font-display text-8xl leading-none font-semibold text-emerald-100 transition duration-500 ease-out;
-    content: counter(bento, decimal-leading-zero);
-  }
-
-  .bento-tile:hover::after {
-    @apply -translate-y-1 scale-110 text-emerald-200;
-  }
-
-  .bento-tile:first-child,
-  .bento-tile:last-child {
-    @apply lg:col-span-2;
-  }
-
-  .bento-tile:first-child {
-    @apply bg-linear-to-br from-emerald-700 to-teal-700 text-white ring-transparent;
-    background-size: 200% 200%;
-  }
-
-  .bento-tile:first-child:hover {
-    background-position: 100% 100%;
-  }
-
-  .bento-tile:first-child::after {
-    @apply text-white/15;
-  }
-
-  .bento-results {
-    @apply mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4;
-  }
-
-  .bento-result {
-    @apply rounded-3xl border-2 border-transparent p-5 shadow-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10;
-    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #d1fae5, #ccfbf1) border-box;
-  }
-
-  .bento-result:hover {
-    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #10b981, #14b8a6) border-box;
-  }
-
-  .bento-result h3 {
-    @apply bg-linear-to-r from-emerald-700 to-teal-700 bg-clip-text font-display text-xl font-semibold text-transparent;
-  }
-
-  .bento-console {
-    @apply relative isolate overflow-hidden rounded-3xl bg-emerald-950 p-6 text-white shadow-2xl shadow-emerald-950/30 sm:p-8;
-  }
-
-  .bento-console::before {
-    @apply absolute -bottom-24 -left-16 -z-10 h-72 w-72 rounded-full bg-emerald-500/30 blur-3xl transition duration-700 ease-out;
-    content: "";
-  }
-
-  .bento-console:hover::before {
-    @apply translate-x-16 scale-110 bg-teal-400/35;
-  }
-
-  .bento-code {
-    @apply rounded-xl bg-white/5 px-4 py-3 font-mono text-sm text-emerald-100 ring-1 ring-white/10 transition duration-300 hover:bg-white/10 hover:ring-emerald-400/50;
-  }
-
-  .bento-code::before {
-    @apply font-bold text-teal-300;
-    content: "> ";
-  }
-
-  .bento-example {
-    @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-200 sm:p-8;
-  }
-
-  .bento-frame {
-    @apply rounded-3xl border-2 border-transparent p-6 sm:p-8;
-    background:
-      linear-gradient(135deg, #f0fdf4, #fff 45%, #f0fdfa) padding-box,
-      linear-gradient(135deg, #34d399, #2dd4bf, #a7f3d0) border-box;
-  }
-
-  .bento-pills {
-    @apply mt-5 grid gap-3 sm:grid-cols-2;
-  }
-
-  .bento-pill {
-    @apply flex items-start gap-3 rounded-2xl bg-white/80 px-4 py-3 text-sm leading-6 text-slate-600 ring-1 ring-emerald-100 transition duration-300 hover:bg-white hover:text-slate-800 hover:shadow-md hover:shadow-emerald-900/5 hover:ring-emerald-300;
-  }
-
-  .bento-pill::before {
-    @apply mt-0.5 h-6 w-6 rounded-full bg-emerald-50 ring-1 ring-emerald-200;
-    background-image: var(--ico-info);
-  }
-
-  .bento-pill:hover::before {
-    @apply rotate-12 bg-emerald-600 ring-emerald-600;
-    background-image: var(--ico-info-white);
-  }
-
-  /* TDEE: stepper */
-  .stp-track {
+  /* How to use: numbered stepper */
+  .how-track {
     @apply relative mt-6 grid gap-4 lg:grid-cols-4 lg:gap-5;
-    counter-reset: stp;
+    counter-reset: how;
   }
 
-  .stp-track::before {
+  .how-track::before {
     @apply absolute top-6 bottom-6 left-[calc(1.25rem-1px)] w-0.5 rounded-full bg-linear-to-b from-emerald-400 to-teal-400 lg:top-[calc(1.25rem-1px)] lg:right-[12.5%] lg:bottom-auto lg:left-[12.5%] lg:h-0.5 lg:w-auto lg:bg-linear-to-r;
     content: "";
   }
 
-  .stp-step {
+  .how-step {
     @apply relative ml-14 rounded-2xl bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:bg-linear-to-b hover:from-emerald-50 hover:to-white hover:text-slate-800 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
-    counter-increment: stp;
+    counter-increment: how;
   }
 
-  .stp-step::before {
+  .how-step::before {
     @apply absolute top-1/2 -left-14 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-2xl bg-white text-sm font-bold text-emerald-700 shadow-md shadow-emerald-900/10 ring-2 ring-emerald-300 transition duration-300 ease-out lg:-top-14 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0;
-    content: counter(stp);
+    content: counter(how);
   }
 
-  .stp-step:hover::before {
+  .how-step:hover::before {
     @apply rotate-6 scale-110 bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-600/40 ring-transparent;
   }
 
-  .stp-rows {
+  /* Results: sweep rows */
+  .result-rows {
     @apply mt-6 grid gap-1 rounded-3xl bg-white p-2 shadow-sm ring-1 ring-slate-900/5;
   }
 
-  .stp-row {
+  .result-row {
     @apply grid gap-1 rounded-2xl bg-no-repeat px-4 py-4 transition-all duration-500 ease-out sm:grid-cols-[13rem_1fr] sm:items-center sm:gap-6 sm:px-5;
     background-image: linear-gradient(90deg, #d1fae5, #ccfbf1 60%, rgb(255 255 255 / 0));
     background-size: 0% 100%;
   }
 
-  .stp-row:hover {
+  .result-row:hover {
     background-size: 100% 100%;
   }
 
-  .stp-row h3 {
+  .result-row h3 {
     @apply flex items-center gap-2.5 text-base font-semibold text-slate-900;
   }
 
-  .stp-row h3::before {
+  .result-row h3::before {
     @apply h-2.5 w-2.5 flex-none rounded-full bg-linear-to-br from-emerald-400 to-teal-500 transition duration-300;
     content: "";
   }
 
-  .stp-row:hover h3::before {
+  .result-row:hover h3::before {
     @apply scale-150 shadow-md shadow-emerald-500/50;
   }
 
-  .stp-banner {
-    @apply relative isolate overflow-hidden rounded-3xl bg-linear-to-r from-emerald-700 via-teal-700 to-emerald-800 p-6 text-white shadow-xl shadow-emerald-900/20 sm:p-10;
-    background-size: 200% 100%;
-    transition: background-position 0.8s ease;
-  }
-
-  .stp-banner:hover {
-    background-position: 100% 0;
-  }
-
-  .stp-banner::after {
-    @apply absolute -right-16 -bottom-24 -z-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.18),transparent_65%)];
-    content: "";
-  }
-
-  .stp-chip {
-    @apply rounded-full bg-white px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md shadow-emerald-950/20 transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-50 hover:shadow-lg;
-  }
-
-  .stp-quote {
-    @apply relative mx-auto max-w-4xl rounded-3xl bg-white p-6 pl-16 shadow-sm ring-1 ring-slate-900/5 transition duration-300 hover:bg-linear-to-br hover:from-white hover:to-emerald-50/70 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-200 sm:p-8 sm:pl-24;
-  }
-
-  .stp-quote::before {
-    @apply absolute top-3 left-4 bg-linear-to-br from-emerald-400 to-teal-600 bg-clip-text font-display text-7xl leading-none text-transparent transition duration-500 ease-out sm:left-7 sm:text-8xl;
-    content: "\201C";
-  }
-
-  .stp-quote:hover::before {
-    @apply -rotate-6 scale-110;
-  }
-
-  .stp-zigzag {
-    @apply mt-6 grid gap-3;
-  }
-
-  .stp-zig {
-    @apply flex items-center gap-4 rounded-2xl bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:translate-x-1.5 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:w-[82%] sm:p-5 lg:w-[68%];
-  }
-
-  .stp-zig:nth-child(even) {
-    @apply sm:ml-auto sm:flex-row-reverse sm:text-right sm:hover:-translate-x-1.5;
-  }
-
-  .stp-zig::before {
-    @apply h-9 w-9 rounded-xl bg-emerald-50 ring-1 ring-emerald-200;
-    background-image: var(--ico-arrow);
-  }
-
-  .stp-zig:nth-child(even)::before {
-    @apply sm:rotate-180;
-  }
-
-  .stp-zig:hover::before {
-    @apply ring-transparent;
-    background-image: var(--ico-arrow-white), linear-gradient(135deg, #10b981, #0d9488);
-    background-size: 55%, 100%;
-  }
-
-  /* Macros: editorial */
-  .layout-editorial {
-    counter-reset: ed;
-  }
-
-  .ed-row {
-    @apply grid gap-5 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] lg:gap-12 lg:py-10;
-  }
-
-  .ed-aside {
-    @apply lg:sticky lg:top-36 lg:self-start;
-  }
-
-  .ed-aside::before {
-    @apply mb-3 block text-xs font-semibold tracking-[0.2em] text-emerald-700;
-    counter-increment: ed;
-    content: counter(ed, decimal-leading-zero) " / 06";
-  }
-
-  .ed-lead {
-    @apply mt-3 text-base leading-7 text-slate-600;
-  }
-
-  .ed-checklist {
-    @apply grid gap-3;
-  }
-
-  .ed-check {
-    @apply flex items-start gap-4 rounded-2xl bg-white p-4 text-base leading-7 text-slate-700 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:translate-x-1.5 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:p-5;
-  }
-
-  .ed-check::before {
-    @apply h-8 w-8 rounded-full shadow-md shadow-emerald-600/30;
-    background-image: var(--ico-check-white), linear-gradient(135deg, #34d399, #0d9488);
-    background-size: 55%, 100%;
-  }
-
-  .ed-check:hover::before {
-    @apply rotate-12 scale-110;
-  }
-
-  .ed-cards {
-    @apply grid gap-4 sm:grid-cols-2;
-    counter-reset: edc;
-  }
-
-  .ed-card {
-    @apply relative rounded-3xl bg-white p-5 pt-16 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:bg-linear-to-br hover:from-white hover:to-teal-50 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-300;
-    counter-increment: edc;
-  }
-
-  .ed-card::before {
-    @apply absolute top-4 left-5 bg-linear-to-br from-emerald-500 to-teal-700 bg-clip-text font-display text-4xl leading-none font-semibold text-transparent transition duration-300;
-    content: counter(edc, decimal-leading-zero);
-  }
-
-  .ed-card:hover::before {
-    @apply translate-x-1 scale-110;
-  }
-
-  .ed-card h3 {
-    @apply text-lg font-semibold text-slate-900;
-  }
-
-  .ed-pill {
-    @apply rounded-full bg-white px-5 py-3 text-base font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-200 transition duration-300 hover:bg-linear-to-r hover:from-emerald-700 hover:to-teal-700 hover:text-white hover:shadow-lg hover:shadow-emerald-600/25 hover:ring-transparent sm:text-lg;
-  }
-
-  .ed-note {
-    @apply relative space-y-3 rounded-3xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-6 pl-16 ring-1 ring-emerald-200 transition duration-300 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-8 sm:pl-20;
-  }
-
-  .ed-note::before {
-    @apply absolute top-6 left-5 h-9 w-9 rounded-xl shadow-md shadow-emerald-600/30 sm:top-8 sm:left-7;
-    background-image: var(--ico-spark-white), linear-gradient(135deg, #34d399, #0d9488);
-    background-size: 55%, 100%;
-  }
-
-  .ed-note:hover::before {
-    @apply rotate-12 scale-110;
-  }
-
-  .ed-limit {
-    @apply flex flex-col gap-3 rounded-2xl bg-white p-5 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300;
-  }
-
-  .ed-limit::before {
-    @apply h-9 w-9 rounded-xl bg-emerald-50 ring-1 ring-emerald-200;
-    background-image: var(--ico-info);
-  }
-
-  .ed-limit:hover::before {
-    @apply -rotate-6 bg-emerald-600 ring-emerald-600;
-    background-image: var(--ico-info-white);
-  }
-
-  /* Due date: journey */
-  .jr-steps {
-    @apply -mx-4 mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-2 pb-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4 lg:gap-8 [&::-webkit-scrollbar]:hidden;
-    counter-reset: jr;
-  }
-
-  .jr-step {
-    @apply relative w-[78%] flex-none snap-start rounded-3xl bg-white p-5 pt-14 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:bg-linear-to-b hover:from-white hover:to-emerald-50 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:w-auto;
-    counter-increment: jr;
-  }
-
-  .jr-step::before {
-    @apply absolute top-5 left-5 rounded-full bg-linear-to-r from-emerald-700 to-teal-700 px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase shadow-md shadow-emerald-600/25 transition duration-300;
-    content: "Step " counter(jr);
-  }
-
-  .jr-step:hover::before {
-    @apply translate-x-1;
-  }
-
-  .jr-step:not(:last-child)::after {
-    @apply absolute top-1/2 -right-7 hidden h-6 w-6 -translate-y-1/2 bg-center bg-no-repeat transition duration-300 lg:block;
-    background-image: var(--ico-arrow);
-    background-size: 100%;
-    content: "";
-  }
-
-  .jr-step:hover::after {
-    @apply translate-x-1;
-  }
-
-  .jr-milestones {
-    @apply relative mt-8 space-y-5;
-  }
-
-  .jr-milestones::before {
-    @apply absolute top-2 bottom-2 left-4 w-0.5 -translate-x-1/2 rounded-full bg-linear-to-b from-emerald-300 via-teal-400 to-emerald-300 lg:left-1/2;
-    content: "";
-  }
-
-  .jr-milestone {
-    @apply relative pl-11 lg:w-1/2 lg:pr-12 lg:pl-0;
-  }
-
-  .jr-milestone:nth-child(even) {
-    @apply lg:ml-auto lg:pr-0 lg:pl-12;
-  }
-
-  .jr-milestone::before {
-    @apply absolute top-6 left-4 z-10 h-5 w-5 -translate-x-1/2 rounded-full bg-white ring-4 ring-emerald-400 transition duration-300 lg:right-0 lg:left-auto lg:translate-x-1/2;
-    content: "";
-  }
-
-  .jr-milestone:nth-child(even)::before {
-    @apply lg:right-auto lg:left-0 lg:-translate-x-1/2;
-  }
-
-  .jr-milestone:hover::before {
-    @apply scale-125 bg-emerald-500 shadow-lg shadow-emerald-500/60 ring-teal-200;
-  }
-
-  .jr-milestone-card {
-    @apply rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out;
-  }
-
-  .jr-milestone:hover .jr-milestone-card {
-    @apply -translate-y-1 bg-linear-to-br from-white to-emerald-50 shadow-xl shadow-emerald-900/10 ring-emerald-300;
-  }
-
-  .jr-milestone-card h3 {
-    @apply text-lg font-semibold text-emerald-800;
-  }
-
-  .jr-calendar {
-    @apply relative isolate grid gap-6 overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-teal-700 to-emerald-800 p-6 text-white shadow-xl shadow-emerald-900/20 sm:p-10 lg:grid-cols-2 lg:gap-10;
+  /* Formula and worked example panel */
+  .formula-panel {
+    @apply relative isolate grid scroll-mt-32 gap-6 overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-teal-700 to-emerald-800 p-6 text-white shadow-xl shadow-emerald-900/20 sm:p-10 lg:grid-cols-2 lg:gap-10;
     background-size: 200% 200%;
     transition: background-position 0.8s ease;
   }
 
-  .jr-calendar:hover {
+  .formula-panel:hover {
     background-position: 100% 100%;
   }
 
-  .jr-calendar::before {
+  .formula-panel::before {
     @apply absolute inset-0 -z-10 opacity-60;
     background-image: radial-gradient(rgb(255 255 255 / 0.16) 1.5px, transparent 1.5px);
     background-size: 22px 22px;
     content: "";
   }
 
-  .jr-day {
+  .formula-line {
     @apply flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2.5 text-sm font-semibold ring-1 ring-white/20 transition duration-300 hover:translate-x-1 hover:bg-white/20;
   }
 
-  .jr-day::before {
+  .formula-line::before {
     @apply h-8 w-8 rounded-lg bg-white shadow-md shadow-emerald-950/20;
     background-image: var(--ico-calendar);
   }
 
-  .jr-day:hover::before {
+  .formula-line:hover::before {
     @apply -rotate-6 scale-110;
   }
 
-  .jr-glass {
+  .formula-example {
     @apply rounded-2xl bg-white/10 p-5 ring-1 ring-white/20 transition duration-300 hover:-translate-y-1 hover:bg-white/15 sm:p-6;
   }
 
-  .jr-limits {
-    @apply rounded-3xl bg-linear-to-br from-emerald-50 to-teal-50/70 p-6 ring-1 ring-emerald-100 sm:p-8;
+  /* Limits */
+  .limits-frame {
+    @apply rounded-3xl border-2 border-transparent p-6 sm:p-8;
+    background:
+      linear-gradient(135deg, #f0fdf4, #fff 45%, #f0fdfa) padding-box,
+      linear-gradient(135deg, #34d399, #2dd4bf, #a7f3d0) border-box;
   }
 
-  .jr-limit {
-    @apply flex items-start gap-3 rounded-2xl p-3 text-sm leading-6 text-slate-700 transition duration-300 hover:bg-white hover:shadow-md hover:shadow-emerald-900/5;
+  .limits-list {
+    @apply mt-5 grid gap-3 sm:grid-cols-2;
   }
 
-  .jr-limit::before {
-    @apply mt-0.5 h-6 w-6 rounded-full shadow-sm shadow-emerald-600/30;
-    background-image: var(--ico-check-white), linear-gradient(135deg, #34d399, #0d9488);
-    background-size: 60%, 100%;
+  .limits-item {
+    @apply flex items-start gap-3 rounded-2xl bg-white/80 px-4 py-3 text-sm leading-6 text-slate-600 ring-1 ring-emerald-100 transition duration-300 hover:bg-white hover:text-slate-800 hover:shadow-md hover:shadow-emerald-900/5 hover:ring-emerald-300;
   }
 
-  .jr-limit:hover::before {
-    @apply scale-125;
+  .limits-item::before {
+    @apply mt-0.5 h-6 w-6 rounded-full bg-emerald-50 ring-1 ring-emerald-200;
+    background-image: var(--ico-info);
   }
 
-  /* Ovulation: spotlight */
-  .sp-steps {
-    @apply mt-6 grid gap-4 sm:grid-cols-2;
-    counter-reset: sp;
-  }
-
-  .sp-step {
-    @apply relative isolate flex min-h-32 items-center overflow-hidden rounded-3xl bg-white p-6 pl-24 text-base leading-7 text-slate-700 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:pl-28;
-    counter-increment: sp;
-  }
-
-  .sp-step::before {
-    @apply absolute top-1/2 left-6 -translate-y-1/2 bg-linear-to-b from-emerald-400 to-teal-600 bg-clip-text font-display text-7xl leading-none font-semibold text-transparent opacity-30 transition duration-500 ease-out sm:text-8xl;
-    content: counter(sp);
-  }
-
-  .sp-step:hover::before {
-    @apply scale-110 opacity-100;
-  }
-
-  .sp-stack {
-    @apply mt-6 grid gap-3;
-  }
-
-  .sp-card {
-    @apply grid gap-2 rounded-2xl border-2 border-transparent p-5 shadow-sm transition duration-300 ease-out hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-900/10 sm:grid-cols-[11rem_1fr] sm:items-center sm:gap-6 sm:p-6;
-    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #ecfdf5, #f0fdfa) border-box;
-  }
-
-  .sp-card:hover {
-    background: linear-gradient(135deg, #f0fdf4, #fff) padding-box, linear-gradient(135deg, #10b981, #14b8a6, #6ee7b7) border-box;
-  }
-
-  .sp-card h3 {
-    @apply w-fit rounded-full bg-emerald-50 px-3.5 py-1.5 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200 transition duration-300;
-  }
-
-  .sp-card:hover h3 {
-    @apply bg-linear-to-r from-emerald-700 to-teal-700 text-white ring-transparent;
-  }
-
-  .sp-band {
-    @apply relative isolate grid gap-5 overflow-hidden rounded-3xl bg-emerald-950 p-5 sm:p-8 lg:grid-cols-2 lg:p-10;
-  }
-
-  .sp-band::before,
-  .sp-band::after {
-    @apply absolute -z-10 rounded-full blur-3xl transition duration-1000 ease-out;
-    content: "";
-  }
-
-  .sp-band::before {
-    @apply -top-24 left-1/4 h-80 w-80 bg-emerald-500/25;
-  }
-
-  .sp-band::after {
-    @apply right-0 -bottom-24 h-72 w-72 bg-teal-400/20;
-  }
-
-  .sp-band:hover::before {
-    @apply translate-x-24;
-  }
-
-  .sp-band:hover::after {
-    @apply -translate-x-24;
-  }
-
-  .sp-glass {
-    @apply rounded-2xl bg-white/5 p-5 ring-1 ring-white/10 backdrop-blur-md transition duration-300 ease-out hover:-translate-y-1 hover:bg-white/10 hover:ring-emerald-400/40 sm:p-6;
-  }
-
-  .sp-line {
-    @apply rounded-xl bg-emerald-400/10 px-4 py-2.5 text-sm font-semibold text-emerald-100 ring-1 ring-emerald-400/20 transition duration-300 hover:translate-x-1 hover:bg-emerald-400/20;
-  }
-
-  .sp-checks {
-    @apply mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2;
-  }
-
-  .sp-check {
-    @apply flex items-start gap-3 rounded-xl p-2 text-base leading-7 text-slate-700 transition duration-300 hover:bg-white/80 hover:text-emerald-900 hover:shadow-sm;
-  }
-
-  .sp-check::before {
-    @apply mt-1 h-6 w-6 rounded-full bg-emerald-100 ring-1 ring-emerald-300;
-    background-image: var(--ico-check);
-    background-size: 60%;
-  }
-
-  .sp-check:hover::before {
-    @apply scale-110 ring-transparent;
-    background-image: var(--ico-check-white), linear-gradient(135deg, #34d399, #0d9488);
-    background-size: 60%, 100%;
+  .limits-item:hover::before {
+    @apply rotate-12 bg-emerald-600 ring-emerald-600;
+    background-image: var(--ico-info-white);
   }
 }

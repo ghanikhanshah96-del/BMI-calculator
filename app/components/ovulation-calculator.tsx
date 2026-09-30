@@ -208,14 +208,9 @@ export default function OvulationCalculator() {
       >
         {!result ? (
           <EmptyResult
-            icon={Sparkles}
-            text={
-              <>
-                Enter the first day of your last period and average cycle length, then press{" "}
-                <strong>Calculate</strong> for ovulation, fertile window, test day, and the next six cycles.
-              </>
-            }
-            formulas={["Ovulation ≈ day (length − 14)", "Fertile: −5 to +1 day", "Due date ≈ LMP + 280"]}
+            label="Most probable ovulation"
+            stats={["Fertile", "Test day", "Next period"]}
+            rows={["Fertile window", "Peak fertility", "Pregnancy test", "Next period", "Due date if conceived"]}
           />
         ) : (
           <ResultBody animationKey={`${animationKey}-${resultTab}`}>

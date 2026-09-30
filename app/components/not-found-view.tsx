@@ -23,7 +23,7 @@ export default function NotFoundView() {
             All calculators
           </Link>
         </div>
-        <ul className="mx-auto mt-12 grid max-w-3xl gap-3 sm:grid-cols-2">
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {toolLinks.map((tool) => (
             <li key={tool.id}>
               <Link href={toolHref(tool)} className="spotlight group card-lift card-surface flex items-center gap-3 p-4">

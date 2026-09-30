@@ -21,7 +21,18 @@ import {
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
-import { validateFields } from "../lib/validate";
+import {
+  checkRange,
+  formatCm,
+  formatFeetInches,
+  formatKg,
+  formatLb,
+  heightQuantity,
+  KG_PER_LB,
+  useUnitConversion,
+  weightQuantity,
+} from "../lib/units";
+import { validateFields, type FieldRule } from "../lib/validate";
 
 type UnitMode = "metric" | "imperial";
 type Gender = "male" | "female";
@@ -37,8 +48,8 @@ type TdeeInputs = {
   weightKg: number | null;
   weightLb: number | null;
   heightCm: number | null;
-  /** Imperial height as total inches, chosen from a dropdown. */
-  heightTotalIn: string;
+  heightFeet: number | null;
+  heightInches: number | null;
   activity: ActivityId | "";
   bodyFat: number | null;
 };
@@ -97,21 +108,19 @@ const EMPTY_INPUTS: TdeeInputs = {
   weightKg: null,
   weightLb: null,
   heightCm: null,
-  heightTotalIn: "",
+  heightFeet: null,
+  heightInches: null,
   activity: "",
   bodyFat: null,
 };
 
-/** Imperial height options as total inches (4'7"–7'0"), same range as tdeecalculator.net */
-const IMPERIAL_HEIGHT_OPTIONS = Array.from({ length: 30 }, (_, i) => {
-  const totalInches = 55 + i;
-  const feet = Math.floor(totalInches / 12);
-  const inches = totalInches % 12;
-  return {
-    value: String(totalInches),
-    label: `${feet}ft ${inches}in`,
-  };
-});
+const WEIGHT_KG_RANGE = [30, 300] as const;
+const HEIGHT_CM_RANGE = [120, 230] as const;
+
+const QUANTITIES = [
+  heightQuantity<TdeeInputs, UnitMode>("imperial", "heightCm", "heightFeet", "heightInches"),
+  weightQuantity<TdeeInputs, UnitMode>("imperial", "weightKg", "weightLb"),
+];
 
 function roundCal(n: number) {
   return Math.round(n);
@@ -175,7 +184,7 @@ function muscularPotential(heightCm: number) {
   const leanMass = stageLeanKg * 0.95;
   return [5, 10, 15].map((bf) => {
     const kg = leanMass / (1 - bf / 100);
-    return { bf, kg, lb: kg / 0.45359237 };
+    return { bf, kg, lb: kg / KG_PER_LB };
   });
 }
 
@@ -191,21 +200,32 @@ function macrosFromCalories(calories: number, split: MacroCarb) {
   };
 }
 
-function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result: TdeeResult } | { ok: false; error: string } {
-  const error = validateFields([
-    { label: "age", value: inputs.age, min: 15, max: 120 },
-    ...(unitMode === "metric"
-      ? [
-          { label: "weight", value: inputs.weightKg, min: 30, max: 300, unit: "kg" },
-          { label: "height", value: inputs.heightCm, min: 120, max: 230, unit: "cm" },
-        ]
-      : [
-          { label: "weight", value: inputs.weightLb, min: 66, max: 660, unit: "lb" },
-          { label: "height", value: inputs.heightTotalIn, kind: "choice" as const },
-        ]),
-    { label: "gender", value: inputs.gender, kind: "choice" },
-    { label: "activity level", value: inputs.activity, kind: "choice" },
-  ]);
+/** `exact` holds the unrounded metric height (cm) and weight (kg) behind the fields. */
+function buildResult(
+  inputs: TdeeInputs,
+  unitMode: UnitMode,
+  exact: Record<string, number | null>,
+): { ok: true; result: TdeeResult } | { ok: false; error: string } {
+  const imperial = unitMode === "imperial";
+  const measurementRules: FieldRule[] = imperial
+    ? [
+        { label: "weight", value: inputs.weightLb },
+        { label: "height in feet", value: inputs.heightFeet },
+        { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
+      ]
+    : [
+        { label: "weight", value: inputs.weightKg },
+        { label: "height", value: inputs.heightCm },
+      ];
+  const error =
+    validateFields([
+      { label: "age", value: inputs.age, min: 15, max: 120 },
+      ...measurementRules,
+      { label: "gender", value: inputs.gender, kind: "choice" },
+      { label: "activity level", value: inputs.activity, kind: "choice" },
+    ]) ||
+    checkRange("weight", exact.weight!, WEIGHT_KG_RANGE, imperial ? formatLb : formatKg) ||
+    checkRange("height", exact.height!, HEIGHT_CM_RANGE, imperial ? formatFeetInches : formatCm);
   if (error) return { ok: false, error };
   if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
     return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
@@ -213,8 +233,8 @@ function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result
 
   const gender = inputs.gender as Gender;
   const age = inputs.age!;
-  const weightKg = unitMode === "metric" ? inputs.weightKg! : inputs.weightLb! * 0.45359237;
-  const heightCm = unitMode === "metric" ? inputs.heightCm! : Number(inputs.heightTotalIn) * 2.54;
+  const weightKg = exact.weight!;
+  const heightCm = exact.height!;
 
   const bodyFat = inputs.bodyFat;
   const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
@@ -298,6 +318,7 @@ export default function TdeeCalculator() {
   const [macroCarb, setMacroCarb] = useState<MacroCarb>("moderate");
   const [resultTab, setResultTab] = useState<ResultTab>("overview");
   const resultRef = useRef<HTMLDivElement>(null);
+  const units = useUnitConversion(QUANTITIES);
 
   const macroCalories = useMemo(() => {
     if (!result) return 0;
@@ -306,10 +327,11 @@ export default function TdeeCalculator() {
     return result.tdee;
   }, [result, macroGoal]);
 
-  const calculate = () => {
-    const built = buildResult(inputs, unitMode);
+  /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
+  const run = (values: TdeeInputs, mode: UnitMode, silent = false) => {
+    const built = buildResult(values, mode, units.metric(values, mode));
     if (built.ok === false) {
-      setError(built.error);
+      setError(silent ? "" : built.error);
       setResult(null);
       return;
     }
@@ -317,17 +339,29 @@ export default function TdeeCalculator() {
     setResult(built.result);
     setResultTab("overview");
     setAnimationKey((k) => k + 1);
+    if (silent) return;
     window.requestAnimationFrame(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   };
 
+  const calculate = () => run(inputs, unitMode);
+
+  const changeUnit = (mode: UnitMode) => {
+    if (mode === unitMode) return;
+    const next = units.convert(inputs, unitMode, mode);
+    setInputs(next);
+    setUnitMode(mode);
+    run(next, mode, true);
+  };
+
   const update = (patch: Partial<TdeeInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
-    if ([patch.gender, patch.heightTotalIn, patch.activity].includes("")) setResult(null);
+    if ([patch.gender, patch.activity].includes("")) setResult(null);
   };
 
   const clear = () => {
+    units.reset();
     setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
@@ -339,7 +373,7 @@ export default function TdeeCalculator() {
 
   const weightDisplay = (kg: number) =>
     result?.unitMode === "imperial"
-      ? `${(kg / 0.45359237).toFixed(0)} lb`
+      ? `${(kg / KG_PER_LB).toFixed(0)} lb`
       : `${kg.toFixed(0)} kg`;
 
   return (
@@ -359,7 +393,7 @@ export default function TdeeCalculator() {
             { value: "metric", label: "Metric" },
           ]}
           value={unitMode}
-          onChange={setUnitMode}
+          onChange={changeUnit}
         />
 
         <InputGroup step={1} title="Your details">
@@ -419,12 +453,26 @@ export default function TdeeCalculator() {
                 />
               </FieldShell>
               <FieldShell label="Height">
-                <CustomSelect
-                  value={inputs.heightTotalIn}
-                  placeholder="Select height"
-                  onChange={(heightTotalIn) => update({ heightTotalIn })}
-                  options={IMPERIAL_HEIGHT_OPTIONS}
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  <NumberStepper
+                    value={inputs.heightFeet}
+                    min={3}
+                    max={7}
+                    step={1}
+                    suffix="ft"
+                    placeholder={5}
+                    onChange={(heightFeet) => update({ heightFeet })}
+                  />
+                  <NumberStepper
+                    value={inputs.heightInches}
+                    min={0}
+                    max={11.9}
+                    step={1}
+                    suffix="in"
+                    placeholder={9}
+                    onChange={(heightInches) => update({ heightInches })}
+                  />
+                </div>
               </FieldShell>
             </>
           )}
@@ -461,7 +509,6 @@ export default function TdeeCalculator() {
 
       <ResultCard
         resultRef={resultRef}
-        bodyClassName="lg:max-h-[min(70vh,680px)] lg:overflow-y-auto lg:overscroll-contain"
         toolbar={
           result ? (
             <SegmentedControl
@@ -482,14 +529,10 @@ export default function TdeeCalculator() {
       >
         {!result ? (
           <EmptyResult
-            icon={Activity}
-            text={
-              <>
-                Enter your details, then press <strong>Calculate</strong> for maintenance calories, BMR,
-                macros, ideal weight, BMI, and muscular potential.
-              </>
-            }
-            formulas={["Mifflin–St Jeor × activity", "Katch–McArdle with BF%", "Harris–Benedict reference"]}
+            label="Maintenance calories"
+            unit="kcal/day"
+            stats={["BMR", "Harris–Benedict"]}
+            rows={["Cut", "Maintain", "Bulk"]}
           />
         ) : (
           <ResultBody animationKey={`${animationKey}-${resultTab}`}>

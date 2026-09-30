@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDown, HeartPulse, RefreshCw } from "./icons";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { HeartPulse } from "./icons";
+import { useEffect, useRef, useState } from "react";
 import {
   ActionBar,
   CalcForm,
@@ -20,11 +20,24 @@ import {
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import {
+  checkRange,
+  CM_PER_IN,
+  formatCm,
+  formatFeetInches,
+  formatIn,
+  formatKg,
+  formatLb,
+  heightQuantity,
+  KG_PER_LB,
+  lengthQuantity,
+  useUnitConversion,
+  weightQuantity,
+} from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
 
 type UnitMode = "us" | "metric";
 type Gender = "male" | "female";
-type ConverterKind = "length" | "weight";
 
 type BodyFatInputs = {
   gender: Gender | "";
@@ -56,8 +69,6 @@ type BodyFatResult = {
   gender: Gender;
 };
 
-const KG_PER_LB = 0.45359237;
-
 const EMPTY_INPUTS: BodyFatInputs = {
   gender: "",
   age: null,
@@ -74,20 +85,21 @@ const EMPTY_INPUTS: BodyFatInputs = {
   hipCm: null,
 };
 
-const LENGTH_UNITS = [
-  { value: "m", label: "Meters (m)", factor: 1 },
-  { value: "cm", label: "Centimeters (cm)", factor: 0.01 },
-  { value: "mm", label: "Millimeters (mm)", factor: 0.001 },
-  { value: "ft", label: "Feet (ft)", factor: 0.3048 },
-  { value: "in", label: "Inches (in)", factor: 0.0254 },
-] as const;
+const RANGES = {
+  weight: [25, 320],
+  height: [100, 250],
+  neck: [20, 80],
+  waist: [40, 200],
+  hip: [40, 200],
+} as const;
 
-const WEIGHT_UNITS = [
-  { value: "kg", label: "Kilograms (kg)", factor: 1 },
-  { value: "g", label: "Grams (g)", factor: 0.001 },
-  { value: "lb", label: "Pounds (lb)", factor: KG_PER_LB },
-  { value: "oz", label: "Ounces (oz)", factor: 0.028349523125 },
-] as const;
+const QUANTITIES = [
+  weightQuantity<BodyFatInputs, UnitMode>("us", "weightKg", "weightLb"),
+  heightQuantity<BodyFatInputs, UnitMode>("us", "heightCm", "heightFeet", "heightInches"),
+  lengthQuantity<BodyFatInputs, UnitMode>("neck", "us", "neckCm", "neckIn"),
+  lengthQuantity<BodyFatInputs, UnitMode>("waist", "us", "waistCm", "waistIn"),
+  lengthQuantity<BodyFatInputs, UnitMode>("hip", "us", "hipCm", "hipIn"),
+];
 
 /** Jackson & Pollock ideal body fat % by age */
 const JACKSON_POLLOCK: Array<{ age: number; male: number; female: number }> = [
@@ -191,43 +203,44 @@ function bmiBodyFatPercent(gender: Gender, age: number, bmi: number) {
   return gender === "male" ? 1.2 * bmi + 0.23 * age - 16.2 : 1.2 * bmi + 0.23 * age - 5.4;
 }
 
-/** Reads the active unit system into inches and kilograms, or returns a validation message. */
-function readMeasurements(inputs: BodyFatInputs, unitMode: UnitMode, gender: Gender | "") {
+/**
+ * Checks the fields of the active unit system, then returns the exact measurements in inches and
+ * kilograms (the Navy formula's units), or a validation message worded in the user's units.
+ */
+function readMeasurements(inputs: BodyFatInputs, unitMode: UnitMode, gender: Gender | "", exact: Record<string, number | null>) {
   const needsHip = gender === "female";
-  if (unitMode === "us") {
-    const rules: FieldRule[] = [
-      { label: "weight", value: inputs.weightLb, min: 50, max: 700, unit: "lb" },
-      { label: "height in feet", value: inputs.heightFeet, min: 3, max: 8, unit: "ft" },
-      { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
-      { label: "neck", value: inputs.neckIn, min: 8, max: 30, unit: "in" },
-      { label: "waist", value: inputs.waistIn, min: 20, max: 80, unit: "in" },
-      ...(needsHip ? [{ label: "hip", value: inputs.hipIn, min: 20, max: 80, unit: "in" }] : []),
-    ];
-    const error = validateFields(rules);
-    if (error) return error;
-    return {
-      heightIn: inputs.heightFeet! * 12 + (inputs.heightInches ?? 0),
-      neckIn: inputs.neckIn!,
-      waistIn: inputs.waistIn!,
-      hipIn: inputs.hipIn ?? 0,
-      weightKg: inputs.weightLb! * KG_PER_LB,
-    };
-  }
-  const rules: FieldRule[] = [
-    { label: "weight", value: inputs.weightKg, min: 25, max: 320, unit: "kg" },
-    { label: "height", value: inputs.heightCm, min: 100, max: 250, unit: "cm" },
-    { label: "neck", value: inputs.neckCm, min: 20, max: 80, unit: "cm" },
-    { label: "waist", value: inputs.waistCm, min: 40, max: 200, unit: "cm" },
-    ...(needsHip ? [{ label: "hip", value: inputs.hipCm, min: 40, max: 200, unit: "cm" }] : []),
-  ];
-  const error = validateFields(rules);
+  const imperial = unitMode === "us";
+  const presence: FieldRule[] = imperial
+    ? [
+        { label: "weight", value: inputs.weightLb },
+        { label: "height in feet", value: inputs.heightFeet },
+        { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
+        { label: "neck", value: inputs.neckIn },
+        { label: "waist", value: inputs.waistIn },
+        ...(needsHip ? [{ label: "hip", value: inputs.hipIn }] : []),
+      ]
+    : [
+        { label: "weight", value: inputs.weightKg },
+        { label: "height", value: inputs.heightCm },
+        { label: "neck", value: inputs.neckCm },
+        { label: "waist", value: inputs.waistCm },
+        ...(needsHip ? [{ label: "hip", value: inputs.hipCm }] : []),
+      ];
+  const length = imperial ? formatIn : formatCm;
+  const error =
+    validateFields(presence) ||
+    checkRange("weight", exact.weight!, RANGES.weight, imperial ? formatLb : formatKg) ||
+    checkRange("height", exact.height!, RANGES.height, imperial ? formatFeetInches : formatCm) ||
+    checkRange("neck", exact.neck!, RANGES.neck, length) ||
+    checkRange("waist", exact.waist!, RANGES.waist, length) ||
+    (needsHip ? checkRange("hip", exact.hip!, RANGES.hip, length) : "");
   if (error) return error;
   return {
-    heightIn: inputs.heightCm! / 2.54,
-    neckIn: inputs.neckCm! / 2.54,
-    waistIn: inputs.waistCm! / 2.54,
-    hipIn: (inputs.hipCm ?? 0) / 2.54,
-    weightKg: inputs.weightKg!,
+    heightIn: exact.height! / CM_PER_IN,
+    neckIn: exact.neck! / CM_PER_IN,
+    waistIn: exact.waist! / CM_PER_IN,
+    hipIn: needsHip ? exact.hip! / CM_PER_IN : 0,
+    weightKg: exact.weight!,
   };
 }
 
@@ -330,106 +343,6 @@ function BodyFatGauge({
   );
 }
 
-function UnitConverter() {
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [kind, setKind] = useState<ConverterKind>("length");
-  const [fromUnit, setFromUnit] = useState("");
-  const [toUnit, setToUnit] = useState("");
-  const [amount, setAmount] = useState<number | null>(null);
-  const panelId = useId();
-
-  const units: ReadonlyArray<{ value: string; label: string; factor: number }> =
-    kind === "length" ? LENGTH_UNITS : WEIGHT_UNITS;
-  const options = units.map((unit) => ({ value: unit.value, label: unit.label }));
-
-  const converted = useMemo(() => {
-    const from = units.find((unit) => unit.value === fromUnit);
-    const to = units.find((unit) => unit.value === toUnit);
-    if (!from || !to || amount === null) return null;
-    return (amount * from.factor) / to.factor;
-  }, [units, fromUnit, toUnit, amount]);
-
-  return (
-    <div className="overflow-hidden rounded-2xl bg-linear-to-br from-emerald-50 via-white to-teal-50 ring-1 ring-emerald-100">
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={panelId}
-        data-tip={open ? "Hide the unit converter" : "Convert tape or scale readings between units"}
-        onClick={() => {
-          setOpen((prev) => !prev);
-          setMounted(true);
-        }}
-        className="group flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
-      >
-        <span className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-900">
-          <RefreshCw className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-          Unit converter
-          <span className="font-normal text-slate-600">· cm, in, kg, lb and more</span>
-        </span>
-        <ChevronDown className={`h-4 w-4 flex-none text-emerald-700 transition duration-300 ${open ? "rotate-180" : ""}`} aria-hidden="true" />
-      </button>
-      <div id={panelId} className={open ? "accordion-panel accordion-open" : "accordion-panel"}>
-        <div className="accordion-inner" inert={!open}>
-          {mounted ? (
-            <div className="space-y-2.5 px-4 pb-4">
-              <SegmentedControl
-                label="Converter type"
-                size="sm"
-                options={[
-                  { value: "length", label: "Length" },
-                  { value: "weight", label: "Weight" },
-                ]}
-                value={kind}
-                onChange={(next) => {
-                  setKind(next);
-                  setFromUnit("");
-                  setToUnit("");
-                }}
-              />
-              <div className="grid gap-2.5 sm:grid-cols-2">
-                <FieldShell label="Convert">
-                  <NumberStepper
-                    value={amount}
-                    min={0}
-                    max={1_000_000}
-                    step={0.5}
-                    placeholder={kind === "length" ? 32 : 150}
-                    onChange={setAmount}
-                    addon={
-                      <CustomSelect
-                        variant="unit"
-                        ariaLabel="From unit"
-                        placeholder="From"
-                        value={fromUnit}
-                        onChange={setFromUnit}
-                        options={options}
-                      />
-                    }
-                  />
-                </FieldShell>
-                <FieldShell label="Into">
-                  <CustomSelect value={toUnit} onChange={setToUnit} options={options} placeholder="Select a unit" />
-                </FieldShell>
-              </div>
-              <p className="rounded-xl bg-white px-3.5 py-2.5 text-base font-semibold text-slate-950 ring-1 ring-emerald-100" aria-live="polite">
-                {converted === null ? (
-                  <span className="text-sm font-medium text-slate-500">Enter an amount and pick both units.</span>
-                ) : (
-                  <>
-                    {Number(converted.toPrecision(6))} <span className="text-sm font-semibold text-slate-600">{toUnit}</span>
-                  </>
-                )}
-              </p>
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function BodyFatCalculator() {
   const [unitMode, setUnitMode] = useState<UnitMode>("us");
   const [inputs, setInputs] = useState<BodyFatInputs>(EMPTY_INPUTS);
@@ -438,6 +351,7 @@ export default function BodyFatCalculator() {
   const [displayUnits, setDisplayUnits] = useState<UnitMode>("us");
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
+  const units = useUnitConversion(QUANTITIES);
 
   const update = (patch: Partial<BodyFatInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
@@ -445,29 +359,32 @@ export default function BodyFatCalculator() {
   };
   const isFemale = inputs.gender === "female";
 
-  const calculate = () => {
+  /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
+  const run = (values: BodyFatInputs, mode: UnitMode, silent = false) => {
+    const fail = (message: string) => {
+      setError(silent ? "" : message);
+      setResult(null);
+    };
     const detailsError = validateFields([
-      { label: "age", value: inputs.age, min: 10, max: 120 },
-      { label: "gender", value: inputs.gender, kind: "choice" },
+      { label: "age", value: values.age, min: 10, max: 120 },
+      { label: "gender", value: values.gender, kind: "choice" },
     ]);
-    const measured = readMeasurements(inputs, unitMode, inputs.gender);
+    const measured = readMeasurements(values, mode, values.gender, units.metric(values, mode));
     const message = detailsError || (typeof measured === "string" ? measured : "");
     if (message || typeof measured === "string") {
-      setError(message);
-      setResult(null);
+      fail(message);
       return;
     }
 
-    const gender = inputs.gender as Gender;
-    const age = inputs.age!;
+    const gender = values.gender as Gender;
+    const age = values.age!;
     const navy = navyBodyFatPercent(gender, measured.heightIn, measured.neckIn, measured.waistIn, measured.hipIn);
     if (navy === null || !Number.isFinite(navy)) {
-      setError(
+      fail(
         gender === "male"
           ? "Waist must be larger than neck for a valid Navy estimate."
           : "Waist + hip must be larger than neck for a valid Navy estimate.",
       );
-      setResult(null);
       return;
     }
 
@@ -489,14 +406,26 @@ export default function BodyFatCalculator() {
       fatToLoseKg: navy > idealPct ? measured.weightKg * ((navy - idealPct) / 100) : 0,
       gender,
     });
-    setDisplayUnits(unitMode);
+    setDisplayUnits(mode);
     setAnimationKey((k) => k + 1);
+    if (silent) return;
     window.requestAnimationFrame(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   };
 
+  const calculate = () => run(inputs, unitMode);
+
+  const changeUnit = (mode: UnitMode) => {
+    if (mode === unitMode) return;
+    const next = units.convert(inputs, unitMode, mode);
+    setInputs(next);
+    setUnitMode(mode);
+    run(next, mode, true);
+  };
+
   const clear = () => {
+    units.reset();
     setInputs(EMPTY_INPUTS);
     setUnitMode("us");
     setError("");
@@ -523,7 +452,7 @@ export default function BodyFatCalculator() {
             { value: "metric", label: "Metric" },
           ]}
           value={unitMode}
-          onChange={setUnitMode}
+          onChange={changeUnit}
         />
 
         <InputGroup step={1} title="Your details">
@@ -570,7 +499,7 @@ export default function BodyFatCalculator() {
                 <NumberStepper
                   value={inputs.heightInches}
                   min={0}
-                  max={11.5}
+                  max={11.9}
                   step={0.5}
                   suffix="in"
                   placeholder={10}
@@ -679,8 +608,6 @@ export default function BodyFatCalculator() {
         <FormError message={error} />
 
         <ActionBar onCalculate={calculate} onClear={clear} />
-
-        <UnitConverter />
       </CalcForm>
 
       <ResultCard
@@ -702,15 +629,10 @@ export default function BodyFatCalculator() {
       >
         {!result ? (
           <EmptyResult
-            icon={HeartPulse}
-            text={
-              <>
-                Enter gender, age, weight, height, neck, and waist
-                {isFemale ? " (plus hip)" : ""}, then press <strong>Calculate</strong> for U.S. Navy body fat, ACE
-                category, lean mass, and a BMI-method estimate.
-              </>
-            }
-            formulas={["U.S. Navy method", "BMI-based estimate", "Jackson & Pollock ideal %"]}
+            label="Body fat (U.S. Navy)"
+            unit="%"
+            stats={["Fat mass", "Lean mass"]}
+            rows={["Body fat category", "Ideal body fat", "Fat to lose", "BMI method"]}
           />
         ) : (
           <ResultBody animationKey={animationKey}>

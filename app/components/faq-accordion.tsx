@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { ChevronDown } from "./icons";
 
 export type FaqEntry = { question: string; answer: string };
-export type FaqVariant = "list" | "split" | "numbered" | "cards";
+export type FaqVariant = "list" | "split" | "cards";
 
 /** Only one answer is open at a time; answers stay in the HTML so they are indexable. */
 export default function FaqAccordion({

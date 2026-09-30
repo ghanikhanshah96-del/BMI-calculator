@@ -21,6 +21,19 @@ import {
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import {
+  checkRange,
+  cmFromFeetInches,
+  feetInchesFromCm,
+  formatCm,
+  formatFeetInches,
+  formatKg,
+  formatLb,
+  KG_PER_LB,
+  roundTo,
+  useUnitConversion,
+  type Quantity,
+} from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
 
 type UnitMode = "metric" | "us" | "custom";
@@ -73,24 +86,68 @@ const EMPTY_INPUTS: BmiInputs = {
   customWeightUnit: "",
 };
 
-const KG_PER_LB = 0.45359237;
 const HEIGHT_CM_RANGE = { min: 50, max: 300 };
 const WEIGHT_KG_RANGE = { min: 1, max: 650 };
 
 const LENGTH_UNITS = [
-  { value: "cm", label: "Centimeters (cm)", short: "cm", toCm: 1, step: 1, typical: 170 },
-  { value: "m", label: "Meters (m)", short: "m", toCm: 100, step: 0.01, typical: 1.7 },
-  { value: "mm", label: "Millimeters (mm)", short: "mm", toCm: 0.1, step: 10, typical: 1700 },
-  { value: "ft", label: "Feet (ft)", short: "ft", toCm: 30.48, step: 0.1, typical: 5.6 },
-  { value: "in", label: "Inches (in)", short: "in", toCm: 2.54, step: 1, typical: 67 },
+  { value: "cm", label: "Centimeters (cm)", short: "cm", toCm: 1, step: 1, typical: 170, decimals: 1 },
+  { value: "m", label: "Meters (m)", short: "m", toCm: 100, step: 0.01, typical: 1.7, decimals: 3 },
+  { value: "mm", label: "Millimeters (mm)", short: "mm", toCm: 0.1, step: 10, typical: 1700, decimals: 0 },
+  { value: "ft", label: "Feet (ft)", short: "ft", toCm: 30.48, step: 0.1, typical: 5.6, decimals: 2 },
+  { value: "in", label: "Inches (in)", short: "in", toCm: 2.54, step: 1, typical: 67, decimals: 1 },
 ] as const;
 
 const WEIGHT_UNITS = [
-  { value: "kg", label: "Kilograms (kg)", short: "kg", toKg: 1, step: 0.1, typical: 70 },
-  { value: "g", label: "Grams (g)", short: "g", toKg: 0.001, step: 100, typical: 70000 },
-  { value: "lb", label: "Pounds (lb)", short: "lb", toKg: KG_PER_LB, step: 0.5, typical: 154 },
-  { value: "oz", label: "Ounces (oz)", short: "oz", toKg: 0.028349523125, step: 1, typical: 2470 },
+  { value: "kg", label: "Kilograms (kg)", short: "kg", toKg: 1, step: 0.1, typical: 70, decimals: 1 },
+  { value: "g", label: "Grams (g)", short: "g", toKg: 0.001, step: 100, typical: 70000, decimals: 0 },
+  { value: "lb", label: "Pounds (lb)", short: "lb", toKg: KG_PER_LB, step: 0.5, typical: 154, decimals: 1 },
+  { value: "oz", label: "Ounces (oz)", short: "oz", toKg: 0.028349523125, step: 1, typical: 2470, decimals: 1 },
 ] as const;
+
+const lengthUnitOf = (value: string) => LENGTH_UNITS.find((unit) => unit.value === value);
+const weightUnitOf = (value: string) => WEIGHT_UNITS.find((unit) => unit.value === value);
+
+const QUANTITIES: ReadonlyArray<Quantity<BmiInputs, UnitMode>> = [
+  {
+    key: "height",
+    fields: (mode) =>
+      mode === "metric" ? ["heightCm"] : mode === "us" ? ["heightFeet", "heightInches"] : ["customHeight", "customHeightUnit"],
+    toMetric: (inputs, mode) => {
+      if (mode === "metric") return inputs.heightCm;
+      if (mode === "us") return cmFromFeetInches(inputs.heightFeet, inputs.heightInches);
+      const unit = lengthUnitOf(inputs.customHeightUnit);
+      return unit && inputs.customHeight !== null ? inputs.customHeight * unit.toCm : null;
+    },
+    fromMetric: (cm, mode, inputs) => {
+      if (mode === "metric") return { heightCm: cm === null ? null : roundTo(cm, 1) };
+      if (mode === "us") {
+        if (cm === null) return { heightFeet: null, heightInches: null };
+        const { feet, inches } = feetInchesFromCm(cm);
+        return { heightFeet: feet, heightInches: inches };
+      }
+      if (cm === null) return { customHeight: null };
+      const unit = lengthUnitOf(inputs.customHeightUnit) ?? LENGTH_UNITS[0];
+      return { customHeight: roundTo(cm / unit.toCm, unit.decimals), customHeightUnit: unit.value };
+    },
+  },
+  {
+    key: "weight",
+    fields: (mode) => (mode === "metric" ? ["weightKg"] : mode === "us" ? ["weightLb"] : ["customWeight", "customWeightUnit"]),
+    toMetric: (inputs, mode) => {
+      if (mode === "metric") return inputs.weightKg;
+      if (mode === "us") return inputs.weightLb === null ? null : inputs.weightLb * KG_PER_LB;
+      const unit = weightUnitOf(inputs.customWeightUnit);
+      return unit && inputs.customWeight !== null ? inputs.customWeight * unit.toKg : null;
+    },
+    fromMetric: (kg, mode, inputs) => {
+      if (mode === "metric") return { weightKg: kg === null ? null : roundTo(kg, 1) };
+      if (mode === "us") return { weightLb: kg === null ? null : roundTo(kg / KG_PER_LB, 1) };
+      if (kg === null) return { customWeight: null };
+      const unit = weightUnitOf(inputs.customWeightUnit) ?? WEIGHT_UNITS[0];
+      return { customWeight: roundTo(kg / unit.toKg, unit.decimals), customWeightUnit: unit.value };
+    },
+  },
+];
 
 const GENDER_OPTIONS = [
   { value: "male", label: "Male" },
@@ -100,7 +157,7 @@ const GENDER_OPTIONS = [
 const UNIT_OPTIONS = [
   { value: "us", label: "Imperial" },
   { value: "metric", label: "Metric" },
-  { value: "custom", label: "Custom units" },
+  { value: "custom", label: "Custom" },
 ] as const;
 
 function getWhoCategory(bmi: number): { label: string; tone: string } {
@@ -135,7 +192,6 @@ function buildResult(heightM: number, weightKg: number, age: number, showLb: boo
   };
 }
 
-/** Converts the active unit mode's fields to metres and kilograms, or returns a validation message. */
 /** Presence-only rules so one message can list every empty field; ranges are checked in readMeasurements. */
 function requiredMeasurements(inputs: BmiInputs, unitMode: UnitMode): FieldRule[] {
   if (unitMode === "metric") {
@@ -158,46 +214,17 @@ function requiredMeasurements(inputs: BmiInputs, unitMode: UnitMode): FieldRule[
   ];
 }
 
-function readMeasurements(inputs: BmiInputs, unitMode: UnitMode): { heightM: number; weightKg: number } | string {
-  if (unitMode === "metric") {
-    const error = validateFields([
-      { label: "height", value: inputs.heightCm, ...HEIGHT_CM_RANGE, unit: "cm" },
-      { label: "weight", value: inputs.weightKg, ...WEIGHT_KG_RANGE, unit: "kg" },
-    ]);
-    if (error) return error;
-    return { heightM: inputs.heightCm! / 100, weightKg: inputs.weightKg! };
-  }
-
+/** Range checks on the exact metric values, worded in the unit system the user is looking at. */
+function measurementError(inputs: BmiInputs, unitMode: UnitMode, heightCm: number, weightKg: number) {
   if (unitMode === "us") {
-    const error = validateFields([
-      { label: "height in feet", value: inputs.heightFeet, min: 1, max: 9, unit: "ft" },
-      { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
-      { label: "weight", value: inputs.weightLb, min: 2, max: 1400, unit: "lb" },
-    ]);
-    if (error) return error;
-    const totalInches = inputs.heightFeet! * 12 + (inputs.heightInches ?? 0);
-    return { heightM: totalInches * 0.0254, weightKg: inputs.weightLb! * KG_PER_LB };
+    const inchesError = validateFields([{ label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" }]);
+    if (inchesError) return inchesError;
   }
-
-  const rules: FieldRule[] = [
-    { label: "height", value: inputs.customHeight },
-    { label: "weight", value: inputs.customWeight },
-    { label: "height unit", value: inputs.customHeightUnit, kind: "choice" },
-    { label: "weight unit", value: inputs.customWeightUnit, kind: "choice" },
-  ];
-  const missing = validateFields(rules);
-  if (missing) return missing;
-
-  const lengthUnit = LENGTH_UNITS.find((unit) => unit.value === inputs.customHeightUnit)!;
-  const weightUnit = WEIGHT_UNITS.find((unit) => unit.value === inputs.customWeightUnit)!;
-  const heightCm = inputs.customHeight! * lengthUnit.toCm;
-  const weightKg = inputs.customWeight! * weightUnit.toKg;
-  const rangeError = validateFields([
-    { label: "height (converted)", value: Number(heightCm.toFixed(1)), ...HEIGHT_CM_RANGE, unit: "cm" },
-    { label: "weight (converted)", value: Number(weightKg.toFixed(1)), ...WEIGHT_KG_RANGE, unit: "kg" },
-  ]);
-  if (rangeError) return rangeError;
-  return { heightM: heightCm / 100, weightKg };
+  const suffix = unitMode === "custom" ? " (converted)" : "";
+  return (
+    checkRange(`height${suffix}`, heightCm, [HEIGHT_CM_RANGE.min, HEIGHT_CM_RANGE.max], unitMode === "us" ? formatFeetInches : formatCm) ||
+    checkRange(`weight${suffix}`, weightKg, [WEIGHT_KG_RANGE.min, WEIGHT_KG_RANGE.max], unitMode === "us" ? formatLb : formatKg)
+  );
 }
 
 /** Needle angles calibrated to calculator.net gauge (BMI 20.1 ≈ 42.6°). */
@@ -359,17 +386,6 @@ function BmiGauge({ bmi, animationKey }: { bmi: number; animationKey: number }) 
   );
 }
 
-function formatFeetInches(heightM: number) {
-  const totalInches = heightM / 0.0254;
-  let feet = Math.floor(totalInches / 12);
-  let inches = Math.round(totalInches - feet * 12);
-  if (inches === 12) {
-    feet += 1;
-    inches = 0;
-  }
-  return `${feet} ft ${inches} in`;
-}
-
 const kgToLb = (kg: number) => kg / KG_PER_LB;
 
 function OtherUnitsPanel({ result }: { result: BmiResult }) {
@@ -379,7 +395,7 @@ function OtherUnitsPanel({ result }: { result: BmiResult }) {
       cells: [
         "Height",
         `${(result.heightM * 100).toFixed(1)} cm · ${result.heightM.toFixed(2)} m`,
-        formatFeetInches(result.heightM),
+        formatFeetInches(result.heightM * 100),
       ],
     },
     {
@@ -410,6 +426,7 @@ export default function BmiCalculator() {
   const [result, setResult] = useState<BmiResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
+  const units = useUnitConversion(QUANTITIES);
 
   const update = (patch: Partial<BmiInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
@@ -418,30 +435,43 @@ export default function BmiCalculator() {
   const lengthUnit = LENGTH_UNITS.find((unit) => unit.value === inputs.customHeightUnit);
   const weightUnit = WEIGHT_UNITS.find((unit) => unit.value === inputs.customWeightUnit);
 
-  const calculate = () => {
-    const detailsError = validateFields([
-      { label: "age", value: inputs.age, min: 2, max: 120 },
-      ...requiredMeasurements(inputs, unitMode),
-      { label: "gender", value: inputs.gender, kind: "choice" },
-    ]);
-    const measurements = readMeasurements(inputs, unitMode);
-    const message = detailsError || (typeof measurements === "string" ? measurements : "");
-    if (message || typeof measurements === "string") {
-      setError(message);
+  /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
+  const run = (values: BmiInputs, mode: UnitMode, silent = false) => {
+    const exact = units.metric(values, mode);
+    const message =
+      validateFields([
+        { label: "age", value: values.age, min: 2, max: 120 },
+        ...requiredMeasurements(values, mode),
+        { label: "gender", value: values.gender, kind: "choice" },
+      ]) || measurementError(values, mode, exact.height!, exact.weight!);
+    if (message) {
+      setError(silent ? "" : message);
       setResult(null);
       return;
     }
 
-    const showLb = unitMode === "us" || inputs.customWeightUnit === "lb" || inputs.customWeightUnit === "oz";
+    const showLb = mode === "us" || values.customWeightUnit === "lb" || values.customWeightUnit === "oz";
     setError("");
-    setResult(buildResult(measurements.heightM, measurements.weightKg, inputs.age!, unitMode !== "metric" && showLb));
+    setResult(buildResult(exact.height! / 100, exact.weight!, values.age!, mode !== "metric" && showLb));
     setAnimationKey((key) => key + 1);
+    if (silent) return;
     window.requestAnimationFrame(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   };
 
+  const calculate = () => run(inputs, unitMode);
+
+  const changeUnit = (mode: UnitMode) => {
+    if (mode === unitMode) return;
+    const next = units.convert(inputs, unitMode, mode);
+    setInputs(next);
+    setUnitMode(mode);
+    run(next, mode, true);
+  };
+
   const clear = () => {
+    units.reset();
     setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
@@ -466,7 +496,7 @@ export default function BmiCalculator() {
           description="Check your BMI category and healthy weight range in seconds."
         />
 
-        <SegmentedControl label="Unit system" options={UNIT_OPTIONS} value={unitMode} onChange={setUnitMode} />
+        <SegmentedControl label="Unit system" options={UNIT_OPTIONS} value={unitMode} onChange={changeUnit} />
 
         <InputGroup step={1} title="Your details">
           <FieldShell label="Age">
@@ -499,7 +529,7 @@ export default function BmiCalculator() {
                   <NumberStepper
                     value={inputs.heightInches}
                     min={0}
-                    max={11}
+                    max={11.9}
                     step={1}
                     suffix="in"
                     placeholder={10}
@@ -598,14 +628,10 @@ export default function BmiCalculator() {
       <ResultCard resultRef={resultRef} id="bmi-result-panel">
         {!result ? (
           <EmptyResult
-            icon={Scale}
-            text={
-              <>
-                Enter your age, gender, height, and weight, then press <strong>Calculate</strong> to see
-                your BMI, category, healthy range, BMI Prime, and Ponderal Index.
-              </>
-            }
-            formulas={["BMI = kg / m²", "Imperial: 703 × lb / in²", "BMI Prime = BMI / 25", "PI = kg / m³"]}
+            label="Body Mass Index"
+            unit="kg/m²"
+            stats={["Healthy weight", "Category", "BMI Prime", "Ponderal Index"]}
+            rows={["Height", "Weight", "Healthy weight range"]}
           />
         ) : (
           <ResultBody animationKey={animationKey}>

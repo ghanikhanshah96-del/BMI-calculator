@@ -149,15 +149,20 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           </ul>
         </section>
 
-        <section aria-labelledby="guide-structure" className="mx-auto section-gap max-w-3xl">
+        <section aria-labelledby="guide-structure" className="section-gap">
           <h2 id="guide-structure" className="section-title">
             How each guide is structured
           </h2>
-          <dl className="mt-6 space-y-5">
-            {guideParts.map((part) => (
-              <div key={part.title}>
-                <dt className="font-semibold text-slate-900">{part.title}</dt>
-                <dd className="body-copy mt-1">{part.text}</dd>
+          <dl className="mt-6 grid gap-5 md:grid-cols-3">
+            {guideParts.map((part, index) => (
+              <div key={part.title} className="card-surface flex gap-4 p-6">
+                <span className="icon-badge brand-badge text-sm font-semibold" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <div>
+                  <dt className="font-semibold text-slate-900">{part.title}</dt>
+                  <dd className="muted-copy mt-1">{part.text}</dd>
+                </div>
               </div>
             ))}
           </dl>

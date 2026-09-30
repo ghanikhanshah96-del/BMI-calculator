@@ -722,10 +722,6 @@ a {
     @apply h-9 w-9 flex-none rounded-lg;
   }
 
-  .menu-all {
-    @apply flex items-center justify-between bg-linear-to-r from-emerald-50 to-teal-50 px-5 py-3 text-sm font-semibold text-emerald-800 transition hover:from-emerald-100 hover:to-teal-100;
-  }
-
   .menu-toggle {
     @apply relative inline-flex h-11 w-11 flex-none items-center justify-center rounded-2xl bg-white text-emerald-800 shadow-md shadow-emerald-900/10 ring-1 ring-emerald-200 transition duration-300 hover:ring-emerald-400 active:scale-95 lg:hidden;
   }
@@ -833,20 +829,6 @@ a {
     @apply text-xs leading-snug text-slate-500;
   }
 
-  .mobile-all {
-    @apply flex min-h-13 items-center justify-between gap-3 rounded-2xl border border-transparent px-4 text-sm font-semibold text-emerald-800 shadow-sm transition duration-300 hover:shadow-md hover:shadow-emerald-900/10;
-    background:
-      linear-gradient(#fff, #fff) padding-box,
-      linear-gradient(120deg, #10b981, #14b8a6) border-box;
-  }
-
-  .mobile-all:hover,
-  .mobile-all[aria-current="page"] {
-    background:
-      linear-gradient(120deg, #ecfdf5, #f0fdfa) padding-box,
-      linear-gradient(120deg, #10b981, #14b8a6) border-box;
-  }
-
   .mobile-page-list {
     @apply grid gap-1.5;
   }
@@ -884,7 +866,7 @@ a {
   }
 
   .site-footer {
-    @apply relative isolate mt-auto overflow-hidden bg-slate-950 px-4 pb-8 pt-12 text-white sm:px-6 lg:px-8 lg:pt-16;
+    @apply relative isolate mt-auto overflow-hidden bg-slate-950 pb-8 pt-12 text-white lg:pt-16;
   }
 
   .footer-overlay {
@@ -949,8 +931,7 @@ a {
   }
 
   /* FAQ variants */
-  .faq-list,
-  .faq-numbered {
+  .faq-list {
     @apply space-y-2.5;
   }
 
@@ -970,56 +951,6 @@ a {
     @apply from-emerald-50 to-teal-50;
   }
 
-  .faq-numbered {
-    counter-reset: faq;
-  }
-
-  .faq-numbered .faq-question,
-  .faq-qchips .faq-question {
-    @apply flex-1;
-  }
-
-  .faq-numbered .faq-summary::before,
-  .faq-qchips .faq-summary::before {
-    @apply flex h-8 w-8 flex-none items-center justify-center text-xs font-bold transition duration-300;
-  }
-
-  .faq-numbered .faq-summary::before {
-    @apply rounded-lg bg-linear-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-600/25;
-    counter-increment: faq;
-    content: counter(faq, decimal-leading-zero);
-  }
-
-  .faq-numbered .faq-item:hover .faq-summary::before {
-    @apply -rotate-6 scale-110;
-  }
-
-  .sp-faq .faq-summary::before {
-    @apply rounded-full;
-  }
-
-  .faq-qchips .faq-summary::before {
-    @apply rounded-full bg-emerald-50 text-sm text-emerald-700 ring-1 ring-emerald-200;
-    content: "?";
-  }
-
-  .faq-qchips .faq-item:hover .faq-summary::before,
-  .faq-qchips .faq-item-open .faq-summary::before {
-    @apply bg-linear-to-br from-emerald-500 to-teal-600 text-white ring-transparent;
-  }
-
-  .ed-faq {
-    @apply space-y-1 rounded-3xl bg-white p-2 shadow-sm ring-1 ring-slate-900/5;
-  }
-
-  .ed-faq .faq-item {
-    @apply rounded-2xl shadow-none ring-0 hover:bg-emerald-50/70 hover:shadow-none;
-  }
-
-  .ed-faq .faq-item-open {
-    @apply bg-linear-to-br from-emerald-50 to-teal-50/60 shadow-none;
-  }
-
   .related-card {
     @apply flex h-full flex-col p-5;
   }
@@ -1030,6 +961,10 @@ a {
 
   .related-card-cta {
     @apply mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700;
+  }
+
+  .toc-link {
+    @apply block rounded-lg border-l-2 border-transparent px-3 py-2 text-slate-600 transition hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800;
   }
 
   .post-copy {
@@ -1138,11 +1073,44 @@ a {
   }
 
   .result-shell {
-    @apply relative min-w-0 scroll-mt-24 rounded-3xl bg-linear-to-br from-emerald-50/80 via-white to-teal-50/70 p-1.5 shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100 lg:sticky lg:top-24;
+    @apply relative flex min-w-0 scroll-mt-24 flex-col rounded-3xl bg-linear-to-br from-emerald-50/80 via-white to-teal-50/70 p-1.5 shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100;
   }
 
-  .formula-chip {
-    @apply rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-900 ring-1 ring-inset ring-emerald-100 transition hover:bg-linear-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white hover:ring-transparent;
+  /* Empty result preview */
+  .empty-result {
+    @apply flex h-full flex-col gap-3;
+  }
+
+  .empty-hero {
+    @apply rounded-2xl border-2 border-dashed border-emerald-200 bg-linear-to-br from-emerald-50 to-teal-50/60 px-5 py-5 sm:px-6;
+  }
+
+  .empty-label {
+    @apply text-[11px] font-semibold tracking-wide text-emerald-800 uppercase;
+  }
+
+  .empty-value {
+    @apply mt-2 flex items-baseline gap-2 font-display text-4xl font-medium tracking-widest text-emerald-300 sm:text-5xl;
+  }
+
+  .empty-unit {
+    @apply font-sans text-base font-medium tracking-normal text-emerald-700;
+  }
+
+  .empty-tile {
+    @apply flex flex-col gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-3 py-3;
+  }
+
+  .empty-slot {
+    @apply block h-3 w-3/4 rounded-full bg-linear-to-r from-emerald-100 to-slate-100;
+  }
+
+  .empty-rows {
+    @apply flex flex-1 flex-col justify-evenly divide-y divide-dashed divide-slate-200 rounded-xl border border-dashed border-slate-200 px-3;
+  }
+
+  .empty-row {
+    @apply flex items-center justify-between gap-3 py-3 text-sm text-slate-500;
   }
 
   .icon-tile {

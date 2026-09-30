@@ -352,7 +352,7 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
         {/* Tools */}
         <section
           id="tools"
-          className="defer-render relative isolate flex min-h-[calc(100svh-4rem)] scroll-mt-16 items-center overflow-hidden py-8 lg:py-10"
+          className="section-block relative isolate scroll-mt-16 overflow-hidden"
         >
           <Image
             src="/images/tools-bg.jpg"
@@ -487,11 +487,11 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
           </section>
 
           {/* FAQ */}
-          <section aria-labelledby="home-faq" className="mx-auto max-w-3xl pb-10 lg:pb-14">
-            <h2 id="home-faq" className="text-center text-3xl leading-tight text-slate-900 sm:text-[2.25rem]">
+          <section aria-labelledby="home-faq" className="pb-10 lg:pb-14">
+            <h2 id="home-faq" className="section-title">
               Frequently asked questions
             </h2>
-            <FaqAccordion items={faqs} className="mt-6" />
+            <FaqAccordion items={faqs} variant="split" className="mt-5" />
           </section>
 
           {/* Trust */}

@@ -98,7 +98,7 @@ export default function ToolView({
         <ToolSections tool={tool} content={content} />
 
         {guide ? (
-          <section aria-label="In-depth guide" className="cta-panel section-gap mx-auto max-w-5xl">
+          <section aria-label="In-depth guide" className="cta-panel section-gap">
             <div className="cta-glow" />
             <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-lime-200">
               <BookOpen className="h-4 w-4" />
@@ -113,7 +113,7 @@ export default function ToolView({
           </section>
         ) : null}
 
-        <section aria-labelledby="related-tools" className="section-gap mx-auto max-w-5xl">
+        <section aria-labelledby="related-tools" className="section-gap">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 id="related-tools" className="section-title">
               Related calculators
@@ -142,7 +142,7 @@ export default function ToolView({
           </ul>
         </section>
 
-        <p className="mx-auto mt-12 max-w-3xl text-center text-xs leading-5 text-slate-600">
+        <p className="mt-12 rounded-2xl bg-white/70 px-5 py-4 text-center text-xs leading-5 text-slate-600 ring-1 ring-slate-900/5">
           Results are estimates for education and planning, not a diagnosis. Talk to a qualified healthcare professional
           before making medical decisions. Read our{" "}
           <Link href="/about" className="font-semibold text-emerald-700 underline-offset-2 hover:underline">

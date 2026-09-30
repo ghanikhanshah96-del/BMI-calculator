@@ -83,7 +83,7 @@ export default function CalculatorsView({
 
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
-      <SiteHeader activePage="calculators" />
+      <SiteHeader activePage="all-tools" />
       <PageHero
         image="/images/tools-bg.jpg"
         imageAlt="Colorful salad bowl with avocado, chickpeas, tomatoes, and sweet potato"
@@ -157,22 +157,25 @@ export default function CalculatorsView({
           </dl>
         </section>
 
-        <section aria-labelledby="how-built" className="mx-auto section-gap max-w-3xl">
+        <section aria-labelledby="how-built" className="card-surface section-gap p-6 sm:p-8">
           <h2 id="how-built" className="section-title">
             How these calculators are built
           </h2>
-          <p className="body-copy mt-3">
-            Each tool uses a published, widely used formula, such as the WHO adult BMI categories, the Mifflin-St Jeor
-            energy equation, the U.S. Navy circumference method, and Naegele&apos;s rule for due dates. Results appear
-            instantly in metric or US units, and every calculation runs in your browser, so nothing you enter is stored.
-          </p>
-          <p className="body-copy mt-3">
-            Results are educational estimates rather than a diagnosis. See{" "}
-            <Link href="/about" className="content-link">
-              how our calculators work
-            </Link>{" "}
-            for the full list of formulas and sources.
-          </p>
+          <div className="mt-3 grid gap-x-10 gap-y-3 lg:grid-cols-2">
+            <p className="body-copy">
+              Each tool uses a published, widely used formula, such as the WHO adult BMI categories, the Mifflin-St Jeor
+              energy equation, the U.S. Navy circumference method, and Naegele&apos;s rule for due dates. Results appear
+              instantly in metric or US units, and every calculation runs in your browser, so nothing you enter is
+              stored.
+            </p>
+            <p className="body-copy">
+              Results are educational estimates rather than a diagnosis. See{" "}
+              <Link href="/about" className="content-link">
+                how our calculators work
+              </Link>{" "}
+              for the full list of formulas and sources.
+            </p>
+          </div>
         </section>
       </main>
 

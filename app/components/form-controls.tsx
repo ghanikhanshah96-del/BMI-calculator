@@ -157,7 +157,7 @@ export function NumberStepper({
 }: NumberStepperProps) {
   const field = useContext(FieldContext);
   const fieldLabel = field
-    ? suffix && !field.label.includes(`(${suffix})`)
+    ? suffix && !field.label.includes(suffix)
       ? `${field.label} (${suffix})`
       : field.label
     : null;
@@ -172,6 +172,18 @@ export function NumberStepper({
     return Math.min(max, Math.max(min, next));
   };
 
+  /* While the input is focused its text is the source of truth, so step from it and keep it in sync;
+     otherwise blurring would commit the stale text over the stepped value. */
+  const shownValue = () => {
+    if (draft === null) return value;
+    return draft === "" || draft === "." ? null : Number(draft);
+  };
+
+  const emit = (next: number) => {
+    onChange(next);
+    setDraft((current) => (current === null ? null : String(next)));
+  };
+
   const stopHold = () => {
     window.clearTimeout(hold.current.timeout);
     window.clearInterval(hold.current.interval);
@@ -182,12 +194,12 @@ export function NumberStepper({
 
   const startHold = (direction: 1 | -1) => {
     stopHold();
-    let current = nextValue(value, direction);
-    onChange(current);
+    let current = nextValue(shownValue(), direction);
+    emit(current);
     hold.current.timeout = window.setTimeout(() => {
       hold.current.interval = window.setInterval(() => {
         current = nextValue(current, direction);
-        onChange(current);
+        emit(current);
       }, 70);
     }, 420);
   };
@@ -220,7 +232,7 @@ export function NumberStepper({
         onPointerLeave={stopHold}
         onPointerCancel={stopHold}
         onClick={(event) => {
-          if (event.detail === 0) onChange(nextValue(value, direction));
+          if (event.detail === 0) emit(nextValue(shownValue(), direction));
         }}
       >
         {direction === 1 ? (
@@ -255,10 +267,7 @@ export function NumberStepper({
           if (event.key === "Enter") event.currentTarget.blur();
           if (event.key === "ArrowUp" || event.key === "ArrowDown") {
             event.preventDefault();
-            const base = draft !== null && draft !== "" && draft !== "." ? Number(draft) : value;
-            const next = nextValue(base, event.key === "ArrowUp" ? 1 : -1);
-            onChange(next);
-            setDraft(String(next));
+            emit(nextValue(shownValue(), event.key === "ArrowUp" ? 1 : -1));
           }
         }}
         className={`num-input ${focused ? "text-emerald-900" : "text-slate-950"}`}
