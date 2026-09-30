@@ -1,18 +1,18 @@
 "use client";
 
-import { Eraser, Play, Sparkles, type LucideIcon } from "lucide-react";
+import { Eraser, Play, Sparkles, type IconComponent } from "./icons";
 import type { CSSProperties, ReactNode, Ref } from "react";
 
 export function CalcLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-8">
+    <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6">
       {children}
     </div>
   );
 }
 
 export function CalcForm({ children }: { children: ReactNode }) {
-  return <div className="min-w-0 space-y-5">{children}</div>;
+  return <div className="min-w-0 space-y-4">{children}</div>;
 }
 
 export function CalcHeader({
@@ -21,7 +21,7 @@ export function CalcHeader({
   title,
   description,
 }: {
-  icon: LucideIcon;
+  icon: IconComponent;
   eyebrow: string;
   title: string;
   description?: string;
@@ -33,7 +33,7 @@ export function CalcHeader({
       </span>
       <div className="min-w-0">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">{eyebrow}</p>
-        <h3 className="text-xl font-semibold leading-tight text-slate-950 sm:text-2xl">{title}</h3>
+        <h2 className="text-xl font-semibold leading-tight text-slate-950 sm:text-2xl">{title}</h2>
         {description ? (
           <p className="mt-1 text-sm leading-6 text-slate-600">{description}</p>
         ) : null}
@@ -67,7 +67,7 @@ export function SegmentedControl<T extends string>({
       role={role}
       aria-label={label}
       className={[
-        "segmented flex w-full gap-1 overflow-x-auto rounded-2xl p-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:w-auto [&::-webkit-scrollbar]:hidden",
+        "segmented seg-track",
         tone === "dark" ? "bg-white/10" : "bg-linear-to-r from-slate-100 to-emerald-50/80 ring-1 ring-inset ring-slate-200",
       ].join(" ")}
     >
@@ -80,17 +80,18 @@ export function SegmentedControl<T extends string>({
             role={isTabs ? "tab" : undefined}
             aria-selected={isTabs ? active : undefined}
             aria-pressed={isTabs ? undefined : active}
+            data-tip={`${isTabs ? "Show" : "Use"} ${option.label}`}
             onClick={() => onChange(option.value)}
             className={[
-              "relative flex-1 whitespace-nowrap rounded-xl font-semibold transition duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 sm:flex-none",
-              size === "sm" ? "min-h-9 px-3 text-xs" : "min-h-11 px-4 text-sm",
+              "seg-btn",
+              size === "sm" ? "min-h-9 px-2 text-xs sm:px-3" : "min-h-11 px-2.5 text-sm sm:px-4",
               active
                 ? tone === "dark"
                   ? "bg-white text-emerald-800 shadow-md"
-                  : "bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/25"
+                  : "seg-btn-active"
                 : tone === "dark"
                   ? "text-emerald-50 hover:bg-white/15"
-                  : "text-slate-600 hover:bg-white hover:text-emerald-700 hover:shadow-md hover:shadow-emerald-900/10 hover:ring-1 hover:ring-emerald-300",
+                  : "seg-btn-idle",
             ].join(" ")}
           >
             {option.label}
@@ -115,15 +116,15 @@ export function InputGroup({
   columns?: 1 | 2;
 }) {
   return (
-    <fieldset className="min-w-0 space-y-3">
-      <legend className="mb-3 flex w-full items-center gap-2.5">
-        <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-linear-to-br from-emerald-500 to-teal-600 text-xs font-semibold text-white shadow-md shadow-emerald-600/30">
+    <fieldset className="min-w-0">
+      <legend className="mb-2 flex w-full items-center gap-2.5">
+        <span className="step-dot">
           {step}
         </span>
         <span className="text-sm font-semibold text-slate-900">{title}</span>
         {hint ? <span className="ml-auto text-xs text-slate-600">{hint}</span> : null}
       </legend>
-      <div className={`grid gap-3 ${columns === 2 ? "sm:grid-cols-2" : ""}`}>{children}</div>
+      <div className={`grid gap-2.5 ${columns === 2 ? "sm:grid-cols-2" : ""}`}>{children}</div>
     </fieldset>
   );
 }
@@ -151,8 +152,9 @@ export function ActionBar({
       <button
         type="button"
         onClick={onCalculate}
+        data-tip="Calculate with the values you entered"
         data-magnetic
-        className="btn-gradient inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-6 text-sm font-semibold sm:flex-none sm:rounded-full"
+        className="btn-gradient calc-btn"
       >
         <Play className="h-4 w-4 fill-current" aria-hidden="true" />
         {calculateLabel}
@@ -160,7 +162,8 @@ export function ActionBar({
       <button
         type="button"
         onClick={onClear}
-        className="btn-outline inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold sm:rounded-full"
+        data-tip="Clear every field and the result"
+        className="btn-outline clear-btn"
       >
         <Eraser className="h-4 w-4" aria-hidden="true" />
         Clear
@@ -186,7 +189,7 @@ export function ResultCard({
     <div
       ref={resultRef}
       id={id}
-      className="relative min-w-0 scroll-mt-24 rounded-3xl bg-linear-to-br from-emerald-50/80 via-white to-teal-50/70 p-1.5 shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100 lg:sticky lg:top-24"
+      className="result-shell"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 px-3.5 pb-2 pt-3">
         <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">
@@ -207,7 +210,7 @@ export function EmptyResult({
   text,
   formulas,
 }: {
-  icon: LucideIcon;
+  icon: IconComponent;
   text: ReactNode;
   formulas: string[];
 }) {
@@ -225,7 +228,7 @@ export function EmptyResult({
         {formulas.map((formula) => (
           <li
             key={formula}
-            className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-900 ring-1 ring-inset ring-emerald-100 transition hover:bg-linear-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white hover:ring-transparent"
+            className="formula-chip"
           >
             {formula}
           </li>
@@ -328,7 +331,7 @@ export function StatTile({
 export function SectionTitle({ title, hint }: { title: ReactNode; hint?: ReactNode }) {
   return (
     <div>
-      <h4 className="text-sm font-semibold text-slate-900">{title}</h4>
+      <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
       {hint ? <p className="mt-0.5 text-xs leading-5 text-slate-600">{hint}</p> : null}
     </div>
   );
@@ -353,13 +356,13 @@ export function ResultTable({
   const style: CSSProperties | undefined = minWidth ? { minWidth } : undefined;
   return (
     <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200/80">
-      <table className="w-full text-sm" style={style}>
+      <table className="w-full text-[13px] sm:text-sm" style={style}>
         {caption ? <caption className="sr-only">{caption}</caption> : null}
         {head ? (
           <thead>
             <tr className="bg-linear-to-r from-emerald-50 to-teal-50 text-xs uppercase tracking-wide text-emerald-900">
               {head.map((cell, index) => (
-                <th key={index} scope="col" className={`px-3 py-2.5 font-semibold ${alignClass(index)}`}>
+                <th key={index} scope="col" className={`px-2 py-2 font-semibold sm:px-3 sm:py-2.5 ${alignClass(index)}`}>
                   {cell}
                 </th>
               ))}
@@ -379,7 +382,7 @@ export function ResultTable({
               {row.cells.map((cell, index) => (
                 <td
                   key={index}
-                  className={`px-3 py-2.5 ${alignClass(index)} ${index > 0 ? "whitespace-nowrap" : ""}`}
+                  className={`px-2 py-2 sm:px-3 sm:py-2.5 ${alignClass(index)} ${index > 0 ? "sm:whitespace-nowrap" : ""}`}
                 >
                   {cell}
                 </td>

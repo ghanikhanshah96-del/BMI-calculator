@@ -1,7 +1,7 @@
 "use client";
 
-import { Scale } from "lucide-react";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Scale } from "./icons";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   ActionBar,
   CalcForm,
@@ -14,24 +14,32 @@ import {
   ResultCard,
   ResultHero,
   ResultNote,
+  ResultTable,
+  SectionTitle,
   SegmentedControl,
   StatGrid,
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import { validateFields, type FieldRule } from "../lib/validate";
 
-type UnitMode = "metric" | "us" | "other";
+type UnitMode = "metric" | "us" | "custom";
 type Gender = "male" | "female";
-type ConverterKind = "length" | "weight";
+type LengthUnit = (typeof LENGTH_UNITS)[number]["value"];
+type WeightUnit = (typeof WEIGHT_UNITS)[number]["value"];
 
 type BmiInputs = {
-  age: number;
-  gender: Gender;
-  heightCm: number;
-  weightKg: number;
-  heightFeet: number;
-  heightInches: number;
-  weightLb: number;
+  age: number | null;
+  gender: Gender | "";
+  heightCm: number | null;
+  weightKg: number | null;
+  heightFeet: number | null;
+  heightInches: number | null;
+  weightLb: number | null;
+  customHeight: number | null;
+  customHeightUnit: LengthUnit | "";
+  customWeight: number | null;
+  customWeightUnit: WeightUnit | "";
 };
 
 type BmiResult = {
@@ -42,40 +50,57 @@ type BmiResult = {
   healthyBmiMax: number;
   healthyWeightMinKg: number;
   healthyWeightMaxKg: number;
-  healthyWeightMinDisplay: string;
-  healthyWeightMaxDisplay: string;
-  weightUnitLabel: string;
+  showLb: boolean;
   bmiPrime: number;
   ponderalIndex: number;
   isYouth: boolean;
+  age: number;
   heightM: number;
   weightKg: number;
 };
 
-const DEFAULT_INPUTS: BmiInputs = {
-  age: 25,
-  gender: "male",
-  heightCm: 180,
-  weightKg: 65,
-  heightFeet: 5,
-  heightInches: 10,
-  weightLb: 160,
+const EMPTY_INPUTS: BmiInputs = {
+  age: null,
+  gender: "",
+  heightCm: null,
+  weightKg: null,
+  heightFeet: null,
+  heightInches: null,
+  weightLb: null,
+  customHeight: null,
+  customHeightUnit: "",
+  customWeight: null,
+  customWeightUnit: "",
 };
 
+const KG_PER_LB = 0.45359237;
+const HEIGHT_CM_RANGE = { min: 50, max: 300 };
+const WEIGHT_KG_RANGE = { min: 1, max: 650 };
+
 const LENGTH_UNITS = [
-  { value: "m", label: "Meter", toMeter: 1 },
-  { value: "km", label: "Kilometer", toMeter: 1000 },
-  { value: "cm", label: "Centimeter", toMeter: 0.01 },
-  { value: "mm", label: "Millimeter", toMeter: 0.001 },
-  { value: "ft", label: "Foot", toMeter: 0.3048 },
-  { value: "in", label: "Inch", toMeter: 0.0254 },
+  { value: "cm", label: "Centimeters (cm)", short: "cm", toCm: 1, step: 1, typical: 170 },
+  { value: "m", label: "Meters (m)", short: "m", toCm: 100, step: 0.01, typical: 1.7 },
+  { value: "mm", label: "Millimeters (mm)", short: "mm", toCm: 0.1, step: 10, typical: 1700 },
+  { value: "ft", label: "Feet (ft)", short: "ft", toCm: 30.48, step: 0.1, typical: 5.6 },
+  { value: "in", label: "Inches (in)", short: "in", toCm: 2.54, step: 1, typical: 67 },
 ] as const;
 
 const WEIGHT_UNITS = [
-  { value: "kg", label: "Kilogram", toKg: 1 },
-  { value: "g", label: "Gram", toKg: 0.001 },
-  { value: "lb", label: "Pound", toKg: 0.45359237 },
-  { value: "oz", label: "Ounce", toKg: 0.028349523125 },
+  { value: "kg", label: "Kilograms (kg)", short: "kg", toKg: 1, step: 0.1, typical: 70 },
+  { value: "g", label: "Grams (g)", short: "g", toKg: 0.001, step: 100, typical: 70000 },
+  { value: "lb", label: "Pounds (lb)", short: "lb", toKg: KG_PER_LB, step: 0.5, typical: 154 },
+  { value: "oz", label: "Ounces (oz)", short: "oz", toKg: 0.028349523125, step: 1, typical: 2470 },
+] as const;
+
+const GENDER_OPTIONS = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+];
+
+const UNIT_OPTIONS = [
+  { value: "us", label: "Imperial" },
+  { value: "metric", label: "Metric" },
+  { value: "custom", label: "Custom units" },
 ] as const;
 
 function getWhoCategory(bmi: number): { label: string; tone: string } {
@@ -89,53 +114,90 @@ function getWhoCategory(bmi: number): { label: string; tone: string } {
   return { label: "Obese Class III", tone: "text-red-800" };
 }
 
-function computeBmiFromMetric(weightKg: number, heightCm: number) {
-  const heightM = heightCm / 100;
-  if (heightM <= 0 || weightKg <= 0) return null;
+function buildResult(heightM: number, weightKg: number, age: number, showLb: boolean): BmiResult {
   const bmi = weightKg / (heightM * heightM);
-  return { bmi, heightM, weightKg };
-}
-
-function computeBmiFromUs(weightLb: number, feet: number, inches: number) {
-  const totalInches = feet * 12 + inches;
-  if (totalInches <= 0 || weightLb <= 0) return null;
-  const bmi = (703 * weightLb) / (totalInches * totalInches);
-  const heightM = totalInches * 0.0254;
-  const weightKg = weightLb * 0.45359237;
-  return { bmi, heightM, weightKg };
-}
-
-function buildResult(
-  raw: { bmi: number; heightM: number; weightKg: number },
-  age: number,
-  unitMode: UnitMode,
-): BmiResult {
-  const category = getWhoCategory(raw.bmi);
-  const healthyWeightMinKg = 18.5 * raw.heightM * raw.heightM;
-  const healthyWeightMaxKg = 25 * raw.heightM * raw.heightM;
-  const useLb = unitMode === "us";
-
+  const category = getWhoCategory(bmi);
   return {
-    bmi: Number(raw.bmi.toFixed(1)),
+    bmi: Number(bmi.toFixed(1)),
     category: category.label,
     categoryTone: category.tone,
     healthyBmiMin: 18.5,
     healthyBmiMax: 25,
-    healthyWeightMinKg: Number(healthyWeightMinKg.toFixed(1)),
-    healthyWeightMaxKg: Number(healthyWeightMaxKg.toFixed(1)),
-    healthyWeightMinDisplay: useLb
-      ? (healthyWeightMinKg / 0.45359237).toFixed(1)
-      : healthyWeightMinKg.toFixed(1),
-    healthyWeightMaxDisplay: useLb
-      ? (healthyWeightMaxKg / 0.45359237).toFixed(1)
-      : healthyWeightMaxKg.toFixed(1),
-    weightUnitLabel: useLb ? "lb" : "kg",
-    bmiPrime: Number((raw.bmi / 25).toFixed(2)),
-    ponderalIndex: Number((raw.weightKg / (raw.heightM * raw.heightM * raw.heightM)).toFixed(1)),
+    healthyWeightMinKg: 18.5 * heightM * heightM,
+    healthyWeightMaxKg: 25 * heightM * heightM,
+    showLb,
+    bmiPrime: Number((bmi / 25).toFixed(2)),
+    ponderalIndex: Number((weightKg / (heightM * heightM * heightM)).toFixed(1)),
     isYouth: age < 20,
-    heightM: raw.heightM,
-    weightKg: raw.weightKg,
+    age,
+    heightM,
+    weightKg,
   };
+}
+
+/** Converts the active unit mode's fields to metres and kilograms, or returns a validation message. */
+/** Presence-only rules so one message can list every empty field; ranges are checked in readMeasurements. */
+function requiredMeasurements(inputs: BmiInputs, unitMode: UnitMode): FieldRule[] {
+  if (unitMode === "metric") {
+    return [
+      { label: "height", value: inputs.heightCm },
+      { label: "weight", value: inputs.weightKg },
+    ];
+  }
+  if (unitMode === "us") {
+    return [
+      { label: "height in feet", value: inputs.heightFeet },
+      { label: "weight", value: inputs.weightLb },
+    ];
+  }
+  return [
+    { label: "height", value: inputs.customHeight },
+    { label: "weight", value: inputs.customWeight },
+    { label: "height unit", value: inputs.customHeightUnit, kind: "choice" },
+    { label: "weight unit", value: inputs.customWeightUnit, kind: "choice" },
+  ];
+}
+
+function readMeasurements(inputs: BmiInputs, unitMode: UnitMode): { heightM: number; weightKg: number } | string {
+  if (unitMode === "metric") {
+    const error = validateFields([
+      { label: "height", value: inputs.heightCm, ...HEIGHT_CM_RANGE, unit: "cm" },
+      { label: "weight", value: inputs.weightKg, ...WEIGHT_KG_RANGE, unit: "kg" },
+    ]);
+    if (error) return error;
+    return { heightM: inputs.heightCm! / 100, weightKg: inputs.weightKg! };
+  }
+
+  if (unitMode === "us") {
+    const error = validateFields([
+      { label: "height in feet", value: inputs.heightFeet, min: 1, max: 9, unit: "ft" },
+      { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
+      { label: "weight", value: inputs.weightLb, min: 2, max: 1400, unit: "lb" },
+    ]);
+    if (error) return error;
+    const totalInches = inputs.heightFeet! * 12 + (inputs.heightInches ?? 0);
+    return { heightM: totalInches * 0.0254, weightKg: inputs.weightLb! * KG_PER_LB };
+  }
+
+  const rules: FieldRule[] = [
+    { label: "height", value: inputs.customHeight },
+    { label: "weight", value: inputs.customWeight },
+    { label: "height unit", value: inputs.customHeightUnit, kind: "choice" },
+    { label: "weight unit", value: inputs.customWeightUnit, kind: "choice" },
+  ];
+  const missing = validateFields(rules);
+  if (missing) return missing;
+
+  const lengthUnit = LENGTH_UNITS.find((unit) => unit.value === inputs.customHeightUnit)!;
+  const weightUnit = WEIGHT_UNITS.find((unit) => unit.value === inputs.customWeightUnit)!;
+  const heightCm = inputs.customHeight! * lengthUnit.toCm;
+  const weightKg = inputs.customWeight! * weightUnit.toKg;
+  const rangeError = validateFields([
+    { label: "height (converted)", value: Number(heightCm.toFixed(1)), ...HEIGHT_CM_RANGE, unit: "cm" },
+    { label: "weight (converted)", value: Number(weightKg.toFixed(1)), ...WEIGHT_KG_RANGE, unit: "kg" },
+  ]);
+  if (rangeError) return rangeError;
+  return { heightM: heightCm / 100, weightKg };
 }
 
 /** Needle angles calibrated to calculator.net gauge (BMI 20.1 ≈ 42.6°). */
@@ -297,138 +359,82 @@ function BmiGauge({ bmi, animationKey }: { bmi: number; animationKey: number }) 
   );
 }
 
-function UnitConverter() {
-  const [kind, setKind] = useState<ConverterKind>("length");
-  const [fromValue, setFromValue] = useState(180);
-  const [fromUnit, setFromUnit] = useState("cm");
-  const [toUnit, setToUnit] = useState("m");
+function formatFeetInches(heightM: number) {
+  const totalInches = heightM / 0.0254;
+  let feet = Math.floor(totalInches / 12);
+  let inches = Math.round(totalInches - feet * 12);
+  if (inches === 12) {
+    feet += 1;
+    inches = 0;
+  }
+  return `${feet} ft ${inches} in`;
+}
 
-  const units = kind === "length" ? LENGTH_UNITS : WEIGHT_UNITS;
-  const fromOptions = units.map((u) => ({ value: u.value, label: u.label }));
-  const toOptions = units.map((u) => ({ value: u.value, label: u.label }));
+const kgToLb = (kg: number) => kg / KG_PER_LB;
 
-  const toValue = useMemo(() => {
-    if (kind === "length") {
-      const from = LENGTH_UNITS.find((u) => u.value === fromUnit);
-      const to = LENGTH_UNITS.find((u) => u.value === toUnit);
-      if (!from || !to) return 0;
-      return (fromValue * from.toMeter) / to.toMeter;
-    }
-    const from = WEIGHT_UNITS.find((u) => u.value === fromUnit);
-    const to = WEIGHT_UNITS.find((u) => u.value === toUnit);
-    if (!from || !to) return 0;
-    return (fromValue * from.toKg) / to.toKg;
-  }, [kind, fromValue, fromUnit, toUnit]);
-
+function OtherUnitsPanel({ result }: { result: BmiResult }) {
+  const rows = [
+    {
+      key: "height",
+      cells: [
+        "Height",
+        `${(result.heightM * 100).toFixed(1)} cm · ${result.heightM.toFixed(2)} m`,
+        formatFeetInches(result.heightM),
+      ],
+    },
+    {
+      key: "weight",
+      cells: ["Weight", `${result.weightKg.toFixed(1)} kg`, `${kgToLb(result.weightKg).toFixed(1)} lb`],
+    },
+    {
+      key: "healthy",
+      cells: [
+        "Healthy weight",
+        `${result.healthyWeightMinKg.toFixed(1)} – ${result.healthyWeightMaxKg.toFixed(1)} kg`,
+        `${kgToLb(result.healthyWeightMinKg).toFixed(1)} – ${kgToLb(result.healthyWeightMaxKg).toFixed(1)} lb`,
+      ],
+    },
+  ];
   return (
-    <div className="rounded-2xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-4 ring-1 ring-emerald-100">
-      <p className="text-sm font-semibold text-emerald-900">
-        Unit converter
-      </p>
-      <p className="mt-1 text-xs leading-5 text-slate-600">
-        Convert values, then switch to Metric or US Units and enter them in the calculator.
-      </p>
-
-      <div className="mt-3">
-        <SegmentedControl
-          label="Converter type"
-          size="sm"
-          options={[
-            { value: "length", label: "Length" },
-            { value: "weight", label: "Weight" },
-          ]}
-          value={kind}
-          onChange={(id) => {
-            setKind(id);
-            if (id === "length") {
-              setFromUnit("cm");
-              setToUnit("m");
-              setFromValue(180);
-            } else {
-              setFromUnit("kg");
-              setToUnit("lb");
-              setFromValue(65);
-            }
-          }}
-        />
-      </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <FieldShell label="From">
-          <NumberStepper
-            value={fromValue}
-            min={0}
-            max={1_000_000}
-            step={kind === "length" ? 0.1 : 0.1}
-            onChange={setFromValue}
-          />
-          <div className="mt-2">
-            <CustomSelect
-              value={fromUnit}
-              onChange={setFromUnit}
-              options={fromOptions}
-            />
-          </div>
-        </FieldShell>
-        <FieldShell label="To">
-          <p className="text-lg font-semibold text-slate-950">
-            {Number.isFinite(toValue) ? Number(toValue.toPrecision(6)) : "—"}
-          </p>
-          <div className="mt-2">
-            <CustomSelect value={toUnit} onChange={setToUnit} options={toOptions} />
-          </div>
-        </FieldShell>
-      </div>
+    <div className="space-y-2">
+      <SectionTitle title="Your numbers in other units" hint="Metric and imperial values for the same measurements." />
+      <ResultTable caption="Your numbers in metric and imperial units" head={["", "Metric", "Imperial"]} align={["left", "right", "right"]} rows={rows} />
     </div>
   );
 }
 
 export default function BmiCalculator() {
   const [unitMode, setUnitMode] = useState<UnitMode>("metric");
-  const [inputs, setInputs] = useState<BmiInputs>(DEFAULT_INPUTS);
+  const [inputs, setInputs] = useState<BmiInputs>(EMPTY_INPUTS);
   const [error, setError] = useState("");
   const [result, setResult] = useState<BmiResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
 
+  const update = (patch: Partial<BmiInputs>) => {
+    setInputs((prev) => ({ ...prev, ...patch }));
+    if ([patch.gender, patch.customHeightUnit, patch.customWeightUnit].includes("")) setResult(null);
+  };
+  const lengthUnit = LENGTH_UNITS.find((unit) => unit.value === inputs.customHeightUnit);
+  const weightUnit = WEIGHT_UNITS.find((unit) => unit.value === inputs.customWeightUnit);
+
   const calculate = () => {
-    if (inputs.age < 2 || inputs.age > 120) {
-      setError("Age must be between 2 and 120.");
+    const detailsError = validateFields([
+      { label: "age", value: inputs.age, min: 2, max: 120 },
+      ...requiredMeasurements(inputs, unitMode),
+      { label: "gender", value: inputs.gender, kind: "choice" },
+    ]);
+    const measurements = readMeasurements(inputs, unitMode);
+    const message = detailsError || (typeof measurements === "string" ? measurements : "");
+    if (message || typeof measurements === "string") {
+      setError(message);
       setResult(null);
       return;
     }
 
-    let raw: { bmi: number; heightM: number; weightKg: number } | null = null;
-
-    if (unitMode === "metric" || unitMode === "other") {
-      if (inputs.heightCm <= 0 || inputs.weightKg <= 0) {
-        setError("Enter a valid height (cm) and weight (kg).");
-        setResult(null);
-        return;
-      }
-      raw = computeBmiFromMetric(inputs.weightKg, inputs.heightCm);
-    } else {
-      if (inputs.weightLb <= 0 || inputs.heightFeet < 0 || inputs.heightInches < 0) {
-        setError("Enter a valid height (ft/in) and weight (lb).");
-        setResult(null);
-        return;
-      }
-      if (inputs.heightFeet * 12 + inputs.heightInches <= 0) {
-        setError("Height must be greater than zero.");
-        setResult(null);
-        return;
-      }
-      raw = computeBmiFromUs(inputs.weightLb, inputs.heightFeet, inputs.heightInches);
-    }
-
-    if (!raw || !Number.isFinite(raw.bmi)) {
-      setError("Unable to calculate BMI from these values.");
-      setResult(null);
-      return;
-    }
-
+    const showLb = unitMode === "us" || inputs.customWeightUnit === "lb" || inputs.customWeightUnit === "oz";
     setError("");
-    setResult(buildResult(raw, inputs.age, unitMode === "us" ? "us" : "metric"));
+    setResult(buildResult(measurements.heightM, measurements.weightKg, inputs.age!, unitMode !== "metric" && showLb));
     setAnimationKey((key) => key + 1);
     window.requestAnimationFrame(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -436,17 +442,19 @@ export default function BmiCalculator() {
   };
 
   const clear = () => {
-    setInputs(DEFAULT_INPUTS);
+    setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
     setResult(null);
   };
 
-  const unitOptions = [
-    { value: "us", label: "US Units" },
-    { value: "metric", label: "Metric" },
-    { value: "other", label: "Other" },
-  ] as const;
+  const healthyRange = result
+    ? result.showLb
+      ? `${kgToLb(result.healthyWeightMinKg).toFixed(1)} – ${kgToLb(result.healthyWeightMaxKg).toFixed(1)}`
+      : `${result.healthyWeightMinKg.toFixed(1)} – ${result.healthyWeightMaxKg.toFixed(1)}`
+    : "";
+
+  const measurementHint = unitMode === "us" ? "ft · in · lb" : unitMode === "metric" ? "cm · kg" : "Pick any unit";
 
   return (
     <CalcLayout>
@@ -458,92 +466,124 @@ export default function BmiCalculator() {
           description="Check your BMI category and healthy weight range in seconds."
         />
 
-        <SegmentedControl
-          label="Unit system"
-          options={unitOptions}
-          value={unitMode}
-          onChange={setUnitMode}
-        />
-
-        {unitMode === "other" && <UnitConverter />}
+        <SegmentedControl label="Unit system" options={UNIT_OPTIONS} value={unitMode} onChange={setUnitMode} />
 
         <InputGroup step={1} title="Your details">
           <FieldShell label="Age">
-            <NumberStepper
-              value={inputs.age}
-              min={2}
-              max={120}
-              step={1}
-              onChange={(age) => setInputs({ ...inputs, age })}
-            />
-            <p className="mt-1.5 text-xs text-slate-600">Ages 2 – 120</p>
+            <NumberStepper value={inputs.age} min={2} max={120} step={1} placeholder={25} onChange={(age) => update({ age })} />
           </FieldShell>
           <FieldShell label="Gender">
             <CustomSelect
               value={inputs.gender}
-              onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
-              options={[
-                { value: "male", label: "Male" },
-                { value: "female", label: "Female" },
-              ]}
+              placeholder="Select gender"
+              onChange={(gender) => update({ gender: gender as Gender })}
+              options={GENDER_OPTIONS}
             />
           </FieldShell>
         </InputGroup>
 
-        <InputGroup step={2} title="Measurements" hint={unitMode === "us" ? "ft · in · lb" : "cm · kg"}>
+        <InputGroup step={2} title="Measurements" hint={measurementHint}>
           {unitMode === "us" ? (
             <>
-              <FieldShell label="Height (feet)">
-                <NumberStepper
-                  value={inputs.heightFeet}
-                  min={0}
-                  max={8}
-                  step={1}
-                  suffix="ft"
-                  onChange={(heightFeet) => setInputs({ ...inputs, heightFeet })}
-                />
+              <FieldShell label="Height">
+                <div className="grid grid-cols-2 gap-2">
+                  <NumberStepper
+                    value={inputs.heightFeet}
+                    min={1}
+                    max={9}
+                    step={1}
+                    suffix="ft"
+                    placeholder={5}
+                    onChange={(heightFeet) => update({ heightFeet })}
+                  />
+                  <NumberStepper
+                    value={inputs.heightInches}
+                    min={0}
+                    max={11}
+                    step={1}
+                    suffix="in"
+                    placeholder={10}
+                    onChange={(heightInches) => update({ heightInches })}
+                  />
+                </div>
               </FieldShell>
-              <FieldShell label="Height (inches)">
-                <NumberStepper
-                  value={inputs.heightInches}
-                  min={0}
-                  max={11}
-                  step={1}
-                  suffix="in"
-                  onChange={(heightInches) => setInputs({ ...inputs, heightInches })}
-                />
-              </FieldShell>
-              <FieldShell label="Weight (pounds)">
+              <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightLb}
-                  min={1}
+                  min={2}
                   max={1400}
                   step={0.5}
                   suffix="lb"
-                  onChange={(weightLb) => setInputs({ ...inputs, weightLb })}
+                  placeholder={160}
+                  onChange={(weightLb) => update({ weightLb })}
+                />
+              </FieldShell>
+            </>
+          ) : unitMode === "metric" ? (
+            <>
+              <FieldShell label="Height">
+                <NumberStepper
+                  value={inputs.heightCm}
+                  min={HEIGHT_CM_RANGE.min}
+                  max={HEIGHT_CM_RANGE.max}
+                  step={1}
+                  suffix="cm"
+                  placeholder={175}
+                  onChange={(heightCm) => update({ heightCm })}
+                />
+              </FieldShell>
+              <FieldShell label="Weight">
+                <NumberStepper
+                  value={inputs.weightKg}
+                  min={WEIGHT_KG_RANGE.min}
+                  max={WEIGHT_KG_RANGE.max}
+                  step={0.1}
+                  suffix="kg"
+                  placeholder={70}
+                  onChange={(weightKg) => update({ weightKg })}
                 />
               </FieldShell>
             </>
           ) : (
             <>
-              <FieldShell label="Height (cm)">
+              <FieldShell label="Height">
                 <NumberStepper
-                  value={inputs.heightCm}
-                  min={50}
-                  max={300}
-                  step={1}
-                  suffix="cm"
-                  onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
+                  value={inputs.customHeight}
+                  min={0}
+                  max={lengthUnit ? Math.ceil(HEIGHT_CM_RANGE.max / lengthUnit.toCm) : 100000}
+                  step={lengthUnit?.step ?? 1}
+                  placeholder={lengthUnit?.typical}
+                  onChange={(customHeight) => update({ customHeight })}
+                  addon={
+                    <CustomSelect
+                      variant="unit"
+                      ariaLabel="Height unit"
+                      placeholder="Unit"
+                      value={inputs.customHeightUnit}
+                      onChange={(unit) => update({ customHeightUnit: unit as LengthUnit })}
+                      options={LENGTH_UNITS.map((unit) => ({ value: unit.value, label: unit.label }))}
+                    />
+                  }
                 />
               </FieldShell>
-              <FieldShell label="Weight (kg)">
+              <FieldShell label="Weight">
                 <NumberStepper
-                  value={inputs.weightKg}
-                  min={1}
-                  max={500}
-                  step={0.1}
-                  suffix="kg"
-                  onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
+                  value={inputs.customWeight}
+                  min={0}
+                  max={weightUnit ? Math.ceil(WEIGHT_KG_RANGE.max / weightUnit.toKg) : 1000000}
+                  step={weightUnit?.step ?? 1}
+                  placeholder={weightUnit?.typical}
+                  onChange={(customWeight) => update({ customWeight })}
+                  addon={
+                    <CustomSelect
+                      variant="unit"
+                      ariaLabel="Weight unit"
+                      placeholder="Unit"
+                      value={inputs.customWeightUnit}
+                      onChange={(unit) => update({ customWeightUnit: unit as WeightUnit })}
+                      options={WEIGHT_UNITS.map((unit) => ({ value: unit.value, label: unit.label }))}
+                    />
+                  }
                 />
               </FieldShell>
             </>
@@ -565,7 +605,7 @@ export default function BmiCalculator() {
                 your BMI, category, healthy range, BMI Prime, and Ponderal Index.
               </>
             }
-            formulas={["BMI = kg / m²", "US: 703 × lb / in²", "BMI Prime = BMI / 25", "PI = kg / m³"]}
+            formulas={["BMI = kg / m²", "Imperial: 703 × lb / in²", "BMI Prime = BMI / 25", "PI = kg / m³"]}
           />
         ) : (
           <ResultBody animationKey={animationKey}>
@@ -575,12 +615,14 @@ export default function BmiCalculator() {
 
             <BmiGauge bmi={result.bmi} animationKey={animationKey} />
 
+            <OtherUnitsPanel result={result} />
+
             <StatGrid>
               <StatTile
                 tone="emerald"
                 label="Healthy weight"
-                value={`${result.healthyWeightMinDisplay} – ${result.healthyWeightMaxDisplay}`}
-                hint={`${result.weightUnitLabel} for your height`}
+                value={healthyRange}
+                hint={`${result.showLb ? "lb" : "kg"} for your height`}
               />
               <StatTile label="Category" value={<span className={result.categoryTone}>{result.category}</span>} hint="WHO adult scale" />
               <StatTile label="BMI Prime" value={result.bmiPrime} hint="BMI ÷ 25" />
@@ -589,7 +631,7 @@ export default function BmiCalculator() {
 
             {result.isYouth && (
               <ResultNote tone="warning">
-                Age {inputs.age} is under 20. CDC uses BMI-for-age percentiles for children and teens. The WHO
+                Age {result.age} is under 20. CDC uses BMI-for-age percentiles for children and teens. The WHO
                 adult category above is shown for reference only.
               </ResultNote>
             )}

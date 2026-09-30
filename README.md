@@ -41,24 +41,35 @@ Open `http://localhost:3000` in your browser.
 ## Scripts
 
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
+npm run dev          # development server
+npm run build        # production build
+npm run start        # serve the production build
+npm run lint         # ESLint
+npm run icons        # rebuild public/icons.svg from Lucide icons
+npm run og           # rebuild public/og-image.jpg and public/logo.png
+npm run audit:serve  # build + serve on localhost:3100 for SEO crawlers
 ```
+
+Copy `.env.example` to `.env.local` and fill in the Resend values to enable the contact form.
 
 ## Project Structure
 
 ```text
 app/
-  blog/
-  components/
-  privacy/
-  terms/
+  [tool]/          calculator pages and per-tool layouts
+  about/           about page
+  api/             contact form endpoints
+  blog/            blog index and posts
+  calculators/     all-calculators page
+  components/      shared UI and the calculator widgets
+  contact/         contact page and form
+  lib/             tool data, SEO helpers, validation
+  privacy/ terms/ sitemap-page/
   globals.css
-  home-client.tsx
   layout.tsx
   page.tsx
+public/            images, icons sprite, OG image, logo
+scripts/           build helpers (icons, OG image, polyfill patch, audit server)
 ```
 
 ## Notes

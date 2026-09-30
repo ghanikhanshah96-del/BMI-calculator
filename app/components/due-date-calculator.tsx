@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarHeart } from "lucide-react";
+import { CalendarHeart } from "./icons";
 import { useRef, useState } from "react";
 import {
   ActionBar,
@@ -20,20 +20,22 @@ import {
   StatGrid,
   StatTile,
 } from "./calc-ui";
-import { CustomSelect, DatePicker, FieldShell, NumberStepper } from "./form-controls";
+import { CustomSelect, DatePicker, FieldShell, NumberStepper, useToday } from "./form-controls";
+import { validateFields } from "../lib/validate";
 
 type MethodId = "lmp" | "conception" | "ultrasound" | "ivf";
 type IvfEmbryo = "day3" | "day5";
 
+/** Empty date strings mean "today" until the user picks a date. */
 type DueDateInputs = {
   method: MethodId;
   lmp: string;
   conception: string;
   ultrasoundDate: string;
-  ultrasoundWeeks: number;
-  ultrasoundDays: number;
+  ultrasoundWeeks: number | null;
+  ultrasoundDays: number | null;
   ivfDate: string;
-  ivfEmbryo: IvfEmbryo;
+  ivfEmbryo: IvfEmbryo | "";
 };
 
 type DueDateResult = {
@@ -52,15 +54,15 @@ type DueDateResult = {
 
 const MS_DAY = 24 * 60 * 60 * 1000;
 
-const DEFAULT_INPUTS: DueDateInputs = {
+const EMPTY_INPUTS: DueDateInputs = {
   method: "lmp",
-  lmp: "2026-01-10",
-  conception: "2026-01-24",
-  ultrasoundDate: "2026-03-15",
-  ultrasoundWeeks: 12,
-  ultrasoundDays: 0,
-  ivfDate: "2026-02-01",
-  ivfEmbryo: "day5",
+  lmp: "",
+  conception: "",
+  ultrasoundDate: "",
+  ultrasoundWeeks: null,
+  ultrasoundDays: null,
+  ivfDate: "",
+  ivfEmbryo: "",
 };
 
 function parseLocalDate(iso: string): Date | null {
@@ -126,16 +128,20 @@ function buildResult(
   } else if (inputs.method === "ultrasound") {
     const scan = parseLocalDate(inputs.ultrasoundDate);
     if (!scan) return { ok: false, error: "Enter a valid ultrasound date." };
-    const gaDays = inputs.ultrasoundWeeks * 7 + inputs.ultrasoundDays;
-    if (gaDays < 0 || gaDays > 300) {
-      return { ok: false, error: "Gestational age at scan looks invalid." };
-    }
+    const error = validateFields([
+      { label: "gestational weeks at the scan", value: inputs.ultrasoundWeeks, min: 0, max: 42 },
+      { label: "extra days", value: inputs.ultrasoundDays ?? 0, min: 0, max: 6 },
+    ]);
+    if (error) return { ok: false, error };
+    const gaDays = inputs.ultrasoundWeeks! * 7 + (inputs.ultrasoundDays ?? 0);
     dueDate = addDays(scan, 280 - gaDays);
     lmpEstimate = addDays(dueDate, -280);
     conceptionEstimate = addDays(lmpEstimate, 14);
   } else {
     const transfer = parseLocalDate(inputs.ivfDate);
     if (!transfer) return { ok: false, error: "Enter a valid IVF transfer date." };
+    const error = validateFields([{ label: "embryo age at transfer", value: inputs.ivfEmbryo, kind: "choice" }]);
+    if (error) return { ok: false, error };
     // calculator.net: day-3 → +263, day-5 → +261 from transfer
     dueDate = addDays(transfer, inputs.ivfEmbryo === "day3" ? 263 : 261);
     lmpEstimate = addDays(dueDate, -280);
@@ -224,14 +230,26 @@ function TimelineBar({ result }: { result: DueDateResult }) {
 }
 
 export default function DueDateCalculator() {
-  const [inputs, setInputs] = useState<DueDateInputs>(DEFAULT_INPUTS);
+  const today = useToday();
+  const [inputs, setInputs] = useState<DueDateInputs>(EMPTY_INPUTS);
   const [error, setError] = useState("");
   const [result, setResult] = useState<DueDateResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
 
+  const update = (patch: Partial<DueDateInputs>) => {
+    setInputs((prev) => ({ ...prev, ...patch }));
+    if (patch.ivfEmbryo === "") setResult(null);
+  };
+  const dates = {
+    lmp: inputs.lmp || today,
+    conception: inputs.conception || today,
+    ultrasoundDate: inputs.ultrasoundDate || today,
+    ivfDate: inputs.ivfDate || today,
+  };
+
   const calculate = () => {
-    const built = buildResult(inputs);
+    const built = buildResult({ ...inputs, ...dates });
     if (built.ok === false) {
       setError(built.error);
       setResult(null);
@@ -246,7 +264,7 @@ export default function DueDateCalculator() {
   };
 
   const clear = () => {
-    setInputs(DEFAULT_INPUTS);
+    setInputs(EMPTY_INPUTS);
     setError("");
     setResult(null);
   };
@@ -270,67 +288,62 @@ export default function DueDateCalculator() {
             { value: "ivf", label: "IVF" },
           ]}
           value={inputs.method}
-          onChange={(method) => setInputs({ ...inputs, method })}
+          onChange={(method) => update({ method })}
         />
 
-        <InputGroup step={1} title="Key dates" columns={1}>
+        <InputGroup step={1} title="Key dates" columns={inputs.method === "lmp" || inputs.method === "conception" ? 1 : 2}>
           {inputs.method === "lmp" ? (
             <FieldShell label="First day of last menstrual period">
-              <DatePicker value={inputs.lmp} onChange={(lmp) => setInputs({ ...inputs, lmp })} />
+              <DatePicker value={dates.lmp} onChange={(lmp) => update({ lmp })} />
             </FieldShell>
           ) : null}
 
           {inputs.method === "conception" ? (
             <FieldShell label="Conception date">
-              <DatePicker
-                value={inputs.conception}
-                onChange={(conception) => setInputs({ ...inputs, conception })}
-              />
+              <DatePicker value={dates.conception} onChange={(conception) => update({ conception })} />
             </FieldShell>
           ) : null}
 
           {inputs.method === "ultrasound" ? (
             <>
               <FieldShell label="Ultrasound date">
-                <DatePicker
-                  value={inputs.ultrasoundDate}
-                  onChange={(ultrasoundDate) => setInputs({ ...inputs, ultrasoundDate })}
-                />
+                <DatePicker value={dates.ultrasoundDate} onChange={(ultrasoundDate) => update({ ultrasoundDate })} />
               </FieldShell>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <FieldShell label="Gestational weeks at scan">
+              <FieldShell label="Gestational age at scan">
+                <div className="grid grid-cols-2 gap-2">
                   <NumberStepper
                     value={inputs.ultrasoundWeeks}
                     min={0}
                     max={42}
                     step={1}
                     suffix="w"
-                    onChange={(ultrasoundWeeks) => setInputs({ ...inputs, ultrasoundWeeks })}
+                    placeholder={12}
+                    onChange={(ultrasoundWeeks) => update({ ultrasoundWeeks })}
                   />
-                </FieldShell>
-                <FieldShell label="Extra days">
                   <NumberStepper
                     value={inputs.ultrasoundDays}
                     min={0}
                     max={6}
                     step={1}
                     suffix="d"
-                    onChange={(ultrasoundDays) => setInputs({ ...inputs, ultrasoundDays })}
+                    placeholder={0}
+                    onChange={(ultrasoundDays) => update({ ultrasoundDays })}
                   />
-                </FieldShell>
-              </div>
+                </div>
+              </FieldShell>
             </>
           ) : null}
 
           {inputs.method === "ivf" ? (
             <>
               <FieldShell label="Embryo transfer date">
-                <DatePicker value={inputs.ivfDate} onChange={(ivfDate) => setInputs({ ...inputs, ivfDate })} />
+                <DatePicker value={dates.ivfDate} onChange={(ivfDate) => update({ ivfDate })} />
               </FieldShell>
               <FieldShell label="Embryo age at transfer">
                 <CustomSelect
                   value={inputs.ivfEmbryo}
-                  onChange={(ivfEmbryo) => setInputs({ ...inputs, ivfEmbryo: ivfEmbryo as IvfEmbryo })}
+                  placeholder="Select embryo age"
+                  onChange={(ivfEmbryo) => update({ ivfEmbryo: ivfEmbryo as IvfEmbryo })}
                   options={[
                     { value: "day3", label: "Day 3 embryo" },
                     { value: "day5", label: "Day 5 embryo" },

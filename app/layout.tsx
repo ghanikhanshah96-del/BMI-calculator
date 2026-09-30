@@ -3,7 +3,10 @@ import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 import CursorEffects from "./components/cursor-effects";
 import RevealObserver from "./components/reveal-observer";
+import SiteJsonLd from "./components/site-json-ld";
 import SmoothScroll from "./components/smooth-scroll";
+import TooltipLayer from "./components/tooltip-layer";
+import { defaultOgImage } from "./lib/seo";
 import { getSiteUrl } from "./lib/site-url";
 import "./globals.css";
 
@@ -26,11 +29,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: "FitnessCalculatorPro.com",
   title: {
-    default: "FitnessCalculatorPro.com | Free BMI, TDEE & Health Calculators",
+    default: "Free Health Calculators | FitnessCalculatorPro.com",
     template: "%s | FitnessCalculatorPro.com",
   },
   description:
-    "FitnessCalculatorPro.com is a free online health calculator suite: BMI, TDEE/BMR, body fat, macros, pregnancy due date, and ovulation—with clear guides for each tool.",
+    "Free online health calculators for BMI, TDEE, body fat, macros, pregnancy due date, and ovulation, with a clear guide for each tool.",
   keywords: [
     "BMI calculator",
     "free BMI calculator",
@@ -63,51 +66,24 @@ export const metadata: Metadata = {
     shortcut: "/icon.svg",
   },
   openGraph: {
-    title: "FitnessCalculatorPro.com | Free BMI, TDEE & Health Calculators",
+    title: "Free Health Calculators | FitnessCalculatorPro.com",
     description:
-      "Calculate BMI, calories (TDEE), body fat, macros, due date, and ovulation online—free tools with step-by-step guides.",
-    url: "/",
+      "Calculate BMI, calories (TDEE), body fat, macros, due date, and ovulation online with free tools and step-by-step guides.",
     siteName: "FitnessCalculatorPro.com",
     locale: "en_US",
     type: "website",
+    images: [defaultOgImage],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FitnessCalculatorPro.com | Free BMI, TDEE & Health Calculators",
+    title: "Free Health Calculators | FitnessCalculatorPro.com",
     description:
-      "Calculate BMI, calories (TDEE), body fat, macros, due date, and ovulation online—free tools with step-by-step guides.",
-  },
-  alternates: {
-    canonical: "/",
+      "Calculate BMI, calories (TDEE), body fat, macros, due date, and ovulation online with free tools and step-by-step guides.",
+    images: [{ url: defaultOgImage.url, alt: defaultOgImage.alt }],
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  const orgJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${siteUrl}/#organization`,
-        name: "FitnessCalculatorPro.com",
-        url: siteUrl,
-        logo: `${siteUrl}/icon.svg`,
-        description:
-          "Free online BMI and wellness calculators for body mass index, calorie needs, body fat, macros, pregnancy due date, and ovulation.",
-      },
-      {
-        "@type": "WebSite",
-        "@id": `${siteUrl}/#website`,
-        url: siteUrl,
-        name: "FitnessCalculatorPro.com",
-        description:
-          "Free health calculators: BMI, TDEE, body fat percentage, macro planner, pregnancy due date, and ovulation fertile window.",
-        publisher: { "@id": `${siteUrl}/#organization` },
-        inLanguage: "en-US",
-      },
-    ],
-  };
-
   return (
     <html
       lang="en"
@@ -115,14 +91,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
+        <SiteJsonLd siteUrl={siteUrl} />
         {children}
         <RevealObserver />
         <SmoothScroll />
         <CursorEffects />
+        <TooltipLayer />
       </body>
     </html>
   );

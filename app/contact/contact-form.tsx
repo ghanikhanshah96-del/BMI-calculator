@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, CheckCircle2, Loader2, Mail, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, Mail, Send } from "../components/icons";
 import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 import {
@@ -239,7 +239,7 @@ export default function ContactForm() {
             onBlur={() => onBlur("message")}
             aria-invalid={Boolean(errors.message)}
             aria-describedby={errors.message ? "contact-message-error" : undefined}
-            className={`${inputClass("message")} resize-y`}
+            className={`${inputClass("message")} h-36 resize-none overflow-y-auto`}
             placeholder="How can we help?"
           />
           <FieldError id="contact-message-error" message={errors.message} />

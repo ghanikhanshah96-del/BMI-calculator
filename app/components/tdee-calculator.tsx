@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity } from "lucide-react";
+import { Activity } from "./icons";
 import { useMemo, useRef, useState } from "react";
 import {
   ActionBar,
@@ -21,6 +21,7 @@ import {
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import { validateFields } from "../lib/validate";
 
 type UnitMode = "metric" | "imperial";
 type Gender = "male" | "female";
@@ -31,16 +32,15 @@ type FormulaUsed = "mifflin" | "katch";
 type ResultTab = "overview" | "activity" | "macros" | "body";
 
 type TdeeInputs = {
-  gender: Gender;
-  age: number;
-  weightKg: number;
-  weightLb: number;
-  heightCm: number;
-  heightFeet: number;
-  heightInches: number;
-  activity: ActivityId;
-  /** Empty string = optional field unused */
-  bodyFat: string;
+  gender: Gender | "";
+  age: number | null;
+  weightKg: number | null;
+  weightLb: number | null;
+  heightCm: number | null;
+  /** Imperial height as total inches, chosen from a dropdown. */
+  heightTotalIn: string;
+  activity: ActivityId | "";
+  bodyFat: number | null;
 };
 
 type IdealWeightRow = { name: string; year: string; kg: number };
@@ -91,16 +91,15 @@ const BMI_TABLE = [
   { max: Infinity, label: "Obese", range: "30+" },
 ] as const;
 
-const DEFAULT_INPUTS: TdeeInputs = {
-  gender: "male",
-  age: 25,
-  weightKg: 70,
-  weightLb: 154,
-  heightCm: 175,
-  heightFeet: 5,
-  heightInches: 9,
-  activity: "sedentary",
-  bodyFat: "",
+const EMPTY_INPUTS: TdeeInputs = {
+  gender: "",
+  age: null,
+  weightKg: null,
+  weightLb: null,
+  heightCm: null,
+  heightTotalIn: "",
+  activity: "",
+  bodyFat: null,
 };
 
 /** Imperial height options as total inches (4'7"–7'0"), same range as tdeecalculator.net */
@@ -180,14 +179,6 @@ function muscularPotential(heightCm: number) {
   });
 }
 
-function parseOptionalBodyFat(raw: string): number | null {
-  const cleaned = raw.trim();
-  if (!cleaned) return null;
-  const n = Number(cleaned);
-  if (!Number.isFinite(n) || n <= 0 || n >= 60) return null;
-  return n;
-}
-
 function macrosFromCalories(calories: number, split: MacroCarb) {
   const s = MACRO_SPLITS[split];
   const carbsG = (calories * s.carbs) / 4;
@@ -201,44 +192,38 @@ function macrosFromCalories(calories: number, split: MacroCarb) {
 }
 
 function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result: TdeeResult } | { ok: false; error: string } {
-  if (inputs.age < 15 || inputs.age > 120) {
-    return { ok: false, error: "Age must be between 15 and 120." };
+  const error = validateFields([
+    { label: "age", value: inputs.age, min: 15, max: 120 },
+    ...(unitMode === "metric"
+      ? [
+          { label: "weight", value: inputs.weightKg, min: 30, max: 300, unit: "kg" },
+          { label: "height", value: inputs.heightCm, min: 120, max: 230, unit: "cm" },
+        ]
+      : [
+          { label: "weight", value: inputs.weightLb, min: 66, max: 660, unit: "lb" },
+          { label: "height", value: inputs.heightTotalIn, kind: "choice" as const },
+        ]),
+    { label: "gender", value: inputs.gender, kind: "choice" },
+    { label: "activity level", value: inputs.activity, kind: "choice" },
+  ]);
+  if (error) return { ok: false, error };
+  if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
+    return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
   }
 
-  let weightKg: number;
-  let heightCm: number;
+  const gender = inputs.gender as Gender;
+  const age = inputs.age!;
+  const weightKg = unitMode === "metric" ? inputs.weightKg! : inputs.weightLb! * 0.45359237;
+  const heightCm = unitMode === "metric" ? inputs.heightCm! : Number(inputs.heightTotalIn) * 2.54;
 
-  if (unitMode === "metric") {
-    if (inputs.weightKg <= 0 || inputs.heightCm <= 0) {
-      return { ok: false, error: "Enter a valid weight (kg) and height (cm)." };
-    }
-    weightKg = inputs.weightKg;
-    heightCm = inputs.heightCm;
-  } else {
-    const totalInches = inputs.heightFeet * 12 + inputs.heightInches;
-    if (inputs.weightLb <= 0 || totalInches <= 0) {
-      return { ok: false, error: "Enter a valid weight (lb) and height (ft/in)." };
-    }
-    weightKg = inputs.weightLb * 0.45359237;
-    heightCm = totalInches * 2.54;
-  }
-
-  const bodyFatRaw = inputs.bodyFat.trim();
-  if (bodyFatRaw !== "") {
-    const bf = Number(bodyFatRaw);
-    if (!Number.isFinite(bf) || bf <= 0 || bf >= 60) {
-      return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
-    }
-  }
-
-  const bodyFat = parseOptionalBodyFat(inputs.bodyFat);
+  const bodyFat = inputs.bodyFat;
   const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
   const bmr =
     formula === "katch" && bodyFat !== null
       ? katchMcArdle(weightKg, bodyFat)
-      : mifflinStJeor(weightKg, heightCm, inputs.age, inputs.gender);
+      : mifflinStJeor(weightKg, heightCm, age, gender);
 
-  const harris = harrisBenedictRevised(weightKg, heightCm, inputs.age, inputs.gender);
+  const harris = harrisBenedictRevised(weightKg, heightCm, age, gender);
   const activityMeta = ACTIVITY_OPTIONS.find((a) => a.id === inputs.activity)!;
   const tdee = bmr * activityMeta.multiplier;
 
@@ -252,7 +237,7 @@ function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result
   const heightM = heightCm / 100;
   const bmi = weightKg / (heightM * heightM);
   const bmiCat = getBmiCategory(bmi);
-  const idealWeights = idealWeightKg(inputs.gender, heightCm).map((row) => ({
+  const idealWeights = idealWeightKg(gender, heightCm).map((row) => ({
     ...row,
     kg: Number(row.kg.toFixed(1)),
   }));
@@ -271,7 +256,7 @@ function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result
       harrisBenedict: roundCal(harris),
       tdee: roundCal(tdee),
       weekly: roundCal(tdee * 7),
-      activity: inputs.activity,
+      activity: activityMeta.id,
       activityRows,
       bmi: Number(bmi.toFixed(1)),
       bmiCategory: bmiCat.label,
@@ -282,8 +267,8 @@ function buildResult(inputs: TdeeInputs, unitMode: UnitMode): { ok: true; result
       mmp,
       weightKg: Number(weightKg.toFixed(1)),
       heightCm: Number(heightCm.toFixed(1)),
-      age: inputs.age,
-      gender: inputs.gender,
+      age,
+      gender,
       bodyFat,
       cutCalories: roundCal(tdee * 0.8),
       bulkCalories: roundCal(tdee * 1.15),
@@ -305,7 +290,7 @@ function MacroGrid({ calories, carb }: { calories: number; carb: MacroCarb }) {
 
 export default function TdeeCalculator() {
   const [unitMode, setUnitMode] = useState<UnitMode>("metric");
-  const [inputs, setInputs] = useState<TdeeInputs>(DEFAULT_INPUTS);
+  const [inputs, setInputs] = useState<TdeeInputs>(EMPTY_INPUTS);
   const [error, setError] = useState("");
   const [result, setResult] = useState<TdeeResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
@@ -337,8 +322,13 @@ export default function TdeeCalculator() {
     });
   };
 
+  const update = (patch: Partial<TdeeInputs>) => {
+    setInputs((prev) => ({ ...prev, ...patch }));
+    if ([patch.gender, patch.heightTotalIn, patch.activity].includes("")) setResult(null);
+  };
+
   const clear = () => {
-    setInputs(DEFAULT_INPUTS);
+    setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
     setResult(null);
@@ -376,7 +366,8 @@ export default function TdeeCalculator() {
           <FieldShell label="Gender">
             <CustomSelect
               value={inputs.gender}
-              onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
+              placeholder="Select gender"
+              onChange={(gender) => update({ gender: gender as Gender })}
               options={[
                 { value: "male", label: "Male" },
                 { value: "female", label: "Female" },
@@ -384,13 +375,7 @@ export default function TdeeCalculator() {
             />
           </FieldShell>
           <FieldShell label="Age">
-            <NumberStepper
-              value={inputs.age}
-              min={15}
-              max={120}
-              step={1}
-              onChange={(age) => setInputs({ ...inputs, age })}
-            />
+            <NumberStepper value={inputs.age} min={15} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
           </FieldShell>
         </InputGroup>
 
@@ -404,7 +389,8 @@ export default function TdeeCalculator() {
                   max={300}
                   step={0.5}
                   suffix="kg"
-                  onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
+                  placeholder={70}
+                  onChange={(weightKg) => update({ weightKg })}
                 />
               </FieldShell>
               <FieldShell label="Height">
@@ -414,7 +400,8 @@ export default function TdeeCalculator() {
                   max={230}
                   step={1}
                   suffix="cm"
-                  onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
+                  placeholder={175}
+                  onChange={(heightCm) => update({ heightCm })}
                 />
               </FieldShell>
             </>
@@ -427,20 +414,15 @@ export default function TdeeCalculator() {
                   max={660}
                   step={1}
                   suffix="lb"
-                  onChange={(weightLb) => setInputs({ ...inputs, weightLb })}
+                  placeholder={155}
+                  onChange={(weightLb) => update({ weightLb })}
                 />
               </FieldShell>
               <FieldShell label="Height">
                 <CustomSelect
-                  value={String(inputs.heightFeet * 12 + inputs.heightInches)}
-                  onChange={(total) => {
-                    const totalInches = Number(total);
-                    setInputs({
-                      ...inputs,
-                      heightFeet: Math.floor(totalInches / 12),
-                      heightInches: totalInches % 12,
-                    });
-                  }}
+                  value={inputs.heightTotalIn}
+                  placeholder="Select height"
+                  onChange={(heightTotalIn) => update({ heightTotalIn })}
                   options={IMPERIAL_HEIGHT_OPTIONS}
                 />
               </FieldShell>
@@ -448,38 +430,27 @@ export default function TdeeCalculator() {
           )}
         </InputGroup>
 
-        <InputGroup step={3} title="Lifestyle" columns={1}>
+        <InputGroup step={3} title="Lifestyle">
           <FieldShell label="Activity">
             <CustomSelect
               value={inputs.activity}
-              onChange={(activity) => setInputs({ ...inputs, activity: activity as ActivityId })}
+              placeholder="Select activity level"
+              onChange={(activity) => update({ activity: activity as ActivityId })}
               options={ACTIVITY_OPTIONS.map((a) => ({ value: a.id, label: a.label }))}
             />
           </FieldShell>
 
           <FieldShell label="Body fat % (optional)">
-            <div className="field-input flex min-h-12 items-center gap-2 rounded-xl px-3.5">
-              <input
-                type="text"
-                inputMode="decimal"
-                value={inputs.bodyFat}
-                placeholder="e.g. 15"
-                maxLength={4}
-                aria-label="Body fat percentage (optional)"
-                onChange={(e) => {
-                  const raw = e.target.value;
-                  if (raw !== "" && !/^\d*\.?\d*$/.test(raw)) return;
-                  setInputs({ ...inputs, bodyFat: raw });
-                }}
-                className="w-full min-w-0 bg-transparent text-base font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400 sm:text-lg"
-              />
-              <span className="shrink-0 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
-                %
-              </span>
-            </div>
-            <p className="mt-2 text-xs leading-5 text-slate-600">
-              Blank = Mifflin–St Jeor. With % = Katch–McArdle.
-            </p>
+            <NumberStepper
+              value={inputs.bodyFat}
+              min={1}
+              max={59}
+              step={0.5}
+              suffix="%"
+              placeholder={15}
+              onChange={(bodyFat) => update({ bodyFat })}
+            />
+            <p className="mt-1.5 text-xs leading-5 text-slate-600">Blank = Mifflin–St Jeor. With % = Katch–McArdle.</p>
           </FieldShell>
         </InputGroup>
 

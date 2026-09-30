@@ -1,6 +1,6 @@
 "use client";
 
-import { Apple } from "lucide-react";
+import { Apple } from "./icons";
 import { useRef, useState } from "react";
 import {
   ActionBar,
@@ -19,6 +19,7 @@ import {
   SegmentedControl,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
+import { validateFields, type FieldRule } from "../lib/validate";
 
 type UnitMode = "metric" | "us";
 type Gender = "male" | "female";
@@ -34,17 +35,17 @@ type MacroPref = "balanced" | "low-carb" | "high-carb" | "high-protein";
 type FormulaUsed = "mifflin" | "katch";
 
 type MacroInputs = {
-  gender: Gender;
-  age: number;
-  weightKg: number;
-  weightLb: number;
-  heightCm: number;
-  heightFeet: number;
-  heightInches: number;
-  activity: ActivityId;
-  goal: GoalId;
-  macroPref: MacroPref;
-  bodyFat: string;
+  gender: Gender | "";
+  age: number | null;
+  weightKg: number | null;
+  weightLb: number | null;
+  heightCm: number | null;
+  heightFeet: number | null;
+  heightInches: number | null;
+  activity: ActivityId | "";
+  goal: GoalId | "";
+  macroPref: MacroPref | "";
+  bodyFat: number | null;
 };
 
 type MacroResult = {
@@ -92,18 +93,18 @@ const MACRO_PRESETS: Record<
   "high-protein": { carbs: 0.3, protein: 0.4, fat: 0.3, label: "High protein (30/40/30)" },
 };
 
-const DEFAULT_INPUTS: MacroInputs = {
-  gender: "male",
-  age: 25,
-  weightKg: 70,
-  weightLb: 154,
-  heightCm: 175,
-  heightFeet: 5,
-  heightInches: 9,
-  activity: "moderate",
-  goal: "maintain",
-  macroPref: "balanced",
-  bodyFat: "",
+const EMPTY_INPUTS: MacroInputs = {
+  gender: "",
+  age: null,
+  weightKg: null,
+  weightLb: null,
+  heightCm: null,
+  heightFeet: null,
+  heightInches: null,
+  activity: "",
+  goal: "",
+  macroPref: "",
+  bodyFat: null,
 };
 
 function roundCal(n: number) {
@@ -124,61 +125,53 @@ function katchMcArdle(weightKg: number, bodyFatPct: number) {
   return 370 + 21.6 * lbm;
 }
 
-function parseOptionalBodyFat(raw: string): number | null {
-  const cleaned = raw.trim();
-  if (!cleaned) return null;
-  const n = Number(cleaned);
-  if (!Number.isFinite(n) || n <= 0 || n >= 60) return null;
-  return n;
-}
-
 function buildResult(
   inputs: MacroInputs,
   unitMode: UnitMode,
 ): { ok: true; result: MacroResult } | { ok: false; error: string } {
-  if (inputs.age < 15 || inputs.age > 120) {
-    return { ok: false, error: "Age must be between 15 and 120." };
+  const measurementRules: FieldRule[] =
+    unitMode === "metric"
+      ? [
+          { label: "weight", value: inputs.weightKg, min: 30, max: 300, unit: "kg" },
+          { label: "height", value: inputs.heightCm, min: 120, max: 230, unit: "cm" },
+        ]
+      : [
+          { label: "weight", value: inputs.weightLb, min: 66, max: 660, unit: "lb" },
+          { label: "height in feet", value: inputs.heightFeet, min: 4, max: 7, unit: "ft" },
+          { label: "inches", value: inputs.heightInches ?? 0, min: 0, max: 11.9, unit: "in" },
+        ];
+  const error = validateFields([
+    { label: "age", value: inputs.age, min: 15, max: 120 },
+    ...measurementRules,
+    { label: "gender", value: inputs.gender, kind: "choice" },
+    { label: "activity level", value: inputs.activity, kind: "choice" },
+    { label: "goal", value: inputs.goal, kind: "choice" },
+    { label: "macro preference", value: inputs.macroPref, kind: "choice" },
+  ]);
+  if (error) return { ok: false, error };
+  if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
+    return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
   }
 
-  let weightKg: number;
-  let heightCm: number;
+  const gender = inputs.gender as Gender;
+  const age = inputs.age!;
+  const weightKg = unitMode === "metric" ? inputs.weightKg! : inputs.weightLb! * 0.45359237;
+  const heightCm =
+    unitMode === "metric" ? inputs.heightCm! : (inputs.heightFeet! * 12 + (inputs.heightInches ?? 0)) * 2.54;
 
-  if (unitMode === "metric") {
-    if (inputs.weightKg <= 0 || inputs.heightCm <= 0) {
-      return { ok: false, error: "Enter a valid weight (kg) and height (cm)." };
-    }
-    weightKg = inputs.weightKg;
-    heightCm = inputs.heightCm;
-  } else {
-    const totalInches = inputs.heightFeet * 12 + inputs.heightInches;
-    if (inputs.weightLb <= 0 || totalInches <= 0) {
-      return { ok: false, error: "Enter a valid weight (lb) and height (ft/in)." };
-    }
-    weightKg = inputs.weightLb * 0.45359237;
-    heightCm = totalInches * 2.54;
-  }
-
-  const bodyFatRaw = inputs.bodyFat.trim();
-  if (bodyFatRaw !== "") {
-    const bf = Number(bodyFatRaw);
-    if (!Number.isFinite(bf) || bf <= 0 || bf >= 60) {
-      return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
-    }
-  }
-
-  const bodyFat = parseOptionalBodyFat(inputs.bodyFat);
+  const bodyFat = inputs.bodyFat;
   const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
   const bmr =
     formula === "katch" && bodyFat !== null
       ? katchMcArdle(weightKg, bodyFat)
-      : mifflinStJeor(weightKg, heightCm, inputs.age, inputs.gender);
+      : mifflinStJeor(weightKg, heightCm, age, gender);
 
   const activity = ACTIVITY_OPTIONS.find((a) => a.id === inputs.activity)!;
   const goal = GOAL_OPTIONS.find((g) => g.id === inputs.goal)!;
   const tdee = bmr * activity.multiplier;
   const calories = Math.max(1200, roundCal(tdee + goal.delta));
 
-  const pref = MACRO_PRESETS[inputs.macroPref];
+  const pref = MACRO_PRESETS[inputs.macroPref as MacroPref];
   const proteinKcal = calories * pref.protein;
   const carbsKcal = calories * pref.carbs;
   const fatKcal = calories * pref.fat;
@@ -238,11 +231,15 @@ function MacroBar({
 
 export default function MacroCalculator() {
   const [unitMode, setUnitMode] = useState<UnitMode>("metric");
-  const [inputs, setInputs] = useState<MacroInputs>(DEFAULT_INPUTS);
+  const [inputs, setInputs] = useState<MacroInputs>(EMPTY_INPUTS);
   const [error, setError] = useState("");
   const [result, setResult] = useState<MacroResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
+  const update = (patch: Partial<MacroInputs>) => {
+    setInputs((prev) => ({ ...prev, ...patch }));
+    if ([patch.gender, patch.activity, patch.goal, patch.macroPref].includes("")) setResult(null);
+  };
 
   const calculate = () => {
     const built = buildResult(inputs, unitMode);
@@ -260,7 +257,7 @@ export default function MacroCalculator() {
   };
 
   const clear = () => {
-    setInputs(DEFAULT_INPUTS);
+    setInputs(EMPTY_INPUTS);
     setUnitMode("metric");
     setError("");
     setResult(null);
@@ -279,7 +276,7 @@ export default function MacroCalculator() {
         <SegmentedControl
           label="Unit system"
           options={[
-            { value: "us", label: "US Units" },
+            { value: "us", label: "Imperial" },
             { value: "metric", label: "Metric" },
           ]}
           value={unitMode}
@@ -290,7 +287,8 @@ export default function MacroCalculator() {
           <FieldShell label="Gender">
             <CustomSelect
               value={inputs.gender}
-              onChange={(gender) => setInputs({ ...inputs, gender: gender as Gender })}
+              placeholder="Select gender"
+              onChange={(gender) => update({ gender: gender as Gender })}
               options={[
                 { value: "male", label: "Male" },
                 { value: "female", label: "Female" },
@@ -298,22 +296,11 @@ export default function MacroCalculator() {
             />
           </FieldShell>
           <FieldShell label="Age">
-            <NumberStepper
-              value={inputs.age}
-              min={15}
-              max={120}
-              step={1}
-              onChange={(age) => setInputs({ ...inputs, age })}
-            />
+            <NumberStepper value={inputs.age} min={15} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
           </FieldShell>
         </InputGroup>
 
-        <InputGroup
-          step={2}
-          title="Measurements"
-          hint={unitMode === "metric" ? "kg · cm" : "lb · ft · in"}
-          columns={unitMode === "metric" ? 2 : 1}
-        >
+        <InputGroup step={2} title="Measurements" hint={unitMode === "metric" ? "kg · cm" : "lb · ft · in"}>
           {unitMode === "metric" ? (
             <>
               <FieldShell label="Weight">
@@ -323,7 +310,8 @@ export default function MacroCalculator() {
                   max={300}
                   step={0.5}
                   suffix="kg"
-                  onChange={(weightKg) => setInputs({ ...inputs, weightKg })}
+                  placeholder={70}
+                  onChange={(weightKg) => update({ weightKg })}
                 />
               </FieldShell>
               <FieldShell label="Height">
@@ -333,7 +321,8 @@ export default function MacroCalculator() {
                   max={230}
                   step={1}
                   suffix="cm"
-                  onChange={(heightCm) => setInputs({ ...inputs, heightCm })}
+                  placeholder={175}
+                  onChange={(heightCm) => update({ heightCm })}
                 />
               </FieldShell>
             </>
@@ -346,18 +335,20 @@ export default function MacroCalculator() {
                   max={660}
                   step={1}
                   suffix="lb"
-                  onChange={(weightLb) => setInputs({ ...inputs, weightLb })}
+                  placeholder={155}
+                  onChange={(weightLb) => update({ weightLb })}
                 />
               </FieldShell>
               <FieldShell label="Height">
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-2">
                   <NumberStepper
                     value={inputs.heightFeet}
                     min={4}
                     max={7}
                     step={1}
                     suffix="ft"
-                    onChange={(heightFeet) => setInputs({ ...inputs, heightFeet })}
+                    placeholder={5}
+                    onChange={(heightFeet) => update({ heightFeet })}
                   />
                   <NumberStepper
                     value={inputs.heightInches}
@@ -365,7 +356,8 @@ export default function MacroCalculator() {
                     max={11}
                     step={1}
                     suffix="in"
-                    onChange={(heightInches) => setInputs({ ...inputs, heightInches })}
+                    placeholder={9}
+                    onChange={(heightInches) => update({ heightInches })}
                   />
                 </div>
               </FieldShell>
@@ -373,11 +365,12 @@ export default function MacroCalculator() {
           )}
         </InputGroup>
 
-        <InputGroup step={3} title="Goal & preferences" columns={1}>
+        <InputGroup step={3} title="Goal & preferences">
           <FieldShell label="Activity">
             <CustomSelect
               value={inputs.activity}
-              onChange={(activity) => setInputs({ ...inputs, activity: activity as ActivityId })}
+              placeholder="Select activity level"
+              onChange={(activity) => update({ activity: activity as ActivityId })}
               options={ACTIVITY_OPTIONS.map((a) => ({ value: a.id, label: a.label }))}
             />
           </FieldShell>
@@ -385,7 +378,8 @@ export default function MacroCalculator() {
           <FieldShell label="Goal">
             <CustomSelect
               value={inputs.goal}
-              onChange={(goal) => setInputs({ ...inputs, goal: goal as GoalId })}
+              placeholder="Select your goal"
+              onChange={(goal) => update({ goal: goal as GoalId })}
               options={GOAL_OPTIONS.map((g) => ({ value: g.id, label: g.label }))}
             />
           </FieldShell>
@@ -393,39 +387,23 @@ export default function MacroCalculator() {
           <FieldShell label="Macro preference">
             <CustomSelect
               value={inputs.macroPref}
-              onChange={(macroPref) => setInputs({ ...inputs, macroPref: macroPref as MacroPref })}
-              options={[
-                { value: "balanced", label: "Balanced (40/30/30)" },
-                { value: "low-carb", label: "Low carb (20/40/40)" },
-                { value: "high-carb", label: "High carb (50/25/25)" },
-                { value: "high-protein", label: "High protein (30/40/30)" },
-              ]}
+              placeholder="Select a macro split"
+              onChange={(macroPref) => update({ macroPref: macroPref as MacroPref })}
+              options={(Object.keys(MACRO_PRESETS) as MacroPref[]).map((id) => ({ value: id, label: MACRO_PRESETS[id].label }))}
             />
           </FieldShell>
 
           <FieldShell label="Body fat % (optional)">
-            <div className="field-input flex min-h-12 items-center gap-2 rounded-xl px-3.5">
-              <input
-                type="text"
-                inputMode="decimal"
-                value={inputs.bodyFat}
-                placeholder="e.g. 15"
-                maxLength={4}
-                aria-label="Body fat percentage (optional)"
-                onChange={(e) => {
-                  const raw = e.target.value;
-                  if (raw !== "" && !/^\d*\.?\d*$/.test(raw)) return;
-                  setInputs({ ...inputs, bodyFat: raw });
-                }}
-                className="w-full min-w-0 bg-transparent text-base font-semibold text-slate-950 caret-emerald-700 outline-none placeholder:text-slate-400 sm:text-lg"
-              />
-              <span className="shrink-0 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
-                %
-              </span>
-            </div>
-            <p className="mt-2 text-xs leading-5 text-slate-600">
-              Blank = Mifflin–St Jeor. With % = Katch–McArdle.
-            </p>
+            <NumberStepper
+              value={inputs.bodyFat}
+              min={1}
+              max={59}
+              step={0.5}
+              suffix="%"
+              placeholder={15}
+              onChange={(bodyFat) => update({ bodyFat })}
+            />
+            <p className="mt-1.5 text-xs leading-5 text-slate-600">Blank = Mifflin–St Jeor. With % = Katch–McArdle.</p>
           </FieldShell>
         </InputGroup>
 

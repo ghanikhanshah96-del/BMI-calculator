@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "./icons";
 import { useRef, useState } from "react";
 import {
   ActionBar,
@@ -20,7 +20,8 @@ import {
   StatGrid,
   StatTile,
 } from "./calc-ui";
-import { CustomSelect, DatePicker, FieldShell } from "./form-controls";
+import { CustomSelect, DatePicker, FieldShell, useToday } from "./form-controls";
+import { validateFields } from "../lib/validate";
 
 type CycleRow = {
   periodStart: Date;
@@ -45,9 +46,6 @@ const CYCLE_OPTIONS = Array.from({ length: 23 }, (_, i) => {
   const days = 22 + i;
   return { value: String(days), label: `${days} days` };
 });
-
-const DEFAULT_LMP = "2026-03-01";
-const DEFAULT_CYCLE = 28;
 
 function parseLocalDate(iso: string): Date | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
@@ -98,13 +96,13 @@ function buildCycle(periodStart: Date, cycleLength: number): CycleRow {
 
 function buildResult(
   lmpIso: string,
-  cycleLength: number,
+  cycleChoice: string,
 ): { ok: true; result: OvulationResult } | { ok: false; error: string } {
   const lmp = parseLocalDate(lmpIso);
   if (!lmp) return { ok: false, error: "Enter a valid first day of your last period." };
-  if (cycleLength < 22 || cycleLength > 44) {
-    return { ok: false, error: "Cycle length must be between 22 and 44 days." };
-  }
+  const error = validateFields([{ label: "average cycle length", value: cycleChoice, kind: "choice" }]);
+  if (error) return { ok: false, error };
+  const cycleLength = Number(cycleChoice);
 
   const cycles: CycleRow[] = [];
   let periodStart = lmp;
@@ -118,16 +116,20 @@ function buildResult(
 }
 
 export default function OvulationCalculator() {
-  const [lmp, setLmp] = useState(DEFAULT_LMP);
-  const [cycleLength, setCycleLength] = useState(DEFAULT_CYCLE);
+  const today = useToday();
+  const [lmpChoice, setLmp] = useState("");
+  const [cycleChoice, setCycleChoice] = useState("");
+  const [cycleLength, setCycleLength] = useState(0);
   const [error, setError] = useState("");
   const [result, setResult] = useState<OvulationResult | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const [resultTab, setResultTab] = useState<"dates" | "cycles">("dates");
   const resultRef = useRef<HTMLDivElement>(null);
+  const lmp = lmpChoice || today;
 
   const calculate = () => {
-    const built = buildResult(lmp, cycleLength);
+    const built = buildResult(lmp, cycleChoice);
+    if (built.ok) setCycleLength(Number(cycleChoice));
     if (built.ok === false) {
       setError(built.error);
       setResult(null);
@@ -143,8 +145,8 @@ export default function OvulationCalculator() {
   };
 
   const clear = () => {
-    setLmp(DEFAULT_LMP);
-    setCycleLength(DEFAULT_CYCLE);
+    setLmp("");
+    setCycleChoice("");
     setError("");
     setResult(null);
     setResultTab("dates");
@@ -160,14 +162,18 @@ export default function OvulationCalculator() {
           description="Predict ovulation, your fertile days, and the next six cycles."
         />
 
-        <InputGroup step={1} title="Your cycle" columns={1}>
+        <InputGroup step={1} title="Your cycle">
           <FieldShell label="First day of your last period">
             <DatePicker value={lmp} onChange={setLmp} />
           </FieldShell>
           <FieldShell label="Average length of cycles">
             <CustomSelect
-              value={String(cycleLength)}
-              onChange={(value) => setCycleLength(Number(value))}
+              value={cycleChoice}
+              placeholder="Select cycle length"
+              onChange={(value) => {
+                setCycleChoice(value);
+                if (!value) setResult(null);
+              }}
               options={CYCLE_OPTIONS}
             />
           </FieldShell>

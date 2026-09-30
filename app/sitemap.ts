@@ -1,61 +1,59 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "./blog/posts";
 import { getSiteUrl } from "./lib/site-url";
+import { SITE_UPDATED, toolHref, tools } from "./lib/tools";
 
 const siteUrl = getSiteUrl();
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const updated = new Date(SITE_UPDATED);
 
   const core: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/`,
-      lastModified: now,
+      lastModified: updated,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: `${siteUrl}/blog`,
-      lastModified: now,
+      url: `${siteUrl}/calculators`,
+      lastModified: updated,
       changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/sitemap-page`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/contact`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.95,
     },
   ];
 
-  // Per-tool guides help Google understand each calculator's purpose
-  const toolGuides: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${siteUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.updatedAt),
-    changeFrequency: "weekly" as const,
-    priority: 0.85,
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
+    url: `${siteUrl}${toolHref(tool)}`,
+    lastModified: updated,
+    changeFrequency: "monthly" as const,
+    priority: 0.95,
   }));
 
-  const legal: MetadataRoute.Sitemap = [
+  const blog: MetadataRoute.Sitemap = [
     {
-      url: `${siteUrl}/privacy`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
+      url: `${siteUrl}/blog`,
+      lastModified: new Date(
+        blogPosts.reduce((latest, post) => (post.updatedAt > latest ? post.updatedAt : latest), SITE_UPDATED),
+      ),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
-    {
-      url: `${siteUrl}/terms`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+    ...blogPosts.map((post) => ({
+      url: `${siteUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
   ];
 
-  return [...core, ...toolGuides, ...legal];
+  const company: MetadataRoute.Sitemap = [
+    { url: `${siteUrl}/about`, lastModified: updated, changeFrequency: "yearly", priority: 0.6 },
+    { url: `${siteUrl}/contact`, lastModified: updated, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${siteUrl}/sitemap-page`, lastModified: updated, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${siteUrl}/privacy`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/terms`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+  ];
+
+  return [...core, ...toolPages, ...blog, ...company];
 }

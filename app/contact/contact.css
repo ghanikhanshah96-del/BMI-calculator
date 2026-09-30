@@ -1,0 +1,92 @@
+@reference "../globals.css";
+
+@layer components {
+  /* Contact page */
+  .ct-topics {
+    @apply grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start;
+  }
+
+  .ct-intro {
+    @apply relative isolate overflow-hidden rounded-3xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-6 ring-1 ring-emerald-100 transition duration-300 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-8;
+  }
+
+  .ct-intro::after {
+    @apply absolute -right-16 -bottom-16 -z-10 h-56 w-56 rounded-full bg-emerald-300/30 blur-3xl transition duration-700 ease-out;
+    content: "";
+  }
+
+  .ct-intro:hover::after {
+    @apply -translate-x-10 -translate-y-6 scale-110 bg-teal-300/40;
+  }
+
+  .ct-topic {
+    @apply relative isolate overflow-hidden rounded-3xl border-2 border-transparent p-5 shadow-sm transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-6;
+    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #ecfdf5, #f0fdfa) border-box;
+  }
+
+  .ct-topic:hover {
+    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #10b981, #14b8a6, #6ee7b7) border-box;
+  }
+
+  .ct-topic::after {
+    @apply absolute -top-12 -right-12 -z-10 h-36 w-36 rounded-full bg-emerald-200/0 blur-2xl transition duration-500;
+    content: "";
+  }
+
+  .ct-topic:hover::after {
+    @apply bg-emerald-200/70;
+  }
+
+  .ct-icon {
+    @apply flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 to-teal-600 text-white shadow-md shadow-emerald-600/30 transition duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110;
+  }
+
+  .ct-topic-title {
+    @apply mt-4 text-lg font-semibold text-slate-900 transition-colors group-hover:text-emerald-800;
+  }
+
+  .ct-tips {
+    @apply grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)];
+  }
+
+  .ct-checklist-panel {
+    @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 sm:p-8;
+  }
+
+  .ct-checklist {
+    @apply mt-5 grid gap-2.5 sm:grid-cols-2;
+    counter-reset: ct;
+  }
+
+  .ct-check {
+    @apply flex items-start gap-3 rounded-2xl bg-emerald-50/50 p-4 text-sm leading-6 text-slate-700 ring-1 ring-emerald-100 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-white hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300;
+    counter-increment: ct;
+  }
+
+  .ct-check::before {
+    @apply flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-700 text-sm font-bold text-white shadow-md shadow-emerald-600/25 transition duration-300;
+    content: counter(ct);
+  }
+
+  .ct-check:hover::before {
+    @apply -rotate-6 scale-110;
+  }
+
+  .ct-cta {
+    @apply flex flex-col justify-center rounded-3xl border-2 border-transparent p-6 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-8;
+    background:
+      linear-gradient(135deg, #ecfdf5, #fff 55%, #f0fdfa) padding-box,
+      linear-gradient(135deg, #34d399, #2dd4bf) border-box;
+  }
+
+  .ct-cta-title {
+    @apply mt-4 font-display text-xl text-slate-900;
+  }
+
+  .ct-faq {
+    @apply rounded-3xl border-2 border-transparent p-5 sm:p-8;
+    background:
+      linear-gradient(135deg, #f0fdf4, #fff 45%, #f0fdfa) padding-box,
+      linear-gradient(135deg, #34d399, #2dd4bf, #a7f3d0) border-box;
+  }
+}

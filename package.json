@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/patch-next-polyfill.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/patch-next-polyfill.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:serve": "node scripts/serve-audit.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "og": "node scripts/generate-og.mjs"
   },
   "dependencies": {
-    "lucide-react": "^0.468.0",
     "next": "16.3.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -23,6 +27,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.2",
     "eslint-config-next": "16.3.5",
+    "lucide-react": "^0.468.0",
     "tailwindcss": "4.1.17",
     "typescript": "6.0.3"
   }
