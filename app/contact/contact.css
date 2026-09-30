@@ -3,11 +3,11 @@
 @layer components {
   /* Contact page */
   .ct-topics {
-    @apply grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start;
+    @apply grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)];
   }
 
   .ct-intro {
-    @apply relative isolate overflow-hidden rounded-3xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-6 ring-1 ring-emerald-100 transition duration-300 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-8;
+    @apply relative isolate flex flex-col overflow-hidden rounded-3xl bg-linear-to-br from-emerald-50 via-white to-teal-50 p-6 ring-1 ring-emerald-100 transition duration-300 hover:shadow-xl hover:shadow-emerald-900/10 sm:p-8;
   }
 
   .ct-intro::after {
@@ -17,6 +17,33 @@
 
   .ct-intro:hover::after {
     @apply -translate-x-10 -translate-y-6 scale-110 bg-teal-300/40;
+  }
+
+  .ct-next {
+    @apply mt-6 border-t border-emerald-100 pt-5 lg:mt-auto;
+  }
+
+  .ct-next-title {
+    @apply text-xs font-semibold tracking-[0.16em] text-emerald-800 uppercase;
+  }
+
+  .ct-steps {
+    @apply mt-3 space-y-2.5;
+    counter-reset: step;
+  }
+
+  .ct-step {
+    @apply flex items-center gap-3 text-sm leading-6 text-slate-700;
+    counter-increment: step;
+  }
+
+  .ct-step::before {
+    @apply flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white text-xs font-bold text-emerald-700 shadow-sm ring-1 ring-emerald-200;
+    content: counter(step);
+  }
+
+  .ct-next-link {
+    @apply mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-900;
   }
 
   .ct-topic {

@@ -153,7 +153,8 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-slate-900/5 sm:p-10"
+      id="contact-form"
+      className="relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-slate-900/5 sm:p-10"
       noValidate
     >
       <span
@@ -170,7 +171,7 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <div className="grid gap-5">
+      <div className="flex flex-1 flex-col gap-5">
         <div>
           <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-slate-700">
             Name
@@ -223,7 +224,7 @@ export default function ContactForm() {
           <FieldError id="contact-email-error" message={errors.email} />
         </div>
 
-        <div>
+        <div className="flex flex-1 flex-col">
           <label htmlFor="contact-message" className="mb-2 block text-sm font-medium text-slate-700">
             Message
           </label>
@@ -239,7 +240,7 @@ export default function ContactForm() {
             onBlur={() => onBlur("message")}
             aria-invalid={Boolean(errors.message)}
             aria-describedby={errors.message ? "contact-message-error" : undefined}
-            className={`${inputClass("message")} h-36 resize-none overflow-y-auto`}
+            className={`${inputClass("message")} min-h-36 flex-1 resize-none overflow-y-auto`}
             placeholder="How can we help?"
           />
           <FieldError id="contact-message-error" message={errors.message} />
@@ -265,7 +266,7 @@ export default function ContactForm() {
         type="submit"
         disabled={status === "loading"}
         data-magnetic
-        className="btn-gradient mt-8 rounded-full px-7 py-3 text-sm font-semibold"
+        className="btn-gradient mt-8 self-start rounded-full px-7 py-3 text-sm font-semibold"
       >
         {status === "loading" ? (
           <>

@@ -905,13 +905,23 @@ a {
     @apply mt-2.5 h-2 w-2 flex-none rounded-full bg-emerald-500;
   }
 
+  /* Below lg: a solid bar joined to the header, edge to edge, with pills scrolling under faded edges.
+     lg and up: a floating pill track. */
   .section-nav {
-    @apply sticky top-16 z-30 mt-6 py-2;
+    @apply sticky top-16 z-30 -mx-4 mt-6 border-b border-emerald-100 bg-white py-2 shadow-md shadow-emerald-900/5 sm:-mx-6 lg:mx-0 lg:border-0 lg:bg-transparent lg:shadow-none;
   }
 
   .section-nav-list {
-    @apply mx-auto flex w-max max-w-full gap-1 overflow-x-auto rounded-full bg-white/90 p-1.5 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100 backdrop-blur-md;
+    @apply relative flex gap-1.5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:mx-auto lg:w-max lg:max-w-full lg:gap-1 lg:rounded-full lg:bg-white/90 lg:p-1.5 lg:shadow-lg lg:shadow-emerald-900/5 lg:ring-1 lg:ring-emerald-100 lg:backdrop-blur-md;
     scrollbar-width: none;
+    scroll-padding-inline: 1rem;
+    mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1.5rem), transparent);
+  }
+
+  @media (width >= 64rem) {
+    .section-nav-list {
+      mask-image: none;
+    }
   }
 
   .section-nav-list::-webkit-scrollbar {
@@ -919,11 +929,11 @@ a {
   }
 
   .section-pill {
-    @apply inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-3.5 text-sm font-medium text-slate-600 transition duration-300 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 sm:px-4;
+    @apply inline-flex min-h-9 flex-none items-center whitespace-nowrap rounded-full bg-emerald-50/70 px-3.5 text-sm font-medium text-slate-700 ring-1 ring-emerald-100 transition duration-300 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 sm:px-4 lg:bg-transparent lg:text-slate-600 lg:ring-0;
   }
 
   .section-pill-active {
-    @apply bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/25 hover:text-white;
+    @apply bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/25 ring-0 hover:text-white;
   }
 
   .info-section {

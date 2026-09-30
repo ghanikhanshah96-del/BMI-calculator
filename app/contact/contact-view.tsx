@@ -6,6 +6,7 @@ import Breadcrumbs from "../components/breadcrumbs";
 import FaqAccordion from "../components/faq-accordion";
 import {
   AlertCircle,
+  ArrowRight,
   BookOpen,
   Calculator,
   Clock,
@@ -62,6 +63,12 @@ const topics = [
   },
 ];
 
+const nextSteps = [
+  "You send a short message with the page and details.",
+  "A person who maintains the calculators reads it.",
+  "You get an email reply within 1–2 business days.",
+];
+
 const tips = [
   "The name of the calculator or guide your message is about.",
   "The inputs you used and whether you chose metric or US units.",
@@ -95,6 +102,11 @@ const faqs = [
     answer:
       "Yes. Tell us what you want to calculate and why it would help. Suggestions that many people ask for, and that rely on a published, well-supported formula, are the most likely to be added.",
   },
+  {
+    question: "How do I report a bug or an accessibility problem?",
+    answer:
+      "Tell us the page, what you tried, and the device and browser you used. Accessibility reports, such as a control that does not work with a keyboard or screen reader, are treated as a priority and fixed as quickly as possible.",
+  },
 ];
 
 export default function ContactView({ siteUrl }: { siteUrl: string }) {
@@ -112,10 +124,8 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Contact", href: "/contact" }]} />
       </PageHero>
       <main className="page-main section-block">
-        <div className="grid items-start gap-8 lg:grid-cols-[1.25fr_0.75fr]">
-          <div>
-            <ContactForm />
-          </div>
+        <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+          <ContactForm />
 
           <aside className="grid gap-5">
             <div className="group relative aspect-4/3 overflow-hidden rounded-3xl shadow-xl shadow-emerald-900/15 ring-1 ring-slate-900/5">
@@ -155,6 +165,20 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
               FitnessCalculatorPro.com is a small, independent project. Messages go straight to the people who write the
               guides and maintain the calculators, so the more specific you are, the faster we can help.
             </p>
+            <div className="ct-next">
+              <p className="ct-next-title">What happens next</p>
+              <ol className="ct-steps">
+                {nextSteps.map((step) => (
+                  <li key={step} className="ct-step">
+                    {step}
+                  </li>
+                ))}
+              </ol>
+              <a href="#contact-form" className="group ct-next-link">
+                Write your message
+                <ArrowRight className="arrow-nudge" />
+              </a>
+            </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {topics.map(({ icon: Icon, title, text }) => (
@@ -206,7 +230,8 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
             Contact FAQ
           </h2>
           <FaqAccordion items={faqs} variant="cards" className="mt-5" />
-        </section>      </main>
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );
