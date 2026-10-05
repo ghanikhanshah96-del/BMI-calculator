@@ -1004,15 +1004,36 @@ a {
     @apply scroll-mt-32;
   }
 
-  /* FAQ variants */
+  /* FAQ variants. Pairs share a row on wide screens, but each card keeps its own height. */
   .faq-list,
   .faq-split,
   .faq-cards {
-    @apply grid items-start gap-2.5;
+    display: grid;
+    align-items: start;
+    gap: 0.625rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .faq-split > .faq-item,
+  .faq-cards > .faq-item {
+    height: auto;
+    align-self: start;
   }
 
   .faq-item > h3 {
     @apply m-0 flex flex-none;
+  }
+
+  @media (min-width: 64rem) {
+    .faq-split,
+    .faq-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .faq-split > .faq-item:last-child:nth-child(odd),
+    .faq-cards > .faq-item:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
   }
 
   .faq-answer > * + * {

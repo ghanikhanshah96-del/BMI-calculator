@@ -1,17 +1,13 @@
 @reference "../../globals.css";
 
 @layer components {
-  /* Article grid: everything spans both columns except paired half cards, which share a row from lg. */
+  /* Guide sections stack full width, in the same order as the page. */
   .tool-article {
-    @apply grid items-stretch gap-x-6 gap-y-6 lg:grid-cols-2;
+    @apply grid items-start gap-y-6;
   }
 
   .tool-article > * {
-    @apply min-w-0 lg:col-span-2;
-  }
-
-  .tool-article > .article-half {
-    @apply flex h-full flex-col lg:col-span-1;
+    @apply min-w-0;
   }
 
   /* How to use: numbered stepper */

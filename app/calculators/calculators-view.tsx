@@ -108,7 +108,7 @@ export default function CalculatorsView({
           <h2 id="choose-tool" className="section-title">
             Which calculator should you use?
           </h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
+          <div className="mt-6 grid gap-5">
             {choosingTips.map((tip, index) => {
               const tool = getToolLink(tip.toolId);
               return (
@@ -141,7 +141,7 @@ export default function CalculatorsView({
             Every calculator answers a different question. Use this quick reference to see what a tool measures and when
             it is most useful, then open the tool page for step-by-step instructions and a guide to reading your result.
           </p>
-          <dl className="mt-6 grid gap-4 md:grid-cols-2">
+          <dl className="mt-6 grid gap-4">
             {reference.map((row, index) => {
               const tool = getToolLink(row.toolId);
               return (
@@ -170,7 +170,7 @@ export default function CalculatorsView({
           <h2 id="how-built" className="section-title">
             How these calculators are built
           </h2>
-          <div className="mt-3 grid gap-x-10 gap-y-3 lg:grid-cols-2">
+          <div className="mt-3 grid max-w-3xl gap-y-3">
             <p className="body-copy">
               Each tool uses a published, widely used formula, such as the WHO adult BMI categories, the Mifflin-St Jeor
               energy equation, the U.S. Navy circumference method, and Naegele&apos;s rule for due dates. Results appear
