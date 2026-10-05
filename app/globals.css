@@ -1005,34 +1005,14 @@ a {
   }
 
   /* FAQ variants */
-  .faq-list {
-    @apply space-y-2.5;
-  }
-
-  .faq-split {
-    @apply grid items-stretch gap-2.5 lg:grid-cols-2;
-  }
-
+  .faq-list,
+  .faq-split,
   .faq-cards {
-    @apply grid items-stretch gap-3 sm:grid-cols-2;
-  }
-
-  .faq-split > .faq-item,
-  .faq-cards > .faq-item {
-    @apply flex h-full flex-col;
+    @apply grid items-start gap-2.5;
   }
 
   .faq-item > h3 {
-    @apply m-0 flex min-h-full flex-1;
-  }
-
-  /* An odd last question spans the row so the grid never ends with an empty cell. */
-  .faq-split > .faq-item:last-child:nth-child(odd) {
-    @apply lg:col-span-2;
-  }
-
-  .faq-cards > .faq-item:last-child:nth-child(odd) {
-    @apply sm:col-span-2;
+    @apply m-0 flex flex-none;
   }
 
   .faq-answer > * + * {
@@ -1054,6 +1034,26 @@ a {
 
   .faq-cards .faq-item-open {
     @apply from-emerald-50 to-teal-50;
+  }
+
+  .home-guide-section {
+    @apply scroll-mt-24 border-t border-emerald-100/80 py-10 lg:py-14;
+  }
+
+  .home-goal-list {
+    @apply mt-8 overflow-hidden rounded-2xl bg-white ring-1 ring-slate-900/5;
+  }
+
+  .home-goal-list > li + li {
+    @apply border-t border-emerald-100;
+  }
+
+  .home-goal-row {
+    @apply flex flex-col gap-2 px-5 py-4 transition-colors hover:bg-emerald-50/70 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6 sm:py-5;
+  }
+
+  .home-goal-link {
+    @apply inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 transition-colors group-hover:text-emerald-900;
   }
 
   .popular-card {

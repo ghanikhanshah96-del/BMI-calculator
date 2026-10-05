@@ -17,7 +17,7 @@
   }
 
   .prose-text {
-    @apply text-base leading-7 break-words text-slate-700;
+    @apply max-w-[68ch] text-base leading-7 break-words text-slate-700;
   }
 
   .prose-text strong,
@@ -52,43 +52,28 @@
     content: "";
   }
 
-  /* Inside a panel, points sit in equal pairs. A leftover last item spans the row. */
+  /* Points stack. Only short labels share a row, and a short leftover item spans that row. */
   .panel-card .dot-list,
   .panel-frame .dot-list,
   .panel-brand .dot-list {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-items: stretch;
+    align-items: start;
     gap: 0.65rem;
     columns: auto;
-  }
-
-  @media (min-width: 40rem) {
-    .panel-card .dot-list,
-    .panel-frame .dot-list,
-    .panel-brand .dot-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .panel-card .dot-list > li:last-child:nth-child(odd),
-    .panel-frame .dot-list > li:last-child:nth-child(odd),
-    .panel-brand .dot-list > li:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-    }
   }
 
   .panel-card .dot-list > li,
   .panel-frame .dot-list > li,
   .panel-brand .dot-list > li {
-    display: flex;
-    align-items: center;
-    height: 100%;
+    display: block;
+    height: auto;
     min-height: 3.25rem;
     margin: 0;
     min-width: 0;
     break-inside: avoid;
     border-radius: 0.9rem;
-    padding: 0.75rem 0.9rem 0.75rem 1.85rem;
+    padding: 0.8rem 0.95rem 0.8rem 1.85rem;
     transition:
       box-shadow 0.3s ease,
       background 0.3s ease;
@@ -97,9 +82,9 @@
   .panel-card .dot-list > li::before,
   .panel-frame .dot-list > li::before,
   .panel-brand .dot-list > li::before {
-    top: 50%;
+    top: 1.15rem;
     left: 0.75rem;
-    transform: translateY(-50%);
+    transform: none;
   }
 
   .panel-card .dot-list > li,
@@ -217,7 +202,7 @@
   .panel-frame .term-grid,
   .panel-brand .term-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
   }
 
@@ -288,6 +273,13 @@
     box-shadow: 0 32px 52px -24px rgba(4, 120, 87, 0.5);
   }
 
+  /* A full section is too large to jump on hover. Color and shadow still respond. */
+  .info-section.panel-card:hover,
+  .info-section.panel-frame:hover,
+  .info-section.panel-brand:hover {
+    transform: none;
+  }
+
   .panel-card:hover {
     background:
       linear-gradient(160deg, #ffffff 0%, #bbf7d0 38%, #99f6e4 100%) padding-box,
@@ -312,6 +304,11 @@
   .panel-brand:hover {
     transform: translateY(-6px);
     box-shadow: 0 32px 56px -28px rgba(6, 78, 59, 0.72);
+  }
+
+  .info-section.panel-brand:hover {
+    transform: none;
+    box-shadow: 0 28px 48px -26px rgba(6, 78, 59, 0.55);
   }
 
   .panel-brand::before {
@@ -382,53 +379,23 @@
   }
 }
 
-@container (min-width: 48rem) {
-  .flow-run-cols {
-    columns: 2;
-    column-gap: 2.5rem;
-  }
-
-  /* Column flow uses block margins; space-y would offset the top of the second column. */
-  .flow-run-cols > * + * {
-    margin-top: 0;
-  }
-
-  .flow-run-cols > * {
-    margin-bottom: 1rem;
-  }
-
-  .flow-run-cols > :last-child {
-    margin-bottom: 0;
-  }
-
-  /* A list stays one block under its lead sentence, so column flow cannot slice a card. */
-  .flow-run-cols > .prose-text:has(+ .dot-list),
-  .flow-run-cols > .dot-list,
-  .flow-run-cols > .calc-list {
-    column-span: all;
-    break-inside: avoid;
+/* Short labels share a row only once the section itself is wide enough to hold them. */
+@container (min-width: 32rem) {
+  .panel-card .dot-list-short,
+  .panel-frame .dot-list-short,
+  .panel-brand .dot-list-short,
+  .panel-card .term-grid,
+  .panel-frame .term-grid,
+  .panel-brand .term-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Lists of short items go two-up in narrower containers instead of leaving a tall, thin column. */
-@container (min-width: 24rem) {
-  .dot-list-short {
-    columns: 2;
-    column-gap: 2rem;
-  }
-
-  .dot-list-short > li + li {
-    margin-top: 0;
-  }
-
-  .dot-list-short > li {
-    margin-bottom: 0.5rem;
-  }
-}
-
-@container (min-width: 48rem) {
-  .flow-run-cols .dot-list-short {
-    columns: auto;
+@container (min-width: 52rem) {
+  .panel-card .dot-list-short,
+  .panel-frame .dot-list-short,
+  .panel-brand .dot-list-short {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

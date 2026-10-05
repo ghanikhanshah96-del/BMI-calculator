@@ -1,6 +1,6 @@
 import "./layouts.css";
 import type { ReactNode } from "react";
-import { Blocks, Inline, isShortList } from "../../components/content-blocks";
+import { Blocks, Inline, listMode } from "../../components/content-blocks";
 import FaqAccordion from "../../components/faq-accordion";
 import { plainText, type ArticleSection, type ContentBlock, type ToolFaq } from "../../lib/tool-content";
 
@@ -66,7 +66,7 @@ function Section({
       return (
         <section id={section.id} aria-labelledby={labelledBy} className={`info-section panel-card ${className}`}>
           <SectionTitle id={section.id}>{section.title}</SectionTitle>
-          <FaqAccordion items={faqs} variant="split" className="mt-5" />
+          <FaqAccordion items={faqs} variant="list" className="mt-5" />
         </section>
       );
   }
@@ -88,8 +88,8 @@ function blocksHeight(blocks: ContentBlock[], perLine = 70): number {
         return sum + GAP + 44 + (lines(block.text, perLine - 10) - 1) * 24;
       case "list": {
         if (block.ordered) return sum + GAP + 32 + block.items.reduce((total, item) => total + lines(item, perLine - 8) * LINE + 6, 0);
-        const rows = block.items.map((item) => lines(item, isShortList(block) ? perLine / 2 - 6 : perLine - 4) * LINE + 8);
-        if (!isShortList(block)) return sum + GAP + rows.reduce((total, row) => total + row, 0);
+        const rows = block.items.map((item) => lines(item, listMode(block) === "stack" ? perLine - 4 : perLine / 2 - 6) * LINE + 8);
+        if (listMode(block) === "stack") return sum + GAP + rows.reduce((total, row) => total + row, 0);
         return sum + GAP + rows.slice(0, Math.ceil(rows.length / 2)).reduce((total, row) => total + row, 0);
       }
       case "tables":

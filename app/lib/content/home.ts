@@ -140,7 +140,6 @@ export const homeSections: ArticleSection[] = [
       ),
       p("This gives you more context than a number alone."),
     ],
-    { half: true },
   ),
   section(
     "estimate-vs-measurement",
@@ -159,7 +158,7 @@ export const homeSections: ArticleSection[] = [
       p("Use these tools as starting points for understanding your health, fitness, nutrition, or cycle information."),
       p("If a result relates to a medical concern, pregnancy complication, fertility problem, or significant change in your health, speak with an appropriate healthcare professional."),
     ],
-    { half: true, tone: "frame" },
+    { tone: "frame" },
   ),
   section(
     "womens-health",
@@ -173,7 +172,7 @@ export const homeSections: ArticleSection[] = [
         ["During pregnancy:", "[Pregnancy Due Date Calculator](/due-date-calculator)"],
       ),
     ],
-    { half: true, tone: "brand" },
+    { tone: "brand" },
   ),
   section(
     "why-fitnesscalculatorpro",
@@ -190,7 +189,6 @@ export const homeSections: ArticleSection[] = [
       ),
       p("We believe a useful calculator should tell you more than just the answer. It should also help you understand what that answer means."),
     ],
-    { half: true },
   ),
   faqSection("Frequently Asked Questions"),
   section(

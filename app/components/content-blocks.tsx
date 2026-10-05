@@ -61,15 +61,12 @@ type FlowBlock = Extract<ContentBlock, { kind: "text" | "formula" | "list" }>;
 const isFlow = (block: ContentBlock): block is FlowBlock =>
   block.kind === "text" || block.kind === "formula" || block.kind === "list";
 
-const flowLength = (block: FlowBlock) => (block.kind === "list" ? block.items.join(" ").length : block.text.length);
-
-/** Bullet lists of four or more short items render two-up in narrower containers. */
-export function isShortList(block: Extract<ContentBlock, { kind: "list" }>): boolean {
-  return !block.ordered && block.items.length >= 4 && block.items.every((item) => item.length <= 40);
+/** Short labels can sit in a chip row. Sentence-length points stay in one vertical list. */
+export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "short" | "stack" {
+  if (block.ordered || block.items.length < 4) return "stack";
+  const longest = Math.max(...block.items.map((item) => item.length));
+  return longest <= 42 ? "short" : "stack";
 }
-
-/** Text runs at least this long split into two columns once their container is wide enough. */
-const COLUMN_MIN_CHARS = 420;
 
 function FlowItem({ block }: { block: FlowBlock }) {
   switch (block.kind) {
@@ -84,7 +81,7 @@ function FlowItem({ block }: { block: FlowBlock }) {
     case "list": {
       const List = block.ordered ? "ol" : "ul";
       return (
-        <List className={block.ordered ? "calc-list" : isShortList(block) ? "dot-list dot-list-short" : "dot-list"}>
+        <List className={block.ordered ? "calc-list" : `dot-list dot-list-${listMode(block)}`}>
           {block.items.map((item, itemIndex) => (
             <li key={`${itemIndex}-${item}`}>
               <Inline text={item} />
@@ -152,10 +149,7 @@ function WideBlock({ block, actionHref }: { block: Exclude<ContentBlock, FlowBlo
   }
 }
 
-/**
- * Renders copy blocks in order. Consecutive text, formula, and list blocks form a run; long runs flow
- * into two columns in wide containers so full-width sections never leave an empty right-hand side.
- */
+/** Renders copy blocks in order. Text stays in one column; only short labels share a row. */
 export function Blocks({
   blocks,
   actionHref = "#calculator",
@@ -180,9 +174,8 @@ export function Blocks({
     <div className={`content-blocks ${className}`}>
       {groups.map((group, index) => {
         if (!Array.isArray(group)) return <WideBlock key={index} block={group} actionHref={actionHref} />;
-        const long = group.reduce((sum, block) => sum + flowLength(block), 0) >= COLUMN_MIN_CHARS;
         return (
-          <div key={index} className={long ? "flow-run flow-run-cols" : "flow-run"}>
+          <div key={index} className="flow-run">
             {group.map((block, blockIndex) => (
               <FlowItem key={blockIndex} block={block} />
             ))}

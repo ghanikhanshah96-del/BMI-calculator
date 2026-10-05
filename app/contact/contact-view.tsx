@@ -229,7 +229,7 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
           <h2 id="contact-faq" className="section-title">
             Contact FAQ
           </h2>
-          <FaqAccordion items={faqs} variant="cards" className="mt-5" />
+          <FaqAccordion items={faqs} variant="list" className="mt-5" />
         </section>
       </main>
       <SiteFooter />
