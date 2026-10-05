@@ -89,7 +89,7 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Sitemap", href: "/sitemap-page" }]} />
       </PageHero>
       <main className="page-main section-block">
-        <section aria-labelledby="site-structure" className="card-surface mb-14 p-6 sm:p-8">
+        <section aria-labelledby="site-structure" className="live-frame mb-14 p-6 sm:p-8">
           <h2 id="site-structure" className="section-title">
             How the site is organized
           </h2>

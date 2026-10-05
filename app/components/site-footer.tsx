@@ -38,13 +38,10 @@ const groups: { id: string; title: string; links: FooterLink[] }[] = [
       { href: "/blog", label: "Blog" },
       { href: "/contact", label: "Contact" },
       { href: "/sitemap-page", label: "Sitemap" },
+      { href: "/privacy", label: "Privacy Policy" },
+      { href: "/terms", label: "Terms of Use" },
     ],
   },
-];
-
-const legalLinks = [
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms of Use" },
 ];
 
 export default function SiteFooter() {
@@ -116,25 +113,7 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <nav aria-label="Legal" className="footer-legal-nav">
-            {legalLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="footer-legal-link"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <p className="order-2 md:order-1">
-            &copy; 2026 FitnessCalculatorPro.com. All rights reserved.
-          </p>
-          <p className="order-3 max-w-xs text-xs leading-5 text-slate-400 md:max-w-sm md:text-right">
-            Free BMI, TDEE, macro, body fat, due date, and ovulation calculators.
-          </p>
-        </div>
+        <p className="footer-copy">&copy; 2026 FitnessCalculatorPro.com. All rights reserved.</p>
       </div>
     </footer>
   );

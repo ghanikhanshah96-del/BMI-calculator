@@ -1,18 +1,17 @@
 @reference "../../globals.css";
 
-:root {
-  --ico-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
-  --ico-info-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
-  --ico-calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
-}
-
 @layer components {
-  /* Icon tiles drawn in CSS to keep repeated SVG out of the HTML. */
-  .formula-line::before,
-  .limits-item::before {
-    @apply block flex-none bg-center bg-no-repeat transition duration-300 ease-out;
-    background-size: 55%;
-    content: "";
+  /* Article grid: everything spans both columns except paired half cards, which share a row from lg. */
+  .tool-article {
+    @apply grid items-stretch gap-x-6 gap-y-6 lg:grid-cols-2;
+  }
+
+  .tool-article > * {
+    @apply min-w-0 lg:col-span-2;
+  }
+
+  .tool-article > .article-half {
+    @apply flex h-full flex-col lg:col-span-1;
   }
 
   /* How to use: numbered stepper */
@@ -27,8 +26,26 @@
   }
 
   .how-step {
-    @apply relative ml-14 rounded-2xl bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm ring-1 ring-slate-900/5 transition duration-300 ease-out hover:-translate-y-1 hover:bg-linear-to-b hover:from-emerald-50 hover:to-white hover:text-slate-800 hover:shadow-lg hover:shadow-emerald-900/10 hover:ring-emerald-300 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
+    @apply relative ml-14 min-w-0 rounded-2xl p-4 text-sm leading-6 break-words text-slate-600 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
     counter-increment: how;
+    border: 1.5px solid transparent;
+    background:
+      linear-gradient(180deg, #ffffff, #f4fbf8) padding-box,
+      linear-gradient(135deg, rgba(6, 95, 70, 0.12), rgba(15, 118, 110, 0.08)) border-box;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.35s ease,
+      background 0.35s ease,
+      color 0.35s ease;
+  }
+
+  .how-step:hover {
+    transform: translateY(-6px);
+    color: #134e4a;
+    background:
+      linear-gradient(180deg, #ffffff, #ecfdf5 55%, #f0fdfa) padding-box,
+      linear-gradient(135deg, #047857, #0f766e) border-box;
+    box-shadow: 0 18px 32px -22px rgba(4, 120, 87, 0.5);
   }
 
   .how-step::before {
@@ -36,96 +53,15 @@
     content: counter(how);
   }
 
+  .how-step strong {
+    @apply font-semibold text-slate-900;
+  }
+
+  .how-step-title {
+    @apply font-sans text-base font-semibold leading-snug text-slate-900;
+  }
+
   .how-step:hover::before {
     @apply rotate-6 scale-110 bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-600/40 ring-transparent;
-  }
-
-  /* Results: sweep rows */
-  .result-rows {
-    @apply mt-6 grid gap-1 rounded-3xl bg-white p-2 shadow-sm ring-1 ring-slate-900/5;
-  }
-
-  .result-row {
-    @apply grid gap-1 rounded-2xl bg-no-repeat px-4 py-4 transition-all duration-500 ease-out sm:grid-cols-[13rem_1fr] sm:items-center sm:gap-6 sm:px-5;
-    background-image: linear-gradient(90deg, #d1fae5, #ccfbf1 60%, rgb(255 255 255 / 0));
-    background-size: 0% 100%;
-  }
-
-  .result-row:hover {
-    background-size: 100% 100%;
-  }
-
-  .result-row h3 {
-    @apply flex items-center gap-2.5 text-base font-semibold text-slate-900;
-  }
-
-  .result-row h3::before {
-    @apply h-2.5 w-2.5 flex-none rounded-full bg-linear-to-br from-emerald-400 to-teal-500 transition duration-300;
-    content: "";
-  }
-
-  .result-row:hover h3::before {
-    @apply scale-150 shadow-md shadow-emerald-500/50;
-  }
-
-  /* Formula and worked example panel */
-  .formula-panel {
-    @apply relative isolate grid scroll-mt-32 gap-6 overflow-hidden rounded-3xl bg-linear-to-br from-emerald-700 via-teal-700 to-emerald-800 p-6 text-white shadow-xl shadow-emerald-900/20 sm:p-10 lg:grid-cols-2 lg:gap-10;
-    background-size: 200% 200%;
-    transition: background-position 0.8s ease;
-  }
-
-  .formula-panel:hover {
-    background-position: 100% 100%;
-  }
-
-  .formula-panel::before {
-    @apply absolute inset-0 -z-10 opacity-60;
-    background-image: radial-gradient(rgb(255 255 255 / 0.16) 1.5px, transparent 1.5px);
-    background-size: 22px 22px;
-    content: "";
-  }
-
-  .formula-line {
-    @apply flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2.5 text-sm font-semibold ring-1 ring-white/20 transition duration-300 hover:translate-x-1 hover:bg-white/20;
-  }
-
-  .formula-line::before {
-    @apply h-8 w-8 rounded-lg bg-white shadow-md shadow-emerald-950/20;
-    background-image: var(--ico-calendar);
-  }
-
-  .formula-line:hover::before {
-    @apply -rotate-6 scale-110;
-  }
-
-  .formula-example {
-    @apply rounded-2xl bg-white/10 p-5 ring-1 ring-white/20 transition duration-300 hover:-translate-y-1 hover:bg-white/15 sm:p-6;
-  }
-
-  /* Limits */
-  .limits-frame {
-    @apply rounded-3xl border-2 border-transparent p-6 sm:p-8;
-    background:
-      linear-gradient(135deg, #f0fdf4, #fff 45%, #f0fdfa) padding-box,
-      linear-gradient(135deg, #34d399, #2dd4bf, #a7f3d0) border-box;
-  }
-
-  .limits-list {
-    @apply mt-5 grid gap-3 sm:grid-cols-2;
-  }
-
-  .limits-item {
-    @apply flex items-start gap-3 rounded-2xl bg-white/80 px-4 py-3 text-sm leading-6 text-slate-600 ring-1 ring-emerald-100 transition duration-300 hover:bg-white hover:text-slate-800 hover:shadow-md hover:shadow-emerald-900/5 hover:ring-emerald-300;
-  }
-
-  .limits-item::before {
-    @apply mt-0.5 h-6 w-6 rounded-full bg-emerald-50 ring-1 ring-emerald-200;
-    background-image: var(--ico-info);
-  }
-
-  .limits-item:hover::before {
-    @apply rotate-12 bg-emerald-600 ring-emerald-600;
-    background-image: var(--ico-info-white);
   }
 }

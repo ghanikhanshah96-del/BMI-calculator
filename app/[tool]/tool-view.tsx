@@ -5,25 +5,16 @@ import Breadcrumbs from "../components/breadcrumbs";
 import { ArrowRight, BookOpen, LayoutGrid } from "../components/icons";
 import JsonLd from "../components/json-ld";
 import PageHero from "../components/page-hero";
-import SectionNav, { type SectionLink } from "../components/section-nav";
+import SectionNav from "../components/section-nav";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import ToolCalculator from "../components/tool-calculator";
 import { postCards } from "../blog/post-cards";
-import { toolContent } from "../lib/tool-content";
+import { articleNav, plainText, toolContent } from "../lib/tool-content";
 import { getToolLink, toolHref, type ToolId } from "../lib/tool-nav";
 import { organizationRef, websiteRef } from "../lib/seo";
 import type { Tool } from "../lib/tools";
-import ToolSections from "./layouts";
-
-const sectionLinks: readonly SectionLink[] = [
-  { id: "how-to", label: "How to use" },
-  { id: "results", label: "Results" },
-  { id: "formula", label: "Formula" },
-  { id: "example", label: "Example" },
-  { id: "limits", label: "Limits" },
-  { id: "faq", label: "FAQ" },
-];
+import ToolSections, { ToolLead } from "./layouts";
 
 export type ToolPageProps = Pick<Tool, "id" | "heroImage" | "heroImageAlt" | "metaDescription" | "relatedToolIds">;
 
@@ -40,6 +31,9 @@ export default function ToolView({
 }) {
   const tool = getToolLink(page.id);
   const content = toolContent[page.id];
+  const sections = content.article;
+  const sectionLinks = articleNav(sections);
+  const sources = content.sources ?? [];
   const guide = postCards.find((card) => card.toolId === page.id);
   const related = page.relatedToolIds.map((id: ToolId) => getToolLink(id));
   const pageUrl = `${siteUrl}${toolHref(tool)}`;
@@ -56,6 +50,9 @@ export default function ToolView({
         publisher: organizationRef(siteUrl),
         primaryImageOfPage: { "@type": "ImageObject", url: `${siteUrl}${page.heroImage}` },
         dateModified: updated,
+        ...(sources.length
+          ? { citation: sources.map((source) => ({ "@type": "CreativeWork", name: source.label, url: source.url })) }
+          : {}),
       },
       {
         "@type": "FAQPage",
@@ -63,7 +60,7 @@ export default function ToolView({
         mainEntity: content.faqs.map((faq) => ({
           "@type": "Question",
           name: faq.question,
-          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+          acceptedAnswer: { "@type": "Answer", text: plainText(faq.answer).replace(/^- /gm, "") },
         })),
       },
   ];
@@ -93,9 +90,11 @@ export default function ToolView({
           <ToolCalculator id={tool.id} />
         </section>
 
+        {content.lead ? <ToolLead blocks={content.lead} label={`About the ${tool.name}`} /> : null}
+
         <SectionNav items={sectionLinks} />
 
-        <ToolSections tool={tool} content={content} />
+        <ToolSections sections={sections} faqs={content.faqs} />
 
         {guide ? (
           <section aria-label="In-depth guide" className="cta-panel section-gap">
@@ -149,6 +148,25 @@ export default function ToolView({
             methodology and sources
           </Link>
           .
+          {sources.length ? (
+            <span className="mt-2 block break-words">
+              Sources:{" "}
+              {sources.map((source, index) => (
+                <span key={source.url}>
+                  {index ? "; " : null}
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-emerald-700 underline-offset-2 hover:underline"
+                  >
+                    {source.label}
+                  </a>
+                </span>
+              ))}
+              .
+            </span>
+          ) : null}
         </p>
       </main>
 

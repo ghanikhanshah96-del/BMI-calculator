@@ -136,15 +136,17 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           </h2>
           <p className="muted-copy mt-2 max-w-3xl">Pick the goal that fits you best and follow the suggested reading order.</p>
           <ul className="mt-6 grid gap-5 md:grid-cols-3">
-            {startingPoints.map((item) => (
-              <li key={item.goal} className="card-surface flex flex-col p-6">
-                <h3 className="text-lg font-semibold">{item.goal}</h3>
-                <p className="muted-copy mt-2">{item.text}</p>
-                <Link href={item.href} className="group mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700">
-                  {item.label}
-                  <ArrowRight className="arrow-nudge" />
-                </Link>
-              </li>
+            {startingPoints.map((item, index) => (
+              <Reveal as="li" key={item.goal} delay={index * 90} className="h-full">
+                <div className="spotlight group card-lift card-surface flex h-full flex-col p-6">
+                  <h3 className="text-lg font-semibold group-hover:text-emerald-800">{item.goal}</h3>
+                  <p className="muted-copy mt-2">{item.text}</p>
+                  <Link href={item.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700">
+                    {item.label}
+                    <ArrowRight className="arrow-nudge" />
+                  </Link>
+                </div>
+              </Reveal>
             ))}
           </ul>
         </section>
@@ -153,19 +155,19 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           <h2 id="guide-structure" className="section-title">
             How each guide is structured
           </h2>
-          <dl className="mt-6 grid gap-5 md:grid-cols-3">
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
             {guideParts.map((part, index) => (
-              <div key={part.title} className="card-surface flex gap-4 p-6">
+              <Reveal key={part.title} delay={index * 90} className="spotlight group card-lift card-surface flex h-full gap-4 p-6">
                 <span className="icon-badge brand-badge text-sm font-semibold" aria-hidden="true">
                   {index + 1}
                 </span>
                 <div>
-                  <dt className="font-semibold text-slate-900">{part.title}</dt>
-                  <dd className="muted-copy mt-1">{part.text}</dd>
+                  <h3 className="font-semibold text-slate-900">{part.title}</h3>
+                  <p className="muted-copy mt-1">{part.text}</p>
                 </div>
-              </div>
+              </Reveal>
             ))}
-          </dl>
+          </div>
         </section>
       </main>
       <SiteFooter />

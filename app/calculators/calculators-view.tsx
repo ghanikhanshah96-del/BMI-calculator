@@ -4,6 +4,7 @@ import Link from "next/link";
 import Breadcrumbs from "../components/breadcrumbs";
 import { ArrowRight, LayoutGrid } from "../components/icons";
 import PageHero from "../components/page-hero";
+import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import ToolClusterGrid, { type GuideLinks } from "../components/tool-cards";
@@ -30,7 +31,7 @@ const choosingTips: { question: string; answer: string; toolId: ToolId }[] = [
 const reference: { toolId: ToolId; measures: string; bestFor: string }[] = [
   {
     toolId: "bmi",
-    measures: "Weight relative to height, sorted into WHO adult categories.",
+    measures: "Weight relative to height, sorted into standard adult BMI categories.",
     bestFor: "A fast screening check and a healthy weight range for your height.",
   },
   {
@@ -108,20 +109,25 @@ export default function CalculatorsView({
             Which calculator should you use?
           </h2>
           <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {choosingTips.map((tip) => {
+            {choosingTips.map((tip, index) => {
               const tool = getToolLink(tip.toolId);
               return (
-                <article key={tip.question} className="card-surface flex flex-col p-6">
-                  <h3 className="text-lg font-semibold">{tip.question}</h3>
-                  <p className="muted-copy mt-2">{tip.answer}</p>
-                  <Link
-                    href={toolHref(tool)}
-                    className="group mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700"
-                  >
-                    Open the {tool.name}
-                    <ArrowRight className="arrow-nudge" />
-                  </Link>
-                </article>
+                <Reveal as="article" key={tip.question} delay={index * 90} className="h-full">
+                  <div className="spotlight group card-lift card-surface flex h-full flex-col p-6">
+                    <span className="icon-badge h-11 w-11 rounded-xl">
+                      <tool.icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="mt-4 text-lg font-semibold group-hover:text-emerald-800">{tip.question}</h3>
+                    <p className="muted-copy mt-2">{tip.answer}</p>
+                    <Link
+                      href={toolHref(tool)}
+                      className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700"
+                    >
+                      Open the {tool.name}
+                      <ArrowRight className="arrow-nudge" />
+                    </Link>
+                  </div>
+                </Reveal>
               );
             })}
           </div>
@@ -136,12 +142,15 @@ export default function CalculatorsView({
             it is most useful, then open the tool page for step-by-step instructions and a guide to reading your result.
           </p>
           <dl className="mt-6 grid gap-4 md:grid-cols-2">
-            {reference.map((row) => {
+            {reference.map((row, index) => {
               const tool = getToolLink(row.toolId);
               return (
-                <div key={row.toolId} className="card-surface p-5">
-                  <dt className="font-semibold">
-                    <Link href={toolHref(tool)} className="hover:text-emerald-800">
+                <Reveal key={row.toolId} delay={(index % 2) * 80} className="spotlight group card-lift card-surface h-full p-5">
+                  <dt className="flex items-center gap-3 font-semibold">
+                    <span className="icon-badge h-10 w-10 flex-none rounded-xl">
+                      <tool.icon className="h-5 w-5" />
+                    </span>
+                    <Link href={toolHref(tool)} className="group-hover:text-emerald-800">
                       {tool.name}
                     </Link>
                   </dt>
@@ -151,13 +160,13 @@ export default function CalculatorsView({
                   <dd className="muted-copy mt-1">
                     <span className="font-medium text-slate-700">Best for:</span> {row.bestFor}
                   </dd>
-                </div>
+                </Reveal>
               );
             })}
           </dl>
         </section>
 
-        <section aria-labelledby="how-built" className="card-surface section-gap p-6 sm:p-8">
+        <section aria-labelledby="how-built" className="live-frame section-gap p-6 sm:p-8">
           <h2 id="how-built" className="section-title">
             How these calculators are built
           </h2>

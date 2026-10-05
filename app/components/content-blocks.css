@@ -1,0 +1,439 @@
+@reference "../globals.css";
+
+@layer components {
+  /* Each block stack is a size container so column and pairing rules follow its own width, not the viewport. */
+  .content-blocks {
+    container-type: inline-size;
+    @apply min-w-0 space-y-4;
+  }
+
+  .flow-run {
+    @apply min-w-0 space-y-4;
+  }
+
+  .flow-run > .formula-chip,
+  .flow-run > .calc-list {
+    break-inside: avoid-column;
+  }
+
+  .prose-text {
+    @apply text-base leading-7 break-words text-slate-700;
+  }
+
+  .prose-text strong,
+  .dot-list strong,
+  .calc-list strong,
+  .term-text strong,
+  .note-box strong {
+    @apply font-semibold text-slate-900;
+  }
+
+  .inline-link {
+    @apply font-semibold text-emerald-700 underline decoration-emerald-300 underline-offset-2 transition-colors hover:text-emerald-900 hover:decoration-emerald-600;
+  }
+
+  .formula-chip {
+    @apply w-fit max-w-full rounded-xl px-4 py-2.5 text-[0.95rem] font-semibold leading-6 break-words text-emerald-950;
+    background: linear-gradient(135deg, #ecfdf5, #f0fdfa 55%, #f7fee7);
+    box-shadow: inset 0 0 0 1px rgba(6, 95, 70, 0.16);
+  }
+
+  .dot-list {
+    @apply space-y-2 text-base leading-7 text-slate-700;
+  }
+
+  .dot-list > li {
+    @apply relative pl-5 break-words;
+    break-inside: avoid-column;
+  }
+
+  .dot-list > li::before {
+    @apply absolute top-[0.6875rem] left-0 h-2 w-2 rounded-full bg-linear-to-br from-emerald-400 to-teal-500;
+    content: "";
+  }
+
+  /* Inside a panel, points sit in equal pairs. A leftover last item spans the row. */
+  .panel-card .dot-list,
+  .panel-frame .dot-list,
+  .panel-brand .dot-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0.65rem;
+    columns: auto;
+  }
+
+  @media (min-width: 40rem) {
+    .panel-card .dot-list,
+    .panel-frame .dot-list,
+    .panel-brand .dot-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel-card .dot-list > li:last-child:nth-child(odd),
+    .panel-frame .dot-list > li:last-child:nth-child(odd),
+    .panel-brand .dot-list > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .panel-card .dot-list > li,
+  .panel-frame .dot-list > li,
+  .panel-brand .dot-list > li {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 3.25rem;
+    margin: 0;
+    min-width: 0;
+    break-inside: avoid;
+    border-radius: 0.9rem;
+    padding: 0.75rem 0.9rem 0.75rem 1.85rem;
+    transition:
+      box-shadow 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .panel-card .dot-list > li::before,
+  .panel-frame .dot-list > li::before,
+  .panel-brand .dot-list > li::before {
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+  }
+
+  .panel-card .dot-list > li,
+  .panel-frame .dot-list > li {
+    background: linear-gradient(160deg, #ffffff, #f3faf7);
+    box-shadow: inset 0 0 0 1px rgba(6, 95, 70, 0.1);
+  }
+
+  .panel-card .dot-list > li:hover,
+  .panel-frame .dot-list > li:hover {
+    background: linear-gradient(160deg, #ffffff, #ecfdf5 55%, #f0fdfa);
+    box-shadow:
+      0 14px 24px -18px rgba(4, 120, 87, 0.55),
+      inset 0 0 0 1.5px #0f766e;
+  }
+
+  .panel-brand .dot-list > li {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  }
+
+  .panel-brand .dot-list > li:hover {
+    background: linear-gradient(160deg, rgba(190, 242, 100, 0.32), rgba(255, 255, 255, 0.14));
+    box-shadow:
+      0 16px 28px -16px rgba(0, 0, 0, 0.4),
+      inset 0 0 0 1px rgba(190, 242, 100, 0.75);
+  }
+
+  .calc-list {
+    @apply list-decimal space-y-1.5 rounded-2xl bg-slate-50/80 py-4 pr-4 pl-9 text-base leading-7 break-words text-slate-700 ring-1 ring-slate-900/5 marker:font-semibold marker:text-emerald-600;
+  }
+
+  /* Data tables: the wrapper scrolls if a table ever outgrows a narrow screen. */
+  .data-table-grid {
+    @apply grid min-w-0 items-start gap-4;
+  }
+
+  .data-table-wrap {
+    @apply min-w-0 overflow-x-auto rounded-2xl bg-white shadow-sm;
+    box-shadow: inset 0 0 0 1px rgba(6, 95, 70, 0.1);
+  }
+
+  .data-table {
+    @apply w-full border-collapse text-left text-sm sm:text-base;
+  }
+
+  .data-table caption {
+    @apply px-4 pt-4 pb-3 text-left font-semibold text-slate-900 sm:px-5;
+  }
+
+  .data-table thead th {
+    @apply px-4 py-2.5 text-xs font-semibold tracking-wide text-white uppercase sm:px-5;
+    background: linear-gradient(90deg, #065f46, #0f766e);
+  }
+
+  .data-table tbody th,
+  .data-table tbody td {
+    @apply border-t border-slate-100 px-4 py-3 align-top break-words sm:px-5;
+  }
+
+  .data-table tbody th {
+    @apply font-semibold text-slate-900;
+  }
+
+  .data-table tbody td {
+    @apply text-slate-700;
+  }
+
+  .data-table tbody tr {
+    @apply transition-colors duration-200;
+  }
+
+  .data-table tbody tr:hover {
+    background: linear-gradient(90deg, #ecfdf5, #f0fdfa);
+  }
+
+  /* Sub-sections and definitions: items grow to fill the row, so an odd last item never leaves a hole. */
+  .sub-cards,
+  .term-grid {
+    @apply flex min-w-0 flex-wrap gap-4;
+  }
+
+  .sub-card {
+    @apply relative min-w-0 rounded-2xl p-5 sm:p-6;
+    flex: 1 1 16rem;
+    border: 1.5px solid transparent;
+    background:
+      linear-gradient(165deg, #ffffff 0%, #f4fbf8 100%) padding-box,
+      linear-gradient(135deg, rgba(6, 95, 70, 0.14), rgba(15, 118, 110, 0.1)) border-box;
+    box-shadow: 0 10px 24px -22px rgba(6, 78, 59, 0.55);
+    transition:
+      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.35s ease,
+      background 0.35s ease;
+  }
+
+  .sub-card:hover {
+    transform: translateY(-6px);
+    background:
+      linear-gradient(165deg, #ffffff 0%, #ecfdf5 48%, #f0fdfa 100%) padding-box,
+      linear-gradient(135deg, #047857, #0f766e) border-box;
+    box-shadow: 0 22px 36px -22px rgba(4, 120, 87, 0.5);
+  }
+
+  .sub-card-title {
+    @apply font-sans text-lg font-semibold leading-snug break-words text-emerald-950;
+    transition: color 0.3s ease;
+  }
+
+  .sub-card:hover .sub-card-title {
+    color: #047857;
+  }
+
+  .panel-card .term-grid,
+  .panel-frame .term-grid,
+  .panel-brand .term-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .term-item {
+    @apply flex h-full min-w-0 flex-col justify-center rounded-2xl px-4 py-3.5 sm:px-5;
+    flex: 1 1 15rem;
+    border: 1.5px solid transparent;
+    background:
+      linear-gradient(160deg, #ffffff, #f7fee7 70%, #f0fdfa) padding-box,
+      linear-gradient(135deg, rgba(101, 163, 13, 0.18), rgba(15, 118, 110, 0.12)) border-box;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.35s ease,
+      background 0.35s ease;
+  }
+
+  .term-item:hover {
+    background:
+      linear-gradient(160deg, #ffffff, #f7fee7 40%, #ecfdf5) padding-box,
+      linear-gradient(135deg, #4d7c0f, #0f766e) border-box;
+    box-shadow: 0 16px 28px -20px rgba(15, 118, 110, 0.45);
+  }
+
+  .term-title {
+    @apply font-semibold break-words text-slate-900;
+  }
+
+  .term-text {
+    @apply mt-1 text-sm leading-6 break-words text-slate-600 sm:text-base sm:leading-7;
+  }
+
+  .note-box {
+    @apply rounded-2xl border-l-4 border-amber-400 bg-amber-50 px-4 py-3.5 text-base leading-7 break-words text-slate-800 sm:px-5;
+  }
+
+  .action-link {
+    @apply min-h-12 w-full max-w-full justify-between gap-3 rounded-2xl px-5 py-3 text-left text-sm font-semibold leading-6 sm:w-fit sm:justify-start sm:rounded-full sm:text-base;
+  }
+
+  /* Panels shared by calculator articles and the home page.
+     Resting state stays quiet. The forest/teal border only appears on hover. */
+  .panel-card,
+  .panel-frame {
+    @apply rounded-3xl p-5 sm:p-8;
+    border: 1.5px solid transparent;
+    box-shadow: 0 16px 36px -30px rgba(6, 78, 59, 0.55);
+    transition:
+      transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.4s ease,
+      background 0.4s ease;
+  }
+
+  .panel-card {
+    background:
+      linear-gradient(160deg, #f4fdf8 0%, #d8f5ea 46%, #d7f4f1 100%) padding-box,
+      linear-gradient(135deg, #059669, #0f766e) border-box;
+  }
+
+  .panel-frame {
+    background:
+      linear-gradient(160deg, #f7fee7 0%, #ecfccb 42%, #d1fae5 100%) padding-box,
+      linear-gradient(135deg, #65a30d, #0f766e) border-box;
+  }
+
+  .panel-card:hover,
+  .panel-frame:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 32px 52px -24px rgba(4, 120, 87, 0.5);
+  }
+
+  .panel-card:hover {
+    background:
+      linear-gradient(160deg, #ffffff 0%, #bbf7d0 38%, #99f6e4 100%) padding-box,
+      linear-gradient(135deg, #047857, #0f766e) border-box;
+  }
+
+  .panel-frame:hover {
+    background:
+      linear-gradient(160deg, #ffffff 0%, #d9f99d 36%, #a7f3d0 100%) padding-box,
+      linear-gradient(135deg, #4d7c0f, #0f766e) border-box;
+  }
+
+  .panel-brand {
+    @apply relative isolate overflow-hidden rounded-3xl p-5 text-white sm:p-8 lg:p-10;
+    background: linear-gradient(135deg, #064e3b 0%, #0f766e 58%, #065f46 100%);
+    box-shadow: 0 22px 40px -28px rgba(6, 78, 59, 0.7);
+    transition:
+      transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.4s ease;
+  }
+
+  .panel-brand:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 56px -28px rgba(6, 78, 59, 0.72);
+  }
+
+  .panel-brand::before {
+    @apply absolute inset-0 -z-10 opacity-60;
+    background-image: radial-gradient(rgb(255 255 255 / 0.16) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+    content: "";
+  }
+
+  .panel-brand .section-title,
+  .panel-brand .sub-card-title,
+  .panel-brand .term-title,
+  .panel-brand .prose-text strong,
+  .panel-brand .dot-list strong,
+  .panel-brand .calc-list strong,
+  .panel-brand .term-text strong {
+    @apply text-white;
+  }
+
+  .panel-brand .prose-text,
+  .panel-brand .dot-list,
+  .panel-brand .term-text {
+    @apply text-emerald-50;
+  }
+
+  .panel-brand .dot-list > li::before {
+    @apply from-lime-200 to-lime-300;
+  }
+
+  .panel-brand .formula-chip {
+    background: linear-gradient(135deg, #ffffff, #ecfdf5 45%, #f7fee7);
+    color: #064e3b;
+    box-shadow: none;
+  }
+
+  .panel-brand .calc-list {
+    @apply bg-white/10 text-emerald-50 ring-white/20 marker:text-lime-200;
+  }
+
+  .panel-brand .sub-card,
+  .panel-brand .term-item {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+    color: #ecfdf5;
+  }
+
+  .panel-brand .sub-card:hover,
+  .panel-brand .term-item:hover {
+    background: linear-gradient(160deg, rgba(190, 242, 100, 0.32), rgba(255, 255, 255, 0.14));
+    box-shadow:
+      0 16px 28px -16px rgba(0, 0, 0, 0.4),
+      inset 0 0 0 1px rgba(190, 242, 100, 0.75);
+  }
+
+  .panel-brand .inline-link {
+    @apply text-lime-200 decoration-lime-200/60 hover:text-white;
+  }
+
+  .panel-brand .action-link {
+    background: #ffffff;
+    color: #065f46;
+    box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.45);
+  }
+
+  .panel-brand .action-link:hover {
+    color: #064e3b;
+    transform: translateY(-2px);
+  }
+}
+
+@container (min-width: 48rem) {
+  .flow-run-cols {
+    columns: 2;
+    column-gap: 2.5rem;
+  }
+
+  /* Column flow uses block margins; space-y would offset the top of the second column. */
+  .flow-run-cols > * + * {
+    margin-top: 0;
+  }
+
+  .flow-run-cols > * {
+    margin-bottom: 1rem;
+  }
+
+  .flow-run-cols > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* A list stays one block under its lead sentence, so column flow cannot slice a card. */
+  .flow-run-cols > .prose-text:has(+ .dot-list),
+  .flow-run-cols > .dot-list,
+  .flow-run-cols > .calc-list {
+    column-span: all;
+    break-inside: avoid;
+  }
+}
+
+/* Lists of short items go two-up in narrower containers instead of leaving a tall, thin column. */
+@container (min-width: 24rem) {
+  .dot-list-short {
+    columns: 2;
+    column-gap: 2rem;
+  }
+
+  .dot-list-short > li + li {
+    margin-top: 0;
+  }
+
+  .dot-list-short > li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@container (min-width: 48rem) {
+  .flow-run-cols .dot-list-short {
+    columns: auto;
+  }
+}
+
+@container (min-width: 42rem) {
+  .data-table-grid-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

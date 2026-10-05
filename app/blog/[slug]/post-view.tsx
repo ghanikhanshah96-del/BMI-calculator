@@ -7,6 +7,7 @@ import Breadcrumbs from "../../components/breadcrumbs";
 import DocNav from "../../components/doc-nav";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
+import Reveal from "../../components/reveal";
 import SectionNav from "../../components/section-nav";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
@@ -99,7 +100,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
           <article className="min-w-0">
             <SectionNav items={contents} className="-mt-4 mb-6 lg:hidden" />
-            <section id="takeaways-section" aria-labelledby="takeaways" className="card-surface mb-10 scroll-mt-28 p-6 sm:p-8">
+            <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
                 Key takeaways
               </h2>
@@ -112,27 +113,31 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 ))}
               </ul>
             </section>
-            <div className="space-y-10">
-              {post.sections.map((section) => (
-                <section key={section.heading} id={sectionId(section.heading)} className="scroll-mt-28">
-                  <h2 className="section-title">{section.heading}</h2>
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph.slice(0, 24)} className="post-copy">
-                      {renderInline(paragraph)}
-                    </p>
-                  ))}
-                </section>
+            <div className="space-y-6">
+              {post.sections.map((section, index) => (
+                <Reveal key={section.heading} delay={Math.min(index, 2) * 60}>
+                  <section id={sectionId(section.heading)} className="spotlight card-lift card-surface scroll-mt-28 p-6 sm:p-8">
+                    <h2 className="section-title">{section.heading}</h2>
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph.slice(0, 24)} className="post-copy">
+                        {renderInline(paragraph)}
+                      </p>
+                    ))}
+                  </section>
+                </Reveal>
               ))}
               <section id="questions" aria-labelledby="common-questions" className="scroll-mt-28">
                 <h2 id="common-questions" className="section-title">
                   Common questions
                 </h2>
-                {post.faqs.map((faq) => (
-                  <div key={faq.question} className="mt-5">
-                    <h3 className="text-lg font-semibold text-slate-900">{faq.question}</h3>
-                    <p className="body-copy mt-2">{renderInline(faq.answer)}</p>
-                  </div>
-                ))}
+                <div className="mt-5 grid gap-4">
+                  {post.faqs.map((faq) => (
+                    <article key={faq.question} className="spotlight card-lift card-surface p-5 sm:p-6">
+                      <h3 className="text-lg font-semibold text-slate-900">{faq.question}</h3>
+                      <p className="body-copy mt-2">{renderInline(faq.answer)}</p>
+                    </article>
+                  ))}
+                </div>
               </section>
             </div>
           </article>

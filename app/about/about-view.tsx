@@ -4,6 +4,7 @@ import Link from "next/link";
 import Breadcrumbs from "../components/breadcrumbs";
 import { AlertTriangle, ArrowRight, BookOpenCheck, Calculator, Info, Lock, RefreshCw, Target } from "../components/icons";
 import PageHero from "../components/page-hero";
+import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import { organizationRef, websiteRef } from "../lib/seo";
@@ -103,14 +104,16 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
 
       <main className="page-main section-block">
         <div className="grid gap-5 md:grid-cols-3">
-          {principles.map(({ icon: Icon, title, text }) => (
-            <section key={title} className="card-surface p-6">
-              <span className="icon-badge h-11 w-11 rounded-xl">
-                <Icon className="h-5 w-5" />
-              </span>
-              <h2 className="mt-4 text-xl text-slate-900">{title}</h2>
-              <p className="muted-copy mt-2">{text}</p>
-            </section>
+          {principles.map(({ icon: Icon, title, text }, index) => (
+            <Reveal as="section" key={title} delay={index * 90}>
+              <div className="spotlight group card-lift card-surface h-full p-6">
+                <span className="icon-badge h-11 w-11 rounded-xl">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h2 className="mt-4 text-xl text-slate-900 group-hover:text-emerald-800">{title}</h2>
+                <p className="muted-copy mt-2">{text}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
 
@@ -128,10 +131,11 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
             result, and answers to common questions.
           </p>
           <ul className="mt-6 grid gap-4 md:grid-cols-2">
-            {methods.map(({ toolId, method, source }) => {
+            {methods.map(({ toolId, method, source }, index) => {
               const tool = getToolLink(toolId);
               return (
-                <li key={toolId} className="card-surface flex gap-4 p-5">
+                <Reveal as="li" key={toolId} delay={(index % 2) * 80}>
+                <div className="spotlight group card-lift card-surface flex h-full gap-4 p-5">
                   <span className="icon-badge h-10 w-10 flex-none rounded-xl">
                     <tool.icon className="h-5 w-5" />
                   </span>
@@ -146,14 +150,15 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
                       <span className="font-semibold">Source:</span> {source}
                     </p>
                   </div>
-                </li>
+                </div>
+                </Reveal>
               );
             })}
           </ul>
         </section>
 
         <div className="section-gap grid gap-10 lg:grid-cols-2">
-          <section aria-labelledby="review" className="card-surface p-6 sm:p-8">
+          <section aria-labelledby="review" className="spotlight card-lift card-surface p-6 sm:p-8">
             <div className="flex items-center gap-3">
               <span className="icon-badge h-10 w-10 rounded-xl">
                 <RefreshCw className="h-5 w-5" />
@@ -169,7 +174,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
             </ol>
           </section>
 
-          <section aria-labelledby="limits" className="card-surface p-6 sm:p-8">
+          <section aria-labelledby="limits" className="spotlight card-lift card-surface p-6 sm:p-8">
             <div className="flex items-center gap-3">
               <span className="icon-badge h-10 w-10 rounded-xl">
                 <AlertTriangle className="h-5 w-5" />

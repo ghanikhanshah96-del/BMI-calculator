@@ -11,21 +11,19 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = pageMetadata({
-  title: "Fitness and Health Calculators | FitnessCalculatorPro.com",
+  title: "Free Fitness & Health Calculators | FitnessCalculatorPro",
   absoluteTitle: true,
   description:
-    "Free fitness and health calculators for BMI, body fat, TDEE, macros, pregnancy due date, and ovulation, with instant results and a clear guide for each.",
+    "Use free calculators for BMI, TDEE, body fat percentage, macros, pregnancy due dates and ovulation. Get quick estimates with clear explanations.",
   path: "/",
   keywords: [
-    "BMI calculator",
-    "free BMI calculator",
-    "body mass index calculator",
-    "TDEE calculator",
-    "BMR calculator",
-    "macro calculator",
-    "body fat calculator",
-    "due date calculator",
-    "ovulation calculator",
+    "Free Fitness & Health Calculators",
+    "BMI Calculator",
+    "TDEE Calculator",
+    "Body Fat Percentage Calculator",
+    "Macro Calculator",
+    "Pregnancy Due Date Calculator",
+    "Ovulation Calculator",
   ],
 });
 

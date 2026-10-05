@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return pageMetadata({
     title: tool.metaTitle,
+    absoluteTitle: tool.metaTitleAbsolute,
     description: tool.metaDescription,
     path: toolHref(tool),
     keywords: tool.keywords,

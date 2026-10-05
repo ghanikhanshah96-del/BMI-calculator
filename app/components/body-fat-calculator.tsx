@@ -55,7 +55,7 @@ type BodyFatInputs = {
   hipCm: number | null;
 };
 
-type AceCategory = "Essential" | "Athletes" | "Fitness" | "Average" | "Obese";
+type AceCategory = "Essential fat" | "Athletes" | "Fitness" | "Average/acceptable" | "Higher range";
 
 type BodyFatResult = {
   navyPct: number;
@@ -115,19 +115,19 @@ const JACKSON_POLLOCK: Array<{ age: number; male: number; female: number }> = [
 
 /** ACE category segments — equal visual width for clear reading (like calculator.net) */
 const MALE_SEGMENTS = [
-  { key: "Essential" as const, from: 2, to: 6, color: "#b45309", tip: "Needed for health" },
+  { key: "Essential fat" as const, from: 2, to: 6, color: "#b45309", tip: "Needed for health" },
   { key: "Athletes" as const, from: 6, to: 14, color: "#65a30d", tip: "Very lean / athletic" },
   { key: "Fitness" as const, from: 14, to: 18, color: "#047857", tip: "Fit range" },
-  { key: "Average" as const, from: 18, to: 25, color: "#ca8a04", tip: "Typical range" },
-  { key: "Obese" as const, from: 25, to: 45, color: "#b91c1c", tip: "High body fat" },
+  { key: "Average/acceptable" as const, from: 18, to: 25, color: "#ca8a04", tip: "Typical range" },
+  { key: "Higher range" as const, from: 25, to: 45, color: "#b91c1c", tip: "High body fat" },
 ];
 
 const FEMALE_SEGMENTS = [
-  { key: "Essential" as const, from: 10, to: 14, color: "#b45309", tip: "Needed for health" },
+  { key: "Essential fat" as const, from: 10, to: 14, color: "#b45309", tip: "Needed for health" },
   { key: "Athletes" as const, from: 14, to: 21, color: "#65a30d", tip: "Very lean / athletic" },
   { key: "Fitness" as const, from: 21, to: 25, color: "#047857", tip: "Fit range" },
-  { key: "Average" as const, from: 25, to: 32, color: "#ca8a04", tip: "Typical range" },
-  { key: "Obese" as const, from: 32, to: 50, color: "#b91c1c", tip: "High body fat" },
+  { key: "Average/acceptable" as const, from: 25, to: 32, color: "#ca8a04", tip: "Typical range" },
+  { key: "Higher range" as const, from: 32, to: 50, color: "#b91c1c", tip: "High body fat" },
 ];
 
 function log10(n: number) {
@@ -153,17 +153,17 @@ function interpolateIdeal(age: number, gender: Gender) {
 
 function getAceCategory(gender: Gender, bf: number): { label: AceCategory; tone: string } {
   if (gender === "male") {
-    if (bf < 6) return { label: "Essential", tone: "text-amber-800" };
+    if (bf < 6) return { label: "Essential fat", tone: "text-amber-800" };
     if (bf < 14) return { label: "Athletes", tone: "text-lime-700" };
     if (bf < 18) return { label: "Fitness", tone: "text-emerald-700" };
-    if (bf < 25) return { label: "Average", tone: "text-yellow-700" };
-    return { label: "Obese", tone: "text-red-700" };
+    if (bf < 25) return { label: "Average/acceptable", tone: "text-yellow-700" };
+    return { label: "Higher range", tone: "text-red-700" };
   }
-  if (bf < 14) return { label: "Essential", tone: "text-amber-800" };
+  if (bf < 14) return { label: "Essential fat", tone: "text-amber-800" };
   if (bf < 21) return { label: "Athletes", tone: "text-lime-700" };
   if (bf < 25) return { label: "Fitness", tone: "text-emerald-700" };
-  if (bf < 32) return { label: "Average", tone: "text-yellow-700" };
-  return { label: "Obese", tone: "text-red-700" };
+  if (bf < 32) return { label: "Average/acceptable", tone: "text-yellow-700" };
+  return { label: "Higher range", tone: "text-red-700" };
 }
 
 function bfToGaugePos(gender: Gender, bf: number) {
@@ -322,7 +322,9 @@ function BodyFatGauge({
               ].join(" ")}
             >
               <p className="truncate text-[10px] sm:text-[11px]">{seg.from}%</p>
-              <p className="truncate text-[9px] sm:text-[10px]">{seg.key}</p>
+              <p className="truncate text-[9px] sm:text-[10px]" title={seg.key}>
+                {seg.key}
+              </p>
             </div>
           ))}
         </div>
@@ -335,7 +337,7 @@ function BodyFatGauge({
           <span className="text-slate-500"> — {active.tip}</span>
           <span className="mt-0.5 block text-xs text-slate-500">
             {gender === "male" ? "Men" : "Women"}: {active.from}
-            {category === "Obese" ? "%+" : `–${active.to}%`}
+            {category === "Higher range" ? "%+" : `–${active.to}%`}
           </span>
         </p>
       </div>
@@ -674,10 +676,10 @@ export default function BodyFatCalculator() {
             />
 
             <ResultNote tone="info">
-              <strong>ACE body fat categories — </strong>
+              <strong>Body fat percentage chart — </strong>
               {result.gender === "male"
-                ? "Men: Essential 2–5% · Athletes 6–13% · Fitness 14–17% · Average 18–24% · Obese 25%+"
-                : "Women: Essential 10–13% · Athletes 14–20% · Fitness 21–24% · Average 25–31% · Obese 32%+"}
+                ? "Men: Essential fat 2–5% · Athletes 6–13% · Fitness 14–17% · Average/acceptable 18–24% · Higher range 25%+"
+                : "Women: Essential fat 10–13% · Athletes 14–20% · Fitness 21–24% · Average/acceptable 25–31% · Higher range 32%+"}
             </ResultNote>
 
             <ResultNote>

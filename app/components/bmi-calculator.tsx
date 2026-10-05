@@ -160,20 +160,21 @@ const UNIT_OPTIONS = [
   { value: "custom", label: "Custom" },
 ] as const;
 
-function getWhoCategory(bmi: number): { label: string; tone: string } {
-  if (bmi < 16) return { label: "Severe Thinness", tone: "text-red-700" };
-  if (bmi < 17) return { label: "Moderate Thinness", tone: "text-orange-700" };
-  if (bmi < 18.5) return { label: "Mild Thinness", tone: "text-amber-700" };
-  if (bmi < 25) return { label: "Normal", tone: "text-emerald-700" };
+/** Labels match the adult category tables on the page; underweight tone still deepens below 17 and 16. */
+function getAdultCategory(bmi: number): { label: string; tone: string } {
+  if (bmi < 16) return { label: "Underweight", tone: "text-red-700" };
+  if (bmi < 17) return { label: "Underweight", tone: "text-orange-700" };
+  if (bmi < 18.5) return { label: "Underweight", tone: "text-amber-700" };
+  if (bmi < 25) return { label: "Healthy Weight", tone: "text-emerald-700" };
   if (bmi < 30) return { label: "Overweight", tone: "text-amber-700" };
-  if (bmi < 35) return { label: "Obese Class I", tone: "text-orange-700" };
-  if (bmi < 40) return { label: "Obese Class II", tone: "text-red-700" };
-  return { label: "Obese Class III", tone: "text-red-800" };
+  if (bmi < 35) return { label: "Obesity Class 1", tone: "text-orange-700" };
+  if (bmi < 40) return { label: "Obesity Class 2", tone: "text-red-700" };
+  return { label: "Obesity Class 3", tone: "text-red-800" };
 }
 
 function buildResult(heightM: number, weightKg: number, age: number, showLb: boolean): BmiResult {
   const bmi = weightKg / (heightM * heightM);
-  const category = getWhoCategory(bmi);
+  const category = getAdultCategory(bmi);
   return {
     bmi: Number(bmi.toFixed(1)),
     category: category.label,
@@ -351,7 +352,7 @@ function BmiGauge({ bmi, animationKey }: { bmi: number; animationKey: number }) 
               <textPath href={`#${curveIds[0]}`}>Underweight</textPath>
             </text>
             <text>
-              <textPath href={`#${curveIds[1]}`}>Normal</textPath>
+              <textPath href={`#${curveIds[1]}`}>Healthy</textPath>
             </text>
             <text>
               <textPath href={`#${curveIds[2]}`}>Overweight</textPath>
@@ -650,20 +651,20 @@ export default function BmiCalculator() {
                 value={healthyRange}
                 hint={`${result.showLb ? "lb" : "kg"} for your height`}
               />
-              <StatTile label="Category" value={<span className={result.categoryTone}>{result.category}</span>} hint="WHO adult scale" />
+              <StatTile label="Category" value={<span className={result.categoryTone}>{result.category}</span>} hint="Adult BMI categories" />
               <StatTile label="BMI Prime" value={result.bmiPrime} hint="BMI ÷ 25" />
               <StatTile label="Ponderal Index" value={result.ponderalIndex} hint="kg/m³" />
             </StatGrid>
 
             {result.isYouth && (
               <ResultNote tone="warning">
-                Age {result.age} is under 20. CDC uses BMI-for-age percentiles for children and teens. The WHO
-                adult category above is shown for reference only.
+                Age {result.age} is under 20. For ages 2 through 19, BMI is interpreted with age- and sex-specific
+                percentiles, so the adult category above is shown for reference only.
               </ResultNote>
             )}
 
             <ResultNote>
-              Gender is collected for completeness. Adult WHO BMI cutoffs are the same for men and women.
+              Gender is collected for completeness. Adult BMI categories are the same for men and women.
             </ResultNote>
           </ResultBody>
         )}

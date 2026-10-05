@@ -77,7 +77,7 @@
   }
 
   .ct-checklist-panel {
-    @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 sm:p-8;
+    @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 hover:ring-emerald-200 sm:p-8;
   }
 
   .ct-checklist {

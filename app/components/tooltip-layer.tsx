@@ -3,7 +3,9 @@
 import { useEffect, useRef } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 
-const TARGETS = "a[href], button, input, select, textarea, summary, [role='option'], [role='button'], [data-tip]";
+const BLOCKS =
+  ".popular-card, .tool-card, .hero-tool, .sub-card, .term-item, .how-step, .related-card, .post-card, .faq-item, .panel-card, .panel-frame, .panel-brand, .live-frame, .ct-topic, .ct-check";
+const TARGETS = `a[href], button, input, select, textarea, summary, [role='option'], [role='button'], [data-tip], .icon-badge, ${BLOCKS}`;
 const SHOW_DELAY = 350;
 const GAP = 10;
 const EDGE = 8;
@@ -59,7 +61,12 @@ function linkTip(link: HTMLAnchorElement) {
 
 /** Tooltip text: explicit data-tip, then aria-label, then a description derived from the element. */
 export function resolveTip(el: HTMLElement): string {
-  const explicit = clean(el.dataset.tip, 120);
+  if (el.classList.contains("icon-badge")) {
+    const host = el.parentElement?.closest<HTMLElement>(BLOCKS);
+    if (host) return resolveTip(host);
+  }
+
+  const explicit = clean(el.dataset.tip, 220);
   if (explicit) return explicit;
 
   const popup = el.getAttribute("aria-haspopup");
@@ -86,6 +93,16 @@ export function resolveTip(el: HTMLElement): string {
   if (el instanceof HTMLSelectElement) return `Choose ${fieldLabel(el)}`;
   if (el instanceof HTMLTextAreaElement) return `Write ${fieldLabel(el)}`;
   if (el.tagName === "SUMMARY") return `Show or hide ${clean(el.textContent) || "details"}`;
+
+  if (el.matches(BLOCKS)) {
+    const heading = clean(
+      el.querySelector("h2, h3, .popular-card-title, .sub-card-title, .term-title, .how-step-title, .related-card-title")?.textContent,
+      80,
+    );
+    const blurb = clean(el.querySelector("p")?.textContent, 180);
+    if (heading && blurb) return `${heading}. ${blurb}`;
+    return heading || blurb || "More about this section";
+  }
 
   const text = clean(el.textContent);
   const expanded = el.getAttribute("aria-expanded");

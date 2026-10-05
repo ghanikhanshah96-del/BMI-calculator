@@ -6,6 +6,23 @@ import { ChevronDown } from "./icons";
 export type FaqEntry = { question: string; answer: string };
 export type FaqVariant = "list" | "split" | "cards";
 
+/** Blank lines separate paragraphs; a paragraph whose lines all start with "- " is a bullet list. */
+function FaqAnswer({ text }: { text: string }) {
+  return text.split("\n\n").map((chunk, index) => {
+    const lines = chunk.split("\n");
+    if (lines.every((line) => line.startsWith("- "))) {
+      return (
+        <ul key={index} className="faq-answer-list">
+          {lines.map((line, lineIndex) => (
+            <li key={lineIndex}>{line.slice(2)}</li>
+          ))}
+        </ul>
+      );
+    }
+    return <p key={index}>{chunk}</p>;
+  });
+}
+
 /** Only one answer is open at a time; answers stay in the HTML so they are indexable. */
 export default function FaqAccordion({
   items,
@@ -44,7 +61,9 @@ export default function FaqAccordion({
             </h3>
             <div id={panelId} role="region" aria-labelledby={buttonId} className={open ? "accordion-panel accordion-open" : "accordion-panel"}>
               <div className="accordion-inner" inert={!open}>
-                <p className="faq-answer">{item.answer}</p>
+                <div className="faq-answer">
+                  <FaqAnswer text={item.answer} />
+                </div>
               </div>
             </div>
           </div>
