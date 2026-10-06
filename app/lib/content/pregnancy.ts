@@ -1,4 +1,4 @@
-import { action, cards, eq, faqSection, note, p, section, steps, sub, table, ul, type ToolContent } from "./blocks";
+import { eq, faqSection, p, section, steps, table, ul, type ToolContent } from "./blocks";
 
 export const pregnancy: ToolContent = {
   intro: "Calculate your due date from your last period or conception date with our free Pregnancy Due Date Calculator.",
@@ -30,14 +30,7 @@ export const pregnancy: ToolContent = {
       [
         p("A **Due Date Calculator From Last Period** uses the first day of your last menstrual period to estimate when your baby may be due."),
         p("The first day of the LMP is traditionally used as the starting point for calculating pregnancy length. ACOG states that the estimated due date is conventionally calculated as **280 days, or 40 weeks, from the first day of the LMP**."),
-        p("This method is commonly used because the exact date of conception is often difficult to determine."),
-        cards(
-          sub(
-            "What Is LMP?",
-            p("**LMP** stands for **Last Menstrual Period**. For pregnancy dating, the relevant date is the **first day of your last menstrual period**."),
-            p("If you know this date accurately, you can enter it into the calculator to get an estimated due date. If you are unsure about your LMP, tell your healthcare provider because uncertainty about the date can affect the initial estimate."),
-          ),
-        ),
+        p("This method is commonly used because the exact date of conception is often difficult to determine. **LMP** means the first day of your last menstrual period, not the day it ended. If that date is uncertain, tell your healthcare provider, because it changes the estimate."),
       ],
       { nav: "From last period", half: true },
     ),
@@ -78,22 +71,7 @@ export const pregnancy: ToolContent = {
       "accuracy",
       "How Accurate Is a Pregnancy Due Date Calculator?",
       [
-        p("A **Pregnancy Due Date Calculator** provides an estimate, so the result should not be interpreted as an exact prediction."),
-        p("One reason is that LMP-based calculations depend on the accuracy of the date provided and make assumptions about the timing of ovulation. Menstrual cycles and ovulation timing can vary, which can affect an LMP-based estimate."),
-        p("A healthcare provider may use an ultrasound examination to establish or confirm gestational age. According to ACOG, **first-trimester ultrasound measurement is the most accurate method for establishing or confirming gestational age** when used appropriately."),
-        cards(
-          sub(
-            "Why Your Calculated Date May Differ",
-            p("Your calculator result may differ from a clinical estimate because:"),
-            ul(
-              "Your LMP date may not be exact.",
-              "Your cycle or ovulation timing may differ from the assumptions used in the calculation.",
-              "An early ultrasound may provide additional information.",
-              "Pregnancy dating may be based on assisted reproductive technology when applicable.",
-              "Your healthcare provider may determine that another dating method is more appropriate.",
-            ),
-          ),
-        ),
+        p("The result is an estimate. It depends on an accurate last-period date and on cycle timing that may not match the formula. A first-trimester ultrasound is the most accurate way for a clinician to confirm gestational age, and your provider may revise the date."),
       ],
       { nav: "Accuracy", tone: "frame" },
     ),
@@ -188,12 +166,6 @@ export const pregnancy: ToolContent = {
       { half: true },
     ),
     faqSection("Frequently Asked Questions About Pregnancy Due Dates"),
-    section("calculate-due-date", "Calculate Your Estimated Due Date", [
-      p("Use the **Pregnancy Due Date Calculator** above to estimate your baby's expected arrival based on the information available to you. You can use the **Pregnancy Due Date Calculator Online** as a convenient starting point for understanding your pregnancy timeline."),
-      p("Remember that an online result is an estimate. Your healthcare provider can assess your pregnancy and use clinical information, including ultrasound when appropriate, to establish or confirm your **Estimated Due Date (EDD)**."),
-      action("Calculate your estimated due date above and keep the result as a reference for your pregnancy timeline."),
-      note("**Important:** This calculator provides an estimate and is not a substitute for medical care or professional pregnancy dating. If you are pregnant or have questions about your due date, discuss your individual situation with a qualified healthcare professional."),
-    ]),
   ],
   faqs: [
     {

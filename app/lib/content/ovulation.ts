@@ -1,4 +1,4 @@
-import { action, cards, eq, faqSection, ol, p, section, sub, table, ul, type ToolContent } from "./blocks";
+import { action, cards, eq, faqSection, p, section, sub, table, ul, type ToolContent } from "./blocks";
 
 export const ovulation: ToolContent = {
   intro:
@@ -16,21 +16,8 @@ export const ovulation: ToolContent = {
       "how-to",
       "How to Use the Ovulation Calculator",
       [
-        p("You usually need two pieces of information:"),
-        ol("**First day of your last period**", "**Average length of your menstrual cycle**"),
-        p("Enter these values and select **Calculate**."),
-        p("Your estimated dates will then appear."),
-        p("For example, if your average cycle is 28 days, the calculator may estimate ovulation around the middle of the cycle. This should not be interpreted as a rule that everyone with a 28-day cycle ovulates on exactly day 14."),
-        p("The NHS explains that ovulation generally occurs around **10 to 16 days before the next period**, and the exact timing can vary between individuals and cycles."),
-        cards(
-          sub(
-            "What Date Should I Enter as My Last Period?",
-            p("Use the **first day of menstrual bleeding** as day 1."),
-            p("Do not use:"),
-            ul("The last day of your period", "A day of light spotting before your actual period began", "The date your previous period ended"),
-            p("Using the correct starting date gives the **Ovulation Calculator by Last Period** a better basis for estimating your cycle."),
-          ),
-        ),
+        p("Enter the **first day of menstrual bleeding** and your average cycle length, then select **Calculate**. Do not use the last day of the period or a day of spotting before bleeding starts."),
+        p("A 28-day cycle does not mean ovulation is always on day 14. The NHS notes that ovulation is often about **10 to 16 days before the next period**, and that timing can shift."),
       ],
       { nav: "How to use" },
     ),
@@ -40,17 +27,8 @@ export const ovulation: ToolContent = {
       [
         p("A calendar-based calculator estimates when your next period may start and works backward to approximate ovulation."),
         p("Ovulation is the process in which an ovary releases an egg. If sperm fertilizes the egg, pregnancy may occur."),
-        p("For someone with a regular cycle, estimated ovulation is often calculated at roughly **14 days before the expected next period**. However, the interval between ovulation and the next period is not identical for every person."),
-        p("That is why an **Ovulation Date Calculator** or **Ovulation Day Calculator** produces an estimate rather than a confirmed biological event."),
-        cards(
-          sub(
-            "Example",
-            p("Suppose your average menstrual cycle is 30 days."),
-            p("A simple calendar estimate may place ovulation around:"),
-            eq("Cycle day 30 − 14 = approximately cycle day 16"),
-            p("This does not mean you can only become pregnant on day 16. The days leading up to ovulation are also important because sperm can remain viable for several days."),
-          ),
-        ),
+        p("For a regular cycle, the estimate is often about **14 days before the next period**. That interval is not the same for everyone, so the date is an estimate, not a confirmed ovulation."),
+        p("On a 30-day cycle, that rough estimate falls near cycle day 16. Pregnancy is still possible on the days before that, because sperm can survive for several days."),
       ],
       { nav: "Calculation", tone: "brand" },
     ),
@@ -106,8 +84,7 @@ export const ovulation: ToolContent = {
           ["30 days", "Around Day 16"],
           ["32 days", "Around Day 18"],
         ),
-        p("These examples explain why an **Ovulation Calculator for a 28 day cycle**, **Ovulation Calculator for a 30 day cycle**, and **Ovulation Calculator for a 32 day cycle** may return different dates."),
-        p("They should not be interpreted as guarantees."),
+        p("A longer or shorter cycle moves that estimate. Treat the date as a guide, not a guarantee."),
       ],
       { nav: "Day 14?", half: true },
     ),
@@ -116,10 +93,8 @@ export const ovulation: ToolContent = {
       "Ovulation Calculator by Cycle Length",
       [
         p("Your average cycle length is the number of days from the first day of one period to the day before your next period begins."),
-        p("For example:"),
-        ul("The period starts March 1.", "The next period starts March 29.", "Cycle length is approximately 28 days."),
-        p("A calculator generally works better when you enter your actual average cycle length instead of assuming that every cycle lasts 28 days."),
-        p("If your recent cycle lengths were:"),
+        p("Count from the first day of one period to the day before the next. March 1 to March 29 is about 28 days. Enter that average instead of assuming every cycle is 28 days."),
+        p("If your recent cycles were:"),
         ul("28 days", "30 days", "29 days", "31 days", "29 days"),
         p("Your average would be approximately 29–30 days."),
         p("Using several recent cycles can provide a more representative input for an **Ovulation Calculator by Cycle Length**."),
@@ -130,16 +105,7 @@ export const ovulation: ToolContent = {
       "calculate-ovulation-date",
       "How to Calculate Ovulation Date From Your Last Menstrual Period",
       [
-        p("If you are asking **how to calculate ovulation date**, the simplest calendar approach is:"),
-        ol(
-          "Identify day 1 of your last menstrual period.",
-          "Determine your average cycle length.",
-          "Estimate when your next period will start.",
-          "Count backward approximately 14 days as a rough ovulation estimate.",
-          "Include several days before the estimated ovulation date when considering your fertile window.",
-        ),
-        p("Our calculator performs these steps automatically."),
-        p("This is also why terms such as **Menstrual Cycle Ovulation Calculator**, **Period Ovulation Calculator**, and **Ovulation Calculator using last period date** generally describe the same basic type of tool."),
+        p("Count day 1 as the first day of bleeding, use your average cycle length to estimate the next period, then count back about 14 days. Include the days just before that date. The calculator above does this for you."),
       ],
       { half: true },
     ),
@@ -149,20 +115,14 @@ export const ovulation: ToolContent = {
       [
         p("If your question is **how to calculate the fertile window**, estimating the ovulation date is only the first step."),
         p("ASRM's clinical guidance uses the estimated day of ovulation plus the five preceding days as the fertile window."),
-        p("For example, if estimated ovulation is on day 16:"),
-        eq("Estimated fertile window: approximately days 11–16"),
-        p("A **Fertile Window Calculator using last period** applies this type of calendar logic automatically based on the dates you enter."),
-        p("Because real ovulation can shift, the true fertile window may occur earlier or later than the predicted dates."),
+        p("A **fertile window calculator** applies that range from the dates you enter. Real ovulation can still fall earlier or later."),
       ],
       { half: true },
     ),
     section("after-period", "When Do I Ovulate After My Period?", [
-      p("There is no fixed number of days after a period when everyone ovulates."),
-      p("The answer depends partly on:"),
+        p("There is no fixed number of days after a period when everyone ovulates. It depends on:"),
       ul("Total cycle length", "How long your period lasts", "Normal cycle-to-cycle variation", "Hormonal changes", "Whether your periods are regular"),
-      p("Someone with a shorter menstrual cycle may ovulate relatively soon after their period, while someone with a longer cycle may ovulate later."),
-      p("Therefore, the question **“how many days after period does ovulation occur?”** does not have one universal answer."),
-      p("Cycle length is usually more useful than counting a fixed number of days from when bleeding stops."),
+        p("A shorter cycle can mean ovulation soon after bleeding stops; a longer cycle means later. Cycle length is more useful than counting a fixed number of days from the end of a period."),
     ]),
     section(
       "before-ovulation",
@@ -214,8 +174,7 @@ export const ovulation: ToolContent = {
         p("Calendar predictions become less reliable when cycle lengths change substantially from month to month."),
         p("For example, if your cycles recently lasted:"),
         ul("25 days", "36 days", "29 days", "41 days"),
-        p("An average alone may hide considerable variation."),
-        p("An **Ovulation Calculator for irregular periods** can still provide a rough estimate, but the fertile window may be wider and harder to predict."),
+        p("An average hides that spread. An **ovulation calculator for irregular periods** can still give a rough estimate, but the fertile window is wider and harder to predict."),
         p("MedlinePlus notes that people with irregular cycles may find ovulation predictor kits useful for identifying when ovulation may be approaching."),
         p("Other fertility-awareness methods include:"),
         ul(
@@ -258,45 +217,10 @@ export const ovulation: ToolContent = {
       "get-pregnant",
       "Ovulation Calculator to Get Pregnant",
       [
-        p("If you are trying to conceive, an **Ovulation Calculator to Get Pregnant** can help identify when intercourse may be more likely to overlap with your fertile period."),
-        p("ASRM states that reproductive efficiency is highest when intercourse occurs every one to two days during the fertile window, although less frequent intercourse can still result in pregnancy."),
-        p("You do not need to identify one “perfect” moment."),
-        p("A more practical approach is to consider the estimated fertile window as a range of opportunity."),
-        p("This is why searches such as:"),
-        ul(
-          "**Best Days to Conceive Calculator**",
-          "**Pregnancy Ovulation Calculator**",
-          "**Conception Calculator**",
-          "**Fertility Calculator**",
-          "**Fertility window calculator for pregnancy**",
-        ),
-        p("often refer to closely related planning tools."),
-        p("Our calculator focuses specifically on estimating the timing of ovulation and the fertile window."),
+        p("If you are trying to conceive, use the estimated fertile window as a range. ASRM notes the highest chance when intercourse happens every one to two days in that window, not on one perfect day."),
+        p("Pair the calendar estimate with cervical mucus, an ovulation test, and your recent cycle pattern."),
       ],
       { nav: "Trying to conceive", half: true },
-    ),
-    section(
-      "most-fertile",
-      "What Are My Most Fertile Days?",
-      [
-        p("If you're wondering **“when am I most fertile?”**, the answer generally centers on the days immediately before ovulation and the ovulation day itself."),
-        p("However, your exact most fertile days cannot be guaranteed from calendar dates alone."),
-        p("For a better picture, you can combine your calculator estimate with:"),
-        ul("Changes in cervical mucus", "Ovulation predictor tests", "Previous cycle patterns", "Other advice from your healthcare professional"),
-        p("A **Best Days to Get Pregnant Calculator** can narrow down the likely dates, but biological signs may provide additional information."),
-      ],
-      { half: true },
-    ),
-    section(
-      "best-time",
-      "When Is the Best Time to Conceive?",
-      [
-        p("There is no requirement to time intercourse to a single exact hour or day."),
-        p("ASRM guidance indicates that intercourse every one to two days during the fertile window is associated with high reproductive efficiency."),
-        p("This approach also reduces the pressure of trying to identify the exact moment of ovulation."),
-        p("If you are specifically asking **“when is the best time to conceive?”**, think in terms of the fertile window—particularly the days immediately preceding ovulation—rather than one isolated calculator date."),
-      ],
-      { half: true },
     ),
     section(
       "next-ovulation",

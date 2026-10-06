@@ -61,11 +61,13 @@ type FlowBlock = Extract<ContentBlock, { kind: "text" | "formula" | "list" }>;
 const isFlow = (block: ContentBlock): block is FlowBlock =>
   block.kind === "text" || block.kind === "formula" || block.kind === "list";
 
-/** Short labels can sit in a chip row. Sentence-length points stay in one vertical list. */
+/** Label-length points sit in pairs. Sentence-length points stay in one vertical list. */
 export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "short" | "stack" {
   if (block.ordered || block.items.length < 4) return "stack";
-  const longest = Math.max(...block.items.map((item) => item.length));
-  return longest <= 42 ? "short" : "stack";
+  const longest = Math.max(
+    ...block.items.map((item) => item.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").length),
+  );
+  return longest <= 72 ? "short" : "stack";
 }
 
 function FlowItem({ block }: { block: FlowBlock }) {

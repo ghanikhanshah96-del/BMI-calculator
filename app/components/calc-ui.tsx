@@ -273,7 +273,7 @@ export function ResultHero({
   children?: ReactNode;
 }) {
   return (
-    <div className="spotlight spotlight-light relative isolate overflow-hidden rounded-2xl bg-linear-to-br from-emerald-700 via-emerald-600 to-teal-600 px-5 py-5 text-white shadow-lg shadow-emerald-700/25 sm:px-6">
+    <div className="niche-fill spotlight spotlight-light relative isolate overflow-hidden rounded-2xl bg-linear-to-br from-emerald-700 via-emerald-600 to-teal-600 px-5 py-5 text-white shadow-lg shadow-emerald-700/25 sm:px-6">
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 -z-10 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(190,242,100,0.35),transparent_70%)]"

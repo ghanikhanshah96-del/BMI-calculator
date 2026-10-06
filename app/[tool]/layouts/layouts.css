@@ -24,28 +24,11 @@
   .how-step {
     @apply relative ml-14 min-w-0 rounded-2xl p-4 text-sm leading-6 break-words text-slate-600 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
     counter-increment: how;
-    border: 1.5px solid transparent;
-    background:
-      linear-gradient(180deg, #ffffff, #f4fbf8) padding-box,
-      linear-gradient(135deg, rgba(6, 95, 70, 0.12), rgba(15, 118, 110, 0.08)) border-box;
-    transition:
-      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.35s ease,
-      background 0.35s ease,
-      color 0.35s ease;
-  }
-
-  .how-step:hover {
-    transform: translateY(-6px);
-    color: #134e4a;
-    background:
-      linear-gradient(180deg, #ffffff, #ecfdf5 55%, #f0fdfa) padding-box,
-      linear-gradient(135deg, #047857, #0f766e) border-box;
-    box-shadow: 0 18px 32px -22px rgba(4, 120, 87, 0.5);
+    border-top: 1px solid rgba(6, 95, 70, 0.1);
   }
 
   .how-step::before {
-    @apply absolute top-1/2 -left-14 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-2xl bg-white text-sm font-bold text-emerald-700 shadow-md shadow-emerald-900/10 ring-2 ring-emerald-300 transition duration-300 ease-out lg:-top-14 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0;
+    @apply absolute top-1/2 -left-14 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-2xl bg-white text-sm font-bold text-emerald-700 shadow-md shadow-emerald-900/10 ring-2 ring-emerald-300 lg:-top-14 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0;
     content: counter(how);
   }
 
@@ -55,9 +38,5 @@
 
   .how-step-title {
     @apply font-sans text-base font-semibold leading-snug text-slate-900;
-  }
-
-  .how-step:hover::before {
-    @apply rotate-6 scale-110 bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-600/40 ring-transparent;
   }
 }

@@ -565,14 +565,6 @@ a {
       linear-gradient(135deg, #f0fdf4, #ffffff 42%, #f0fdfa) padding-box,
       linear-gradient(135deg, #34d399, #14b8a6, #a3e635) border-box;
     box-shadow: 0 16px 40px -28px rgba(4, 120, 87, 0.45);
-    transition:
-      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.35s ease;
-  }
-
-  .live-frame:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 48px -24px rgba(4, 120, 87, 0.4);
   }
 
   .muted-copy {
@@ -672,8 +664,7 @@ a {
       background 0.3s ease;
   }
 
-  .faq-item:hover {
-    transform: translateY(-3px);
+  .faq-item:has(.faq-summary:hover) {
     background:
       linear-gradient(165deg, #ecfdf5, #ccfbf1) padding-box,
       linear-gradient(135deg, #047857, #0f766e) border-box;

@@ -113,11 +113,11 @@ export default function CalculatorsView({
               const tool = getToolLink(tip.toolId);
               return (
                 <Reveal as="article" key={tip.question} delay={index * 90} className="h-full">
-                  <div className="spotlight group card-lift card-surface flex h-full flex-col p-6">
+                  <div className="card-surface flex h-full flex-col p-6">
                     <span className="icon-badge h-11 w-11 rounded-xl">
                       <tool.icon className="h-5 w-5" />
                     </span>
-                    <h3 className="mt-4 text-lg font-semibold group-hover:text-emerald-800">{tip.question}</h3>
+                    <h3 className="mt-4 text-lg font-semibold">{tip.question}</h3>
                     <p className="muted-copy mt-2">{tip.answer}</p>
                     <Link
                       href={toolHref(tool)}
@@ -145,12 +145,12 @@ export default function CalculatorsView({
             {reference.map((row, index) => {
               const tool = getToolLink(row.toolId);
               return (
-                <Reveal key={row.toolId} delay={(index % 2) * 80} className="spotlight group card-lift card-surface h-full p-5">
+                <Reveal key={row.toolId} delay={(index % 2) * 80} className="card-surface h-full p-5">
                   <dt className="flex items-center gap-3 font-semibold">
                     <span className="icon-badge h-10 w-10 flex-none rounded-xl">
                       <tool.icon className="h-5 w-5" />
                     </span>
-                    <Link href={toolHref(tool)} className="group-hover:text-emerald-800">
+                    <Link href={toolHref(tool)} className="hover:text-emerald-800">
                       {tool.name}
                     </Link>
                   </dt>

@@ -1,4 +1,4 @@
-import { cards, faqSection, ol, p, section, sub, table, terms, ul, type ToolContent } from "./blocks";
+import { faqSection, p, section, table, ul, type ToolContent } from "./blocks";
 
 export const bodyFat: ToolContent = {
   intro: "Use our Body Fat Percentage Calculator to estimate your body fat, understand body fat ranges for men and women.",
@@ -28,23 +28,7 @@ export const bodyFat: ToolContent = {
         p("To calculate body fat percentage, enter the measurements requested by the calculator as accurately as possible."),
         p("Depending on the method used by the calculator, you may be asked for measurements such as:"),
         ul("Sex", "Age", "Height", "Weight", "Waist circumference", "Neck circumference", "Hip circumference"),
-        p("Once you enter the required information, select **Calculate** to see your estimated body fat percentage."),
-        cards(
-          sub(
-            "For a More Consistent Result",
-            p("Small measurement differences can change the estimate, especially when a calculator uses body circumferences."),
-            p("For better consistency:"),
-            ol(
-              "Use a flexible, non-stretch measuring tape.",
-              "Measure directly against the body rather than over thick clothing.",
-              "Keep the tape snug but do not compress the skin.",
-              "Stand naturally rather than pulling your stomach inward.",
-              "Measure at the same anatomical location each time.",
-              "If you are tracking progress, take measurements under similar conditions each time.",
-            ),
-            p("The U.S. Navy's body-composition guidance, for example, specifies particular anatomical measurement locations and standardized measuring procedures because inconsistent tape placement can affect the estimate."),
-          ),
-        ),
+        p("Once you enter the required information, select **Calculate** to see your estimated body fat percentage. Measure the same way each time: a snug tape on bare skin, at the same spot, without pulling the stomach in."),
       ],
       { nav: "How to use", tone: "brand" },
     ),
@@ -98,37 +82,8 @@ export const bodyFat: ToolContent = {
       "accuracy",
       "How Accurate Is a Body Fat Calculator?",
       [
-        p("A **Body Fat Calculator** provides an estimate."),
-        p("It does not directly scan or measure the amount of fat tissue inside your body."),
-        p("The accuracy of your result depends on factors including:"),
-        ul(
-          "The calculation method",
-          "Measurement technique",
-          "Body shape",
-          "Muscle mass",
-          "Age and sex",
-          "Where the tape is positioned",
-          "Normal measurement error",
-        ),
-        p("Circumference-based methods are convenient because they require little more than a measuring tape, but they cannot provide the same type of information as laboratory or clinical body-composition testing."),
-        cards(
-          sub(
-            "Other Ways Body Fat Can Be Estimated or Measured",
-            p("Different body-composition methods include:"),
-            terms(
-              ["Skinfold measurements:", "A trained person uses calipers to measure skinfold thickness at specific locations."],
-              [
-                "Bioelectrical impedance analysis (BIA):",
-                "Common in smart scales and fitness equipment. The device sends a small electrical current through the body and estimates body composition based partly on electrical resistance.",
-              ],
-              ["Air displacement:", "Specialized equipment estimates body composition using body volume."],
-              ["Hydrostatic weighing:", "Body density is estimated using underwater weighing."],
-              ["DXA or DEXA scan:", "Dual-energy X-ray absorptiometry can provide detailed estimates of fat mass, lean tissue, and bone mineral content."],
-            ),
-            p("NIH's Common Data Elements repository describes DXA as a highly regarded method for assessing percentage body fat and muscle mass, although it requires specialized equipment and trained personnel."),
-            p("No method should be assumed to produce exactly the same percentage as another method."),
-          ),
-        ),
+        p("A **Body Fat Calculator** estimates fat from measurements. It does not scan the fat inside your body, and the result changes with tape placement, body shape, and the formula used."),
+        p("Other methods include skinfold calipers, bioelectrical impedance (smart scales), air displacement, underwater weighing, and a DXA scan. No two methods should be expected to return the same percentage."),
       ],
       { nav: "Accuracy" },
     ),
@@ -137,8 +92,7 @@ export const bodyFat: ToolContent = {
       "Why Your Body Fat Result May Change",
       [
         p("A change in your calculator result does not always mean that your body gained or lost that exact amount of fat."),
-        p("Circumference and impedance measurements can be influenced by measurement conditions."),
-        p("Changes may reflect:"),
+        p("Tape and scale readings also move with measurement conditions. A change may reflect:"),
         ul(
           "Actual fat gain or loss",
           "Changes in muscle mass",
@@ -149,8 +103,7 @@ export const bodyFat: ToolContent = {
           "Normal daily fluctuations",
           "Measurement error",
         ),
-        p("For tracking progress, **consistency is often more useful than repeatedly switching between different methods**."),
-        p("If you normally use the same calculator and the same measurement procedure, looking at the trend over several weeks or months may be more meaningful than reacting to a single reading."),
+        p("For tracking, use the **same calculator and the same procedure**, and read the trend over weeks rather than one reading."),
       ],
       { half: true },
     ),
@@ -172,9 +125,7 @@ export const bodyFat: ToolContent = {
       "Should You Try to Reach the Lowest Possible Body Fat Percentage?",
       [
         p("No."),
-        p("Some body fat is essential for normal physiological function, and extremely low levels can be unhealthy."),
-        p("Fitness or athletic reference ranges should also not automatically be treated as goals for everyone. Competitive athletes may have different training, nutrition, and body-composition requirements from the general population."),
-        p("Instead of choosing a target solely because it appears on a chart, consider your:"),
+        p("Some body fat is essential, and extremely low levels can be unhealthy. Athletic chart ranges are not automatic goals. Consider your:"),
         ul("Overall health", "Fitness goals", "Medical history", "Athletic requirements", "Energy levels", "Nutrition", "Sustainable lifestyle"),
         p("If body composition is important because of a medical condition, competitive sport, significant weight change, pregnancy, an eating disorder, or another health concern, discuss your result with a qualified healthcare professional."),
       ],

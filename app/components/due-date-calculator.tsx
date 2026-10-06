@@ -213,7 +213,7 @@ function TimelineBar({ result }: { result: DueDateResult }) {
     <div className="space-y-2">
       <div className="relative h-3 overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full bg-linear-to-r from-emerald-500 via-teal-500 to-lime-400 transition-all duration-700"
+          className="niche-fill h-full rounded-full bg-linear-to-r from-emerald-500 via-teal-500 to-lime-400 transition-all duration-700"
           style={{ width: `${pct}%` }}
         />
         <span aria-hidden="true" className="absolute inset-y-0 left-[35%] w-px bg-white/80" />

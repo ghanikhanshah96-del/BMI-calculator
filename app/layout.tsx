@@ -9,6 +9,7 @@ import TooltipLayer from "./components/tooltip-layer";
 import { defaultOgImage } from "./lib/seo";
 import { getSiteUrl } from "./lib/site-url";
 import "./globals.css";
+import "./niche.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",

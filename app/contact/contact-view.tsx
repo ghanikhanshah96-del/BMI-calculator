@@ -143,7 +143,7 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
             </div>
 
             {infoCards.map(({ icon: Icon, title, text }) => (
-              <div key={title} className="spotlight group card-lift card-surface flex items-start gap-4 p-5">
+              <div key={title} className="card-surface flex items-start gap-4 p-5">
                 <span className="icon-badge h-11 w-11 flex-none rounded-xl">
                   <Icon className="h-5 w-5" />
                 </span>
@@ -182,7 +182,7 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {topics.map(({ icon: Icon, title, text }) => (
-              <article key={title} className="spotlight group ct-topic">
+              <article key={title} className="ct-topic">
                 <span className="ct-icon">
                   <Icon className="h-5 w-5" />
                 </span>
@@ -206,7 +206,7 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
               ))}
             </ol>
           </div>
-          <div className="group ct-cta">
+          <div className="ct-cta">
             <span className="ct-icon">
               <BookOpen className="h-5 w-5" />
             </span>

@@ -3,9 +3,8 @@
 import { useEffect, useRef } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 
-const BLOCKS =
-  ".popular-card, .tool-card, .hero-tool, .sub-card, .term-item, .how-step, .related-card, .post-card, .faq-item, .panel-card, .panel-frame, .panel-brand, .live-frame, .ct-topic, .ct-check";
-const TARGETS = `a[href], button, input, select, textarea, summary, [role='option'], [role='button'], [data-tip], .icon-badge, ${BLOCKS}`;
+const BLOCKS = ".popular-card, .tool-card, .hero-tool, .related-card, .post-card";
+const TARGETS = `a[href], button, input, select, textarea, summary, [role='option'], [role='button'], [data-tip], ${BLOCKS}`;
 const SHOW_DELAY = 350;
 const GAP = 10;
 const EDGE = 8;

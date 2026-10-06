@@ -54,19 +54,23 @@ export default function ToolClusterGrid({
             <ul className={`grid sm:grid-cols-2 ${compact ? "gap-3 lg:grid-cols-1" : "gap-4"}`}>
               {clusterTools.map((tool) => (
                 <li key={tool.id}>
-                  <Link href={toolHref(tool)} className={`${cardClass[tone]} ${compact ? "tool-card-compact" : ""}`}>
+                  <Link
+                    href={toolHref(tool)}
+                    data-niche={tool.id}
+                    className={`${cardClass[tone]} ${compact ? "tool-card-compact" : ""}`}
+                  >
                     <span className={badgeClass[tone]}>
                       <tool.icon className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className={`block font-semibold ${dark ? "" : "group-hover:text-emerald-800"}`}>{tool.name}</span>
+                      <span className="niche-name block font-semibold">{tool.name}</span>
                       <span
                         className={`mt-0.5 block text-sm ${compact ? "leading-5" : "leading-6"} ${dark ? "text-emerald-50/90" : "text-slate-600"}`}
                       >
                         {tool.tagline}
                       </span>
                     </span>
-                    <ArrowRight className={`arrow-nudge mt-1 ${dark ? "text-lime-200" : "text-emerald-600"}`} />
+                    <ArrowRight className={`arrow-nudge mt-1 ${dark ? "text-lime-200" : "niche-link"}`} />
                   </Link>
                 </li>
               ))}
@@ -80,7 +84,8 @@ export default function ToolClusterGrid({
                     <li key={guide.slug}>
                       <Link
                         href={`/blog/${guide.slug}`}
-                        className="link-grow inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-900"
+                        data-niche={tool.id}
+                        className="niche-link link-grow inline-flex items-center gap-1.5 font-medium"
                       >
                         <BookOpen className="h-4 w-4" />
                         {guide.title}

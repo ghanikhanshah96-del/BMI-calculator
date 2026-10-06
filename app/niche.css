@@ -1,0 +1,469 @@
+/*
+  Each calculator keeps the shared layout, and takes the color of its audience.
+  BMI is clinical blue, body fat is aqua, TDEE is amber energy, macros are leaf,
+  pregnancy is rose, and ovulation is plum. Result labels such as "Healthy Weight"
+  stay green so a status color does not change meaning.
+*/
+
+[data-niche="bmi"] {
+  --niche-50: #eff6ff;
+  --niche-100: #dbeafe;
+  --niche-200: #bfdbfe;
+  --niche-300: #93c5fd;
+  --niche-400: #60a5fa;
+  --niche-500: #3b82f6;
+  --niche-600: #1d4ed8;
+  --niche-700: #1e40af;
+  --niche-800: #1e3a8a;
+  --niche-900: #172554;
+  --niche-950: #0f1c3f;
+  --niche-glow: rgba(37, 99, 235, 0.18);
+}
+
+[data-niche="body-fat"] {
+  --niche-50: #ecfeff;
+  --niche-100: #cffafe;
+  --niche-200: #a5f3fc;
+  --niche-300: #67e8f9;
+  --niche-400: #22d3ee;
+  --niche-500: #0891b2;
+  --niche-600: #0e7490;
+  --niche-700: #0f6f8a;
+  --niche-800: #0c5f78;
+  --niche-900: #0a4f66;
+  --niche-950: #08384a;
+  --niche-glow: rgba(8, 145, 178, 0.2);
+}
+
+[data-niche="tdee"] {
+  --niche-50: #fffbeb;
+  --niche-100: #fef3c7;
+  --niche-200: #fde68a;
+  --niche-300: #fcd34d;
+  --niche-400: #fbbf24;
+  --niche-500: #f59e0b;
+  --niche-600: #b45309;
+  --niche-700: #92400e;
+  --niche-800: #78350f;
+  --niche-900: #451a03;
+  --niche-950: #2a1202;
+  --niche-glow: rgba(217, 119, 6, 0.2);
+}
+
+[data-niche="macro"] {
+  --niche-50: #f7fee7;
+  --niche-100: #ecfccb;
+  --niche-200: #d9f99d;
+  --niche-300: #bef264;
+  --niche-400: #a3e635;
+  --niche-500: #84cc16;
+  --niche-600: #4d7c0f;
+  --niche-700: #3f6212;
+  --niche-800: #365314;
+  --niche-900: #1a2e05;
+  --niche-950: #142204;
+  --niche-glow: rgba(101, 163, 13, 0.18);
+}
+
+[data-niche="pregnancy"] {
+  --niche-50: #fff1f2;
+  --niche-100: #ffe4e6;
+  --niche-200: #fecdd3;
+  --niche-300: #fda4af;
+  --niche-400: #fb7185;
+  --niche-500: #f43f5e;
+  --niche-600: #be123c;
+  --niche-700: #9f1239;
+  --niche-800: #881337;
+  --niche-900: #4c0519;
+  --niche-950: #3b0414;
+  --niche-glow: rgba(225, 29, 72, 0.16);
+}
+
+[data-niche="ovulation"] {
+  --niche-50: #f5f3ff;
+  --niche-100: #ede9fe;
+  --niche-200: #ddd6fe;
+  --niche-300: #c4b5fd;
+  --niche-400: #a78bfa;
+  --niche-500: #8b5cf6;
+  --niche-600: #6d28d9;
+  --niche-700: #5b21b6;
+  --niche-800: #4c1d95;
+  --niche-900: #2e1065;
+  --niche-950: #1e1b4b;
+  --niche-glow: rgba(109, 40, 217, 0.16);
+}
+
+[data-niche].bg-mesh {
+  background-color: var(--niche-50);
+  background-image:
+    radial-gradient(at 8% 0%, var(--niche-glow) 0, transparent 46%),
+    radial-gradient(at 96% 6%, color-mix(in srgb, var(--niche-300) 42%, transparent) 0, transparent 42%),
+    radial-gradient(at 50% 100%, color-mix(in srgb, var(--niche-200) 70%, transparent) 0, transparent 52%);
+}
+
+[data-niche] .hero-shell {
+  background-color: var(--niche-800);
+}
+
+[data-niche] .hero-shell img {
+  opacity: 0.22;
+}
+
+[data-niche] .hero-overlay {
+  background-color: var(--niche-800);
+  background-image: linear-gradient(
+    115deg,
+    var(--niche-900) 0%,
+    var(--niche-800) 46%,
+    var(--niche-700) 100%
+  );
+}
+
+[data-niche] .hero-glow-teal {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--niche-400) 42%, transparent), transparent 65%);
+}
+
+[data-niche] .hero-glow-lime {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--niche-300) 36%, transparent), transparent 65%);
+}
+
+[data-niche] .hero-pill,
+[data-niche] .hero-copy,
+[data-niche] .hero-copy p,
+[data-niche] .hero-shell nav,
+[data-niche] .hero-shell nav a {
+  color: color-mix(in srgb, white 88%, var(--niche-100));
+}
+
+[data-niche] .hero-shell nav a:hover {
+  color: #fff;
+}
+
+[data-niche] .btn-gradient,
+[data-niche] .niche-fill,
+[data-niche] .niche-fill p,
+[data-niche] .niche-fill span,
+[data-niche] .section-pill-active,
+[data-niche] .card-tag {
+  background-image: linear-gradient(120deg, var(--niche-800), var(--niche-700) 46%, var(--niche-600));
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--niche-800) 70%, transparent);
+}
+
+[data-niche] .btn-outline {
+  color: var(--niche-800);
+  border-color: var(--niche-200);
+}
+
+[data-niche] .icon-badge,
+[data-niche] .tool-badge-dark {
+  background-image: linear-gradient(135deg, var(--niche-500), var(--niche-700));
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--niche-600) 70%, transparent);
+}
+
+[data-niche] .stat-glow {
+  background-image: linear-gradient(to bottom right, var(--niche-400), var(--niche-700));
+}
+
+[data-niche] .hero-tool-arrow {
+  color: var(--niche-500);
+}
+
+[data-niche] .hero-tool::after {
+  background: radial-gradient(circle, color-mix(in srgb, var(--niche-500) 34%, transparent), transparent 68%);
+}
+
+[data-niche].group:hover .hero-tool,
+[data-niche].group:focus-within .hero-tool {
+  --tw-ring-color: var(--niche-300);
+}
+
+[data-niche] .tool-panel {
+  background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, var(--niche-300), var(--niche-500) 55%, var(--niche-400));
+  box-shadow: 0 25px 50px -12px color-mix(in srgb, var(--niche-900) 18%, transparent);
+}
+
+[data-niche] .field-shell {
+  background-image:
+    linear-gradient(180deg, #fff, var(--niche-50)),
+    linear-gradient(135deg, var(--niche-300), var(--niche-500) 55%, var(--niche-400));
+}
+
+[data-niche] .field-shell:hover .field-label,
+[data-niche] .field-shell:focus-within .field-label {
+  color: var(--niche-800);
+}
+
+[data-niche] .field-shell:focus-within {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--niche-500) 18%, transparent),
+    0 16px 32px -18px color-mix(in srgb, var(--niche-700) 55%, transparent);
+}
+
+[data-niche] .field-input::before {
+  background: linear-gradient(135deg, var(--niche-50), #fff 55%, var(--niche-100));
+}
+
+[data-niche] .field-input:hover {
+  box-shadow: inset 0 0 0 1.5px var(--niche-500);
+}
+
+[data-niche] .field-input:focus-within,
+[data-niche] .field-input[aria-expanded="true"] {
+  box-shadow: inset 0 0 0 2px var(--niche-600);
+}
+
+[data-niche] .niche-today {
+  --tw-ring-color: var(--niche-400);
+  color: var(--niche-800);
+}
+
+[data-niche] .section-title,
+[data-niche] .doc-nav-title {
+  color: var(--niche-950);
+}
+
+[data-niche] .section-nav {
+  border-color: var(--niche-100);
+}
+
+[data-niche] .section-nav-list {
+  --tw-ring-color: var(--niche-100);
+}
+
+[data-niche] .section-pill:hover {
+  color: var(--niche-800);
+}
+
+[data-niche] .section-pill-active,
+[data-niche] .section-pill-active:hover {
+  color: #fff;
+}
+
+[data-niche] .inline-link,
+[data-niche] a.content-link,
+[data-niche] .niche-link,
+[data-niche].niche-link,
+[data-niche] .popular-card-kicker,
+[data-niche] .popular-card-link,
+[data-niche] .related-card-cta,
+[data-niche] .doc-nav-link {
+  color: var(--niche-700);
+}
+
+[data-niche] .inline-link:hover,
+[data-niche] a.content-link:hover,
+[data-niche] .niche-link:hover,
+[data-niche].niche-link:hover,
+[data-niche] .popular-card-link:hover {
+  color: var(--niche-900);
+}
+
+[data-niche].group:hover .niche-name,
+[data-niche].group:hover .card-title,
+[data-niche].group:hover .related-card-title,
+[data-niche].group:hover .sitemap-label {
+  color: var(--niche-800);
+}
+
+[data-niche] .popular-card-text {
+  border-color: var(--niche-100);
+}
+
+[data-niche] .dot-list > li::before,
+[data-niche] .limit-dot {
+  background-color: var(--niche-500);
+  background-image: linear-gradient(to bottom right, var(--niche-400), var(--niche-700));
+}
+
+[data-niche] .formula-chip {
+  color: var(--niche-950);
+  background: linear-gradient(135deg, var(--niche-50), #fff 58%, var(--niche-100));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--niche-700) 16%, transparent);
+}
+
+[data-niche] .data-table thead th {
+  background: linear-gradient(90deg, var(--niche-800), var(--niche-600));
+}
+
+[data-niche] .how-step::before {
+  color: var(--niche-700);
+  --tw-ring-color: var(--niche-300);
+}
+
+[data-niche] .panel-frame {
+  background: var(--niche-50);
+  border-color: color-mix(in srgb, var(--niche-700) 12%, transparent);
+}
+
+[data-niche] .panel-card,
+[data-niche] .panel-frame {
+  border-color: color-mix(in srgb, var(--niche-700) 12%, transparent);
+}
+
+[data-niche] .panel-brand,
+[data-niche] .cta-panel {
+  background-image: linear-gradient(135deg, var(--niche-900), var(--niche-700) 58%, var(--niche-800));
+}
+
+[data-niche] .panel-brand .section-title,
+[data-niche] .panel-brand .sub-card-title,
+[data-niche] .panel-brand .term-title,
+[data-niche] .cta-panel h2 {
+  color: #fff;
+}
+
+[data-niche] .panel-brand .prose-text,
+[data-niche] .panel-brand .dot-list,
+[data-niche] .panel-brand .term-text,
+[data-niche] .cta-panel p {
+  color: color-mix(in srgb, white 90%, var(--niche-100));
+}
+
+[data-niche] .cta-button {
+  color: var(--niche-800);
+}
+
+[data-niche] .faq-item {
+  background:
+    linear-gradient(165deg, #fff, var(--niche-50)) padding-box,
+    linear-gradient(135deg, var(--niche-400), var(--niche-600)) border-box;
+}
+
+[data-niche] .faq-item:has(.faq-summary:hover),
+[data-niche] .faq-item-open {
+  background:
+    linear-gradient(165deg, #fff, var(--niche-100)) padding-box,
+    linear-gradient(135deg, var(--niche-600), var(--niche-800)) border-box;
+}
+
+[data-niche] .faq-summary:hover {
+  color: var(--niche-800);
+}
+
+[data-niche] .faq-chevron {
+  background-color: var(--niche-50);
+  color: var(--niche-700);
+  --tw-ring-color: var(--niche-200);
+}
+
+[data-niche] .faq-item-open .faq-chevron {
+  background-color: var(--niche-600);
+  color: #fff;
+}
+
+[data-niche] .faq-summary::before {
+  background: linear-gradient(180deg, var(--niche-600), var(--niche-800));
+}
+
+[data-niche] .empty-hero {
+  border-color: var(--niche-200);
+  background-image: linear-gradient(to bottom right, var(--niche-50), #fff);
+}
+
+[data-niche] .empty-label,
+[data-niche] .empty-unit {
+  color: var(--niche-800);
+}
+
+[data-niche] .empty-value {
+  color: var(--niche-300);
+}
+
+[data-niche] .doc-nav {
+  --tw-ring-color: var(--niche-100);
+}
+
+[data-niche].menu-tool:hover,
+[data-niche].menu-tool:focus-visible {
+  color: var(--niche-900);
+  box-shadow: inset 0 0 0 1px var(--niche-300);
+}
+
+[data-niche].menu-tool:hover::before,
+[data-niche].menu-tool:focus-visible::before {
+  background: linear-gradient(90deg, var(--niche-50), var(--niche-100));
+  opacity: 1;
+}
+
+[data-niche] .mobile-tool-icon {
+  background-image: linear-gradient(to bottom right, var(--niche-400), var(--niche-700));
+  box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--niche-600) 55%, transparent);
+}
+
+[data-niche].mobile-tool:hover,
+[data-niche].mobile-tool-active {
+  background-image: linear-gradient(to bottom right, var(--niche-50), #fff);
+  --tw-ring-color: var(--niche-400);
+}
+
+[data-niche].mobile-tool:hover::after,
+[data-niche].mobile-tool-active::after {
+  background-image: linear-gradient(to bottom right, color-mix(in srgb, var(--niche-300) 45%, transparent), transparent);
+}
+
+[data-niche] .seg-btn-active,
+[data-niche] .step-dot,
+[data-niche] .today-btn {
+  background-image: linear-gradient(135deg, var(--niche-600), var(--niche-800));
+  color: #fff;
+  box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--niche-700) 70%, transparent);
+}
+
+[data-niche] .unit-chip,
+[data-niche] .unit-select {
+  background-image: linear-gradient(to bottom right, var(--niche-100), var(--niche-50));
+  color: var(--niche-800);
+}
+
+[data-niche] .unit-select:hover,
+[data-niche] .unit-select[aria-expanded="true"],
+[data-niche] .num-arrow:hover {
+  background-image: linear-gradient(to bottom right, var(--niche-600), var(--niche-800));
+  color: #fff;
+}
+
+[data-niche] .num-arrow,
+[data-niche] .num-input {
+  color: var(--niche-800);
+  caret-color: var(--niche-700);
+}
+
+.result-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  border: 1px solid #f6d98a;
+  border-radius: 1rem;
+  background: #fffbeb;
+  padding: 0.9rem 1rem;
+  color: #78350f;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.result-notice svg {
+  margin-top: 0.1rem;
+  flex: none;
+  color: #b45309;
+}
+
+.result-notice a {
+  font-weight: 650;
+  color: #92400e;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.result-notice-sources {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+[data-niche] .live-frame {
+  background:
+    linear-gradient(135deg, var(--niche-50), #fff 42%, var(--niche-100)) padding-box,
+    linear-gradient(135deg, var(--niche-400), var(--niche-600), var(--niche-300)) border-box;
+}

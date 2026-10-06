@@ -14,23 +14,7 @@ export const tdee: ToolContent = {
       [
         p("**TDEE stands for Total Daily Energy Expenditure.** It describes the total amount of energy your body uses during a 24-hour period."),
         p("Your daily energy expenditure is influenced by several processes and activities, including the energy your body needs to maintain normal functions, the energy used for physical activity, and the energy required to digest and process food. The National Academies describes total energy expenditure as consisting of resting metabolic rate, the thermic effect of food, and physical activity."),
-        p("In simple terms, your TDEE represents the approximate number of calories your body uses throughout an average day."),
-        cards(
-          sub(
-            "TDEE Can Be Influenced By",
-            ul(
-              "Body size and weight",
-              "Height",
-              "Age",
-              "Sex",
-              "Daily physical activity",
-              "Exercise",
-              "Normal movement throughout the day",
-              "Energy used to process food",
-            ),
-            p("Physical activity is particularly variable between individuals, which is one reason two people with similar body measurements can have different daily calorie requirements."),
-          ),
-        ),
+        p("In simple terms, your TDEE is the approximate number of calories your body uses in an average day. Body size, age, sex, and especially daily activity are why two people with similar measurements can need different amounts."),
       ],
       { nav: "What is TDEE" },
     ),
@@ -38,11 +22,7 @@ export const tdee: ToolContent = {
       "how-it-works",
       "How Does a TDEE Calculator Work?",
       [
-        p("A **TDEE Calculator Online** typically starts with information about your body and lifestyle to estimate your resting energy needs. It then accounts for your typical physical activity to estimate your total daily energy expenditure."),
-        p("Depending on the calculator, the information used may include:"),
-        ul("Age", "Sex", "Height", "Weight", "Activity level"),
-        p("One commonly used approach begins with an estimated resting metabolic rate and then incorporates physical activity. The Mifflin-St Jeor equation is one established method for estimating resting metabolic rate from factors such as weight, height, age, and sex."),
-        p("The important point is that a TDEE calculation is an **estimate based on a mathematical prediction**, not a direct measurement of exactly how many calories your body burns each day."),
+        p("The calculator estimates resting energy from your body details, then adjusts for the activity level you choose. The Mifflin-St Jeor equation is one established method for that resting estimate. The result is a prediction, not a measurement of the calories you burn."),
       ],
       { nav: "How it works", tone: "brand" },
     ),
@@ -133,23 +113,7 @@ export const tdee: ToolContent = {
       "TDEE for Weight Loss",
       [
         p("A **TDEE Calculator for Weight Loss** can provide a starting point for understanding how calorie intake relates to estimated daily energy expenditure."),
-        p("If a person consistently consumes fewer calories than they use, the resulting energy deficit can contribute to weight loss. Physical activity can also increase the amount of energy used."),
-        p("However, there is no single calorie target that is appropriate for everyone."),
-        cards(
-          sub(
-            "When Using TDEE for Weight Loss",
-            p("Consider:"),
-            ul(
-              "Your estimated maintenance calories",
-              "Your current eating pattern",
-              "Your physical activity",
-              "Your health and medical history",
-              "Your weight-management goals",
-              "How your body responds over time",
-            ),
-          ),
-        ),
-        p("A TDEE number should not be treated as a guarantee of a particular rate of weight loss. NIDDK notes that the relationship between calorie intake, energy expenditure, and changes in body weight is more complex than a simple fixed calorie rule."),
+        p("If a person consistently consumes fewer calories than they use, that deficit can contribute to weight loss. There is no single calorie target for everyone, and the number is not a guaranteed rate of loss."),
       ],
       { nav: "Weight loss", half: true },
     ),
@@ -195,23 +159,7 @@ export const tdee: ToolContent = {
       "tdee-accuracy",
       "How Accurate Is a TDEE Calculator?",
       [
-        p("A **TDEE Calculator** provides an estimate rather than directly measuring your energy expenditure."),
-        p("Predictive equations for resting energy expenditure can provide useful estimates, but research shows that the accuracy of these equations can vary between individuals and populations."),
-        p("Your actual daily energy expenditure can also change depending on your activity, body composition, health, and other factors."),
-        p("For this reason, your TDEE result is best viewed as a **starting estimate**."),
-        cards(
-          sub(
-            "Why Your Actual Calorie Needs May Differ",
-            p("Your actual energy expenditure may differ from a calculator estimate because:"),
-            ul(
-              "Your daily activity may vary",
-              "Exercise intensity can change",
-              "Your body composition may differ from the assumptions used by an equation",
-              "Your metabolism may not match a predicted value exactly",
-              "Your lifestyle can change from week to week",
-            ),
-          ),
-        ),
+        p("A **TDEE Calculator** predicts energy use. It does not measure it. Activity, body composition, and health can all move the real number away from the estimate, so treat the result as a starting point."),
       ],
       { nav: "Accuracy", half: true },
     ),
@@ -278,11 +226,6 @@ export const tdee: ToolContent = {
       ],
       { tone: "frame" },
     ),
-    section("calculate-tdee", "Calculate Your TDEE Online", [
-      p("Use the **TDEE Calculator** above to estimate your total daily energy expenditure based on the information you enter. Your result can give you a useful starting point for understanding your approximate daily calorie needs and how activity level can influence energy expenditure."),
-      p("For the most useful interpretation, treat your result as an estimate and consider it alongside your actual lifestyle, eating pattern, activity, and health circumstances."),
-      action("Calculate your TDEE above and use the result as a starting point for understanding your daily calorie needs."),
-    ]),
   ],
   faqs: [
     {

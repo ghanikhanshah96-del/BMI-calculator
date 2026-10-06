@@ -42,6 +42,16 @@
     @apply space-y-2 text-base leading-7 text-slate-700;
   }
 
+  .dot-list-short {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem 2rem;
+  }
+
+  .dot-list.dot-list-short > li {
+    margin-top: 0;
+  }
+
   .dot-list > li {
     @apply relative pl-5 break-words;
     break-inside: avoid-column;
@@ -52,66 +62,7 @@
     content: "";
   }
 
-  /* Points stack. Only short labels share a row, and a short leftover item spans that row. */
-  .panel-card .dot-list,
-  .panel-frame .dot-list,
-  .panel-brand .dot-list {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-    gap: 0.65rem;
-    columns: auto;
-  }
-
-  .panel-card .dot-list > li,
-  .panel-frame .dot-list > li,
-  .panel-brand .dot-list > li {
-    display: block;
-    height: auto;
-    min-height: 3.25rem;
-    margin: 0;
-    min-width: 0;
-    break-inside: avoid;
-    border-radius: 0.9rem;
-    padding: 0.8rem 0.95rem 0.8rem 1.85rem;
-    transition:
-      box-shadow 0.3s ease,
-      background 0.3s ease;
-  }
-
-  .panel-card .dot-list > li::before,
-  .panel-frame .dot-list > li::before,
-  .panel-brand .dot-list > li::before {
-    top: 1.15rem;
-    left: 0.75rem;
-    transform: none;
-  }
-
-  .panel-card .dot-list > li,
-  .panel-frame .dot-list > li {
-    background: linear-gradient(160deg, #ffffff, #f3faf7);
-    box-shadow: inset 0 0 0 1px rgba(6, 95, 70, 0.1);
-  }
-
-  .panel-card .dot-list > li:hover,
-  .panel-frame .dot-list > li:hover {
-    background: linear-gradient(160deg, #ffffff, #ecfdf5 55%, #f0fdfa);
-    box-shadow:
-      0 14px 24px -18px rgba(4, 120, 87, 0.55),
-      inset 0 0 0 1.5px #0f766e;
-  }
-
-  .panel-brand .dot-list > li {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-  }
-
-  .panel-brand .dot-list > li:hover {
-    background: linear-gradient(160deg, rgba(190, 242, 100, 0.32), rgba(255, 255, 255, 0.14));
-    box-shadow:
-      0 16px 28px -16px rgba(0, 0, 0, 0.4),
-      inset 0 0 0 1px rgba(190, 242, 100, 0.75);
-  }
+  /* Lists stay text. They do not become a second set of cards inside the section. */
 
   .calc-list {
     @apply list-decimal space-y-1.5 rounded-2xl bg-slate-50/80 py-4 pr-4 pl-9 text-base leading-7 break-words text-slate-700 ring-1 ring-slate-900/5 marker:font-semibold marker:text-emerald-600;
@@ -153,77 +104,22 @@
     @apply text-slate-700;
   }
 
-  .data-table tbody tr {
-    @apply transition-colors duration-200;
-  }
-
-  .data-table tbody tr:hover {
-    background: linear-gradient(90deg, #ecfdf5, #f0fdfa);
-  }
-
-  /* Sub-sections and definitions: items grow to fill the row, so an odd last item never leaves a hole. */
+  /* Sub-sections and definitions sit in the parent section. They are not another card layer. */
   .sub-cards,
   .term-grid {
-    @apply flex min-w-0 flex-wrap gap-4;
+    @apply grid min-w-0 gap-x-8 gap-y-5;
   }
 
   .sub-card {
-    @apply relative min-w-0 rounded-2xl p-5 sm:p-6;
-    flex: 1 1 16rem;
-    border: 1.5px solid transparent;
-    background:
-      linear-gradient(165deg, #ffffff 0%, #f4fbf8 100%) padding-box,
-      linear-gradient(135deg, rgba(6, 95, 70, 0.14), rgba(15, 118, 110, 0.1)) border-box;
-    box-shadow: 0 10px 24px -22px rgba(6, 78, 59, 0.55);
-    transition:
-      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.35s ease,
-      background 0.35s ease;
-  }
-
-  .sub-card:hover {
-    transform: translateY(-6px);
-    background:
-      linear-gradient(165deg, #ffffff 0%, #ecfdf5 48%, #f0fdfa 100%) padding-box,
-      linear-gradient(135deg, #047857, #0f766e) border-box;
-    box-shadow: 0 22px 36px -22px rgba(4, 120, 87, 0.5);
+    @apply min-w-0 border-t border-emerald-900/10 pt-4;
   }
 
   .sub-card-title {
     @apply font-sans text-lg font-semibold leading-snug break-words text-emerald-950;
-    transition: color 0.3s ease;
-  }
-
-  .sub-card:hover .sub-card-title {
-    color: #047857;
-  }
-
-  .panel-card .term-grid,
-  .panel-frame .term-grid,
-  .panel-brand .term-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-items: stretch;
   }
 
   .term-item {
-    @apply flex h-full min-w-0 flex-col justify-center rounded-2xl px-4 py-3.5 sm:px-5;
-    flex: 1 1 15rem;
-    border: 1.5px solid transparent;
-    background:
-      linear-gradient(160deg, #ffffff, #f7fee7 70%, #f0fdfa) padding-box,
-      linear-gradient(135deg, rgba(101, 163, 13, 0.18), rgba(15, 118, 110, 0.12)) border-box;
-    transition:
-      transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.35s ease,
-      background 0.35s ease;
-  }
-
-  .term-item:hover {
-    background:
-      linear-gradient(160deg, #ffffff, #f7fee7 40%, #ecfdf5) padding-box,
-      linear-gradient(135deg, #4d7c0f, #0f766e) border-box;
-    box-shadow: 0 16px 28px -20px rgba(15, 118, 110, 0.45);
+    @apply min-w-0 border-t border-emerald-900/10 pt-3;
   }
 
   .term-title {
@@ -242,73 +138,22 @@
     @apply min-h-12 w-full max-w-full justify-between gap-3 rounded-2xl px-5 py-3 text-left text-sm font-semibold leading-6 sm:w-fit sm:justify-start sm:rounded-full sm:text-base;
   }
 
-  /* Panels shared by calculator articles and the home page.
-     Resting state stays quiet. The forest/teal border only appears on hover. */
+  /* One surface per section. The panel itself is not clickable, so it does not react to hover. */
   .panel-card,
   .panel-frame {
-    @apply rounded-3xl p-5 sm:p-8;
-    border: 1.5px solid transparent;
-    box-shadow: 0 16px 36px -30px rgba(6, 78, 59, 0.55);
-    transition:
-      transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.4s ease,
-      background 0.4s ease;
-  }
-
-  .panel-card {
-    background:
-      linear-gradient(160deg, #f4fdf8 0%, #d8f5ea 46%, #d7f4f1 100%) padding-box,
-      linear-gradient(135deg, #059669, #0f766e) border-box;
+    @apply rounded-3xl bg-white p-5 sm:p-8;
+    border: 1px solid rgba(6, 95, 70, 0.1);
+    box-shadow: 0 10px 28px -24px rgba(6, 78, 59, 0.45);
   }
 
   .panel-frame {
-    background:
-      linear-gradient(160deg, #f7fee7 0%, #ecfccb 42%, #d1fae5 100%) padding-box,
-      linear-gradient(135deg, #65a30d, #0f766e) border-box;
-  }
-
-  .panel-card:hover,
-  .panel-frame:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 32px 52px -24px rgba(4, 120, 87, 0.5);
-  }
-
-  /* A full section is too large to jump on hover. Color and shadow still respond. */
-  .info-section.panel-card:hover,
-  .info-section.panel-frame:hover,
-  .info-section.panel-brand:hover {
-    transform: none;
-  }
-
-  .panel-card:hover {
-    background:
-      linear-gradient(160deg, #ffffff 0%, #bbf7d0 38%, #99f6e4 100%) padding-box,
-      linear-gradient(135deg, #047857, #0f766e) border-box;
-  }
-
-  .panel-frame:hover {
-    background:
-      linear-gradient(160deg, #ffffff 0%, #d9f99d 36%, #a7f3d0 100%) padding-box,
-      linear-gradient(135deg, #4d7c0f, #0f766e) border-box;
+    background: #f7fbf4;
   }
 
   .panel-brand {
     @apply relative isolate overflow-hidden rounded-3xl p-5 text-white sm:p-8 lg:p-10;
     background: linear-gradient(135deg, #064e3b 0%, #0f766e 58%, #065f46 100%);
     box-shadow: 0 22px 40px -28px rgba(6, 78, 59, 0.7);
-    transition:
-      transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
-      box-shadow 0.4s ease;
-  }
-
-  .panel-brand:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 32px 56px -28px rgba(6, 78, 59, 0.72);
-  }
-
-  .info-section.panel-brand:hover {
-    transform: none;
-    box-shadow: 0 28px 48px -26px rgba(6, 78, 59, 0.55);
   }
 
   .panel-brand::before {
@@ -350,17 +195,8 @@
 
   .panel-brand .sub-card,
   .panel-brand .term-item {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.2);
     color: #ecfdf5;
-  }
-
-  .panel-brand .sub-card:hover,
-  .panel-brand .term-item:hover {
-    background: linear-gradient(160deg, rgba(190, 242, 100, 0.32), rgba(255, 255, 255, 0.14));
-    box-shadow:
-      0 16px 28px -16px rgba(0, 0, 0, 0.4),
-      inset 0 0 0 1px rgba(190, 242, 100, 0.75);
   }
 
   .panel-brand .inline-link {
@@ -379,23 +215,16 @@
   }
 }
 
-/* Short labels share a row only once the section itself is wide enough to hold them. */
-@container (min-width: 32rem) {
-  .panel-card .dot-list-short,
-  .panel-frame .dot-list-short,
-  .panel-brand .dot-list-short,
-  .panel-card .term-grid,
-  .panel-frame .term-grid,
-  .panel-brand .term-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@container (min-width: 20rem) {
+  .dot-list-short {
+    grid-template-columns: repeat(2, minmax(0, 22rem));
   }
 }
 
-@container (min-width: 52rem) {
-  .panel-card .dot-list-short,
-  .panel-frame .dot-list-short,
-  .panel-brand .dot-list-short {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+@container (min-width: 40rem) {
+  .sub-cards,
+  .term-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

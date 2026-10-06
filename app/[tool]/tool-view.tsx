@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Breadcrumbs from "../components/breadcrumbs";
-import { ArrowRight, BookOpen, LayoutGrid } from "../components/icons";
+import { ArrowRight, AlertTriangle, BookOpen, LayoutGrid } from "../components/icons";
 import JsonLd from "../components/json-ld";
 import PageHero from "../components/page-hero";
 import SectionNav from "../components/section-nav";
@@ -66,8 +66,9 @@ export default function ToolView({
   ];
 
   return (
-    <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
+    <div className="flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="calculators" />
+      <div data-niche={page.id} className="bg-mesh flex flex-1 flex-col">
       <PageHero
         image={page.heroImage}
         imageAlt={page.heroImageAlt}
@@ -89,6 +90,29 @@ export default function ToolView({
         <section id="calculator" aria-label={tool.name} className="tool-panel">
           <ToolCalculator id={tool.id} />
         </section>
+
+        <aside className="result-notice" role="note">
+          <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+          <p>
+            <strong>Estimate only.</strong> Results are for education and planning, not a diagnosis. Talk to a qualified
+            healthcare professional before making medical decisions. Read our{" "}
+            <Link href="/about">methodology and sources</Link>.
+            {sources.length ? (
+              <span className="result-notice-sources">
+                Sources:{" "}
+                {sources.map((source, index) => (
+                  <span key={source.url}>
+                    {index ? "; " : null}
+                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                      {source.label}
+                    </a>
+                  </span>
+                ))}
+                .
+              </span>
+            ) : null}
+          </p>
+        </aside>
 
         {content.lead ? <ToolLead blocks={content.lead} label={`About the ${tool.name}`} /> : null}
 
@@ -117,7 +141,7 @@ export default function ToolView({
             <h2 id="related-tools" className="section-title">
               Related calculators
             </h2>
-            <Link href="/calculators" className="link-grow inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+            <Link href="/calculators" className="niche-link link-grow inline-flex items-center gap-1.5 text-sm font-semibold">
               <LayoutGrid className="h-4 w-4" />
               All health calculators
             </Link>
@@ -125,7 +149,7 @@ export default function ToolView({
           <ul className="mt-6 grid gap-5 sm:grid-cols-3">
             {related.map((item) => (
               <li key={item.id}>
-                <Link href={toolHref(item)} className="spotlight group card-lift card-surface related-card">
+                <Link href={toolHref(item)} data-niche={item.id} className="spotlight group card-lift card-surface related-card">
                   <span className="icon-badge h-11 w-11 rounded-xl">
                     <item.icon className="h-5 w-5" />
                   </span>
@@ -140,35 +164,8 @@ export default function ToolView({
             ))}
           </ul>
         </section>
-
-        <p className="mt-12 rounded-2xl bg-white/70 px-5 py-4 text-center text-xs leading-5 text-slate-600 ring-1 ring-slate-900/5">
-          Results are estimates for education and planning, not a diagnosis. Talk to a qualified healthcare professional
-          before making medical decisions. Read our{" "}
-          <Link href="/about" className="font-semibold text-emerald-700 underline-offset-2 hover:underline">
-            methodology and sources
-          </Link>
-          .
-          {sources.length ? (
-            <span className="mt-2 block break-words">
-              Sources:{" "}
-              {sources.map((source, index) => (
-                <span key={source.url}>
-                  {index ? "; " : null}
-                  <a
-                    href={source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-emerald-700 underline-offset-2 hover:underline"
-                  >
-                    {source.label}
-                  </a>
-                </span>
-              ))}
-              .
-            </span>
-          ) : null}
-        </p>
       </main>
+      </div>
 
       <SiteFooter />
       <JsonLd items={jsonLd} />

@@ -1,5 +1,5 @@
 import type { ToolId } from "../tool-nav";
-import { action, cards, faqSection, p, section, sub, table, terms, ul, type ArticleSection, type ToolFaq } from "./blocks";
+import { action, faqSection, p, section, table, ul, type ArticleSection, type ToolFaq } from "./blocks";
 
 export const homeHero = {
   title: "Free Fitness & Health Calculators",
@@ -87,29 +87,17 @@ export const homeSections: ArticleSection[] = [
     ),
   ]),
   section("fitness-nutrition", "Fitness and Nutrition Calculators", [
-    p("If your goal is related to body weight, calorie intake, body composition, or nutrition planning, start with one of these tools:"),
-    cards(
-      sub("[BMI Calculator](/bmi-calculator)", p("Use BMI for a quick height-to-weight screening estimate.")),
-      sub("[TDEE Calculator](/tdee-calculator)", p("Use TDEE to estimate how many calories you may burn each day.")),
-      sub("[Body Fat Percentage Calculator](/body-fat-calculator)", p("Use body measurements to estimate your body fat percentage.")),
-      sub("[Macro Calculator](/macro-calculator)", p("Use your calorie needs to estimate daily protein, carbohydrate, and fat targets.")),
-    ),
-    p("These calculators measure different things, so they can be more useful when you understand how they connect."),
-    p("For example:"),
+    p("If your goal is related to body weight, calorie intake, body composition, or nutrition planning, these calculators measure different things. They are more useful when you understand how they connect."),
     ul(
-      "**BMI** looks at weight relative to height.",
-      "**TDEE** estimates daily calorie expenditure.",
-      "**Body Fat Percentage** estimates body composition.",
-      "**Macro Calculator** divides calories into protein, carbohydrates, and fat.",
+      "**[BMI Calculator](/bmi-calculator)** looks at weight relative to height.",
+      "**[TDEE Calculator](/tdee-calculator)** estimates daily calorie expenditure.",
+      "**[Body Fat Percentage Calculator](/body-fat-calculator)** estimates body composition.",
+      "**[Macro Calculator](/macro-calculator)** divides calories into protein, carbohydrates, and fat.",
     ),
     p("One result does not replace the others."),
   ]),
   section("pregnancy-fertility", "Pregnancy and Fertility Calculators", [
-    p("Our pregnancy and fertility tools are designed to make cycle and pregnancy dates easier to understand."),
-    cards(
-      sub("[Pregnancy Due Date Calculator](/due-date-calculator)", p("Estimate when your baby may be due based on the information you provide.")),
-      sub("[Ovulation Calculator](/ovulation-calculator)", p("Estimate when ovulation and your fertile window may occur during your menstrual cycle.")),
-    ),
+    p("The **[Pregnancy Due Date Calculator](/due-date-calculator)** estimates when a baby may be due. The **[Ovulation Calculator](/ovulation-calculator)** estimates when ovulation and the fertile window may occur."),
     p("Both tools provide **date estimates**, not guarantees."),
     p("Pregnancy length and ovulation timing can vary between individuals, so calculator results should be used as general planning information rather than as a diagnosis or confirmation of a medical event."),
   ]),
@@ -117,45 +105,14 @@ export const homeSections: ArticleSection[] = [
     "how-it-works",
     "How Our Calculators Work",
     [
-      p("Each calculator asks for the information needed for its specific calculation."),
-      p("Depending on the tool, this may include:"),
-      ul(
-        "Age",
-        "Sex",
-        "Height",
-        "Weight",
-        "Activity level",
-        "Body measurements",
-        "Menstrual cycle length",
-        "First day of the last menstrual period",
-      ),
-      p("After you enter your information, the calculator applies the relevant equation or calculation method and gives you an estimated result."),
-      p("Where useful, our calculator pages also explain:"),
-      ul(
-        "What the result means",
-        "How the calculation works",
-        "What inputs affect the result",
-        "Important limitations",
-        "When the estimate may be less accurate",
-      ),
-      p("This gives you more context than a number alone."),
+      p("Each calculator asks only for the details its formula needs, such as height and weight, activity, body measurements, or cycle dates. It then applies that method and explains what the estimate means and where it can be less accurate."),
     ],
   ),
   section(
     "estimate-vs-measurement",
     "Understand the Difference Between an Estimate and a Measurement",
     [
-      p("Online calculators can be useful for planning and understanding your numbers, but they do not directly measure every process happening in your body."),
-      p("For example:"),
-      ul(
-        "**BMI** does not directly measure body fat.",
-        "**TDEE** is an estimate of daily energy expenditure.",
-        "**Body fat calculations** can be affected by measurement technique.",
-        "**Macro needs** can differ between individuals.",
-        "**Pregnancy due dates** are estimated dates.",
-        "**Ovulation calculators** cannot confirm exactly when ovulation occurs.",
-      ),
-      p("Use these tools as starting points for understanding your health, fitness, nutrition, or cycle information."),
+      p("These tools estimate a number from the details you enter. They do not measure body fat, confirm ovulation, or predict the exact day of delivery."),
       p("If a result relates to a medical concern, pregnancy complication, fertility problem, or significant change in your health, speak with an appropriate healthcare professional."),
     ],
     { tone: "frame" },
@@ -164,13 +121,8 @@ export const homeSections: ArticleSection[] = [
     "womens-health",
     "Which Women's Health Calculator Should I Use?",
     [
-      p("Use the **Ovulation Calculator** if you want to estimate your fertile window or next ovulation date."),
-      p("Use the **Pregnancy Due Date Calculator** if you are already pregnant or have a pregnancy start date or last menstrual period to work from."),
-      p("These tools serve different stages:"),
-      terms(
-        ["Before pregnancy:", "[Ovulation Calculator](/ovulation-calculator)"],
-        ["During pregnancy:", "[Pregnancy Due Date Calculator](/due-date-calculator)"],
-      ),
+      p("Use the **[Ovulation Calculator](/ovulation-calculator)** before pregnancy, when you want to estimate a fertile window or next ovulation date."),
+      p("Use the **[Pregnancy Due Date Calculator](/due-date-calculator)** during pregnancy, when you already have a start date or the first day of your last menstrual period."),
     ],
     { tone: "brand" },
   ),
@@ -195,16 +147,8 @@ export const homeSections: ArticleSection[] = [
     "get-started",
     "Choose a Calculator and Get Started",
     [
-      p("Use the calculator that matches your question:"),
-      ul(
-        "[BMI Calculator](/bmi-calculator) for weight relative to height",
-        "[TDEE Calculator](/tdee-calculator) for daily calorie expenditure",
-        "[Body Fat Percentage Calculator](/body-fat-calculator) for body-composition estimates",
-        "[Macro Calculator](/macro-calculator) for protein, carbohydrate, and fat targets",
-        "[Pregnancy Due Date Calculator](/due-date-calculator) for estimated pregnancy dates",
-        "[Ovulation Calculator](/ovulation-calculator) for estimated fertile days",
-      ),
-      action("Select a calculator above and get your estimate in seconds."),
+    p("Pick the calculator above that matches your question, then read the result with its limitations in mind."),
+    action("Select a calculator above and get your estimate in seconds."),
     ],
     { tone: "brand" },
   ),

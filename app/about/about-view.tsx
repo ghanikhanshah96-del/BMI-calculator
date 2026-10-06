@@ -106,11 +106,11 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
         <div className="grid gap-5 md:grid-cols-3">
           {principles.map(({ icon: Icon, title, text }, index) => (
             <Reveal as="section" key={title} delay={index * 90}>
-              <div className="spotlight group card-lift card-surface h-full p-6">
+              <div className="card-surface h-full p-6">
                 <span className="icon-badge h-11 w-11 rounded-xl">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h2 className="mt-4 text-xl text-slate-900 group-hover:text-emerald-800">{title}</h2>
+                <h2 className="mt-4 text-xl text-slate-900">{title}</h2>
                 <p className="muted-copy mt-2">{text}</p>
               </div>
             </Reveal>
@@ -135,7 +135,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
               const tool = getToolLink(toolId);
               return (
                 <Reveal as="li" key={toolId} delay={(index % 2) * 80}>
-                <div className="spotlight group card-lift card-surface flex h-full gap-4 p-5">
+                <div className="card-surface flex h-full gap-4 p-5">
                   <span className="icon-badge h-10 w-10 flex-none rounded-xl">
                     <tool.icon className="h-5 w-5" />
                   </span>
@@ -158,7 +158,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
         </section>
 
         <div className="section-gap grid gap-10 lg:grid-cols-2">
-          <section aria-labelledby="review" className="spotlight card-lift card-surface p-6 sm:p-8">
+          <section aria-labelledby="review" className="card-surface p-6 sm:p-8">
             <div className="flex items-center gap-3">
               <span className="icon-badge h-10 w-10 rounded-xl">
                 <RefreshCw className="h-5 w-5" />
@@ -174,7 +174,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
             </ol>
           </section>
 
-          <section aria-labelledby="limits" className="spotlight card-lift card-surface p-6 sm:p-8">
+          <section aria-labelledby="limits" className="card-surface p-6 sm:p-8">
             <div className="flex items-center gap-3">
               <span className="icon-badge h-10 w-10 rounded-xl">
                 <AlertTriangle className="h-5 w-5" />
@@ -183,7 +183,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
                 Limits of every estimate
               </h2>
             </div>
-            <div className="mt-5 rounded-2xl bg-linear-to-r from-emerald-50 to-teal-50/70 p-5 ring-1 ring-emerald-100">
+            <div className="mt-5">
               <p className="body-copy">
                 Our calculators give educational estimates, not a diagnosis or treatment plan. Results can differ because of
                 medical history, body composition, medication, pregnancy details, and cycle variation. Speak with a doctor,

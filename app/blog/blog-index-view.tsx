@@ -83,7 +83,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
                   </div>
                   <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                     {toolLinksInCluster(cluster.id).map((tool) => (
-                      <Link key={tool.id} href={toolHref(tool)} className="link-grow font-semibold text-emerald-700 hover:text-emerald-900">
+                      <Link key={tool.id} href={toolHref(tool)} data-niche={tool.id} className="niche-link link-grow font-semibold">
                         {tool.name}
                       </Link>
                     ))}
@@ -94,6 +94,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
                     <Reveal as="article" key={post.slug} delay={index * 110} className="h-full">
                       <Link
                         href={`/blog/${post.slug}`}
+                        data-niche={post.toolId}
                         className="spotlight group card-lift card-surface post-card"
                       >
                         <div className="relative aspect-video overflow-hidden bg-emerald-50">
@@ -138,8 +139,8 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           <ul className="mt-6 grid gap-5 md:grid-cols-3">
             {startingPoints.map((item, index) => (
               <Reveal as="li" key={item.goal} delay={index * 90} className="h-full">
-                <div className="spotlight group card-lift card-surface flex h-full flex-col p-6">
-                  <h3 className="text-lg font-semibold group-hover:text-emerald-800">{item.goal}</h3>
+                <div className="card-surface flex h-full flex-col p-6">
+                  <h3 className="text-lg font-semibold">{item.goal}</h3>
                   <p className="muted-copy mt-2">{item.text}</p>
                   <Link href={item.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700">
                     {item.label}
@@ -157,7 +158,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           </h2>
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             {guideParts.map((part, index) => (
-              <Reveal key={part.title} delay={index * 90} className="spotlight group card-lift card-surface flex h-full gap-4 p-6">
+              <Reveal key={part.title} delay={index * 90} className="card-surface flex h-full gap-4 p-6">
                 <span className="icon-badge brand-badge text-sm font-semibold" aria-hidden="true">
                   {index + 1}
                 </span>

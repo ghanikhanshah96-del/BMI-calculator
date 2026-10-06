@@ -147,6 +147,7 @@ export default function SiteHeader({
                     <li key={tool.id}>
                       <Link
                         href={toolHref(tool)}
+                        data-niche={tool.id}
                         onClick={closeMenus}
                         className="menu-option menu-tool"
                       >
@@ -219,6 +220,7 @@ export default function SiteHeader({
                       href={href}
                       onClick={closeMenus}
                       aria-current={isCurrent ? "page" : undefined}
+                      data-niche={tool.id}
                       className={isCurrent ? "group mobile-tool mobile-tool-active" : "group mobile-tool"}
                     >
                       <span className="mobile-tool-icon">

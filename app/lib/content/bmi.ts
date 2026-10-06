@@ -1,4 +1,4 @@
-import { cards, eq, faqSection, p, section, steps, sub, tables, ul, type ToolContent } from "./blocks";
+import { eq, faqSection, p, section, steps, tables, ul, type ToolContent } from "./blocks";
 
 export const bmi: ToolContent = {
   intro: "Calculate BMI online for free using height and weight. See your BMI category with this simple BMI Calculator.",
@@ -36,7 +36,7 @@ export const bmi: ToolContent = {
         eq("BMI = 70 ÷ (1.75 × 1.75) = 22.9"),
         p("The same calculation can be performed using U.S. customary measurements:"),
         eq("BMI = weight in pounds ÷ height in inches² × 703"),
-        p("These formulas are used to calculate BMI from height and weight."),
+        p("Enter centimeters or feet and inches. The calculator converts them before applying the formula."),
       ],
       { nav: "Formula", tone: "brand", half: true },
     ),
@@ -71,53 +71,9 @@ export const bmi: ToolContent = {
       "bmi-meaning",
       "What Does Your BMI Mean?",
       [
-        p("Your BMI provides a numerical result that can be compared with standard adult BMI categories. For example, a BMI below 18.5 falls within the underweight category, while a BMI from 18.5 to less than 25 falls within the healthy weight category."),
-        p("A BMI from 25 to less than 30 falls within the overweight category, while a BMI of 30 or higher falls within the obesity category."),
-        p("However, a BMI number should not be viewed as a complete assessment of an individual's health. BMI does not directly measure body fat and does not distinguish between fat, muscle, and bone mass."),
-        cards(
-          sub(
-            "Why BMI Is Only One Health Measure",
-            p("Two people can have the same BMI while having different amounts of muscle and body fat. Other factors can also affect a person's health risk."),
-            p("When interpreting BMI, healthcare professionals may consider:"),
-            ul(
-              "Medical history",
-              "Physical activity",
-              "Diet and other health behaviors",
-              "Blood pressure",
-              "Cholesterol and other laboratory findings",
-              "Muscle mass and physical examination findings",
-              "Other existing health conditions",
-            ),
-            p("This is why BMI is best used as a screening measure rather than as a standalone diagnosis."),
-          ),
-        ),
+        p("A BMI number is a screening result, not a complete health assessment. It does not directly measure body fat or separate fat from muscle and bone. The category table above shows where an adult result falls; the limits below explain what that number cannot tell you."),
       ],
       { nav: "What it means" },
-    ),
-    section(
-      "bmi-kg-cm",
-      "BMI Calculator kg and cm",
-      [
-        p("If you use metric measurements, you can calculate BMI using **kilograms and centimeters**."),
-        p("The metric formula is:"),
-        eq("BMI = weight (kg) ÷ height (m)²"),
-        p("If your height is entered in centimeters, convert it to meters before applying the formula."),
-        p("For example:"),
-        ul("Weight: 75 kg", "Height: 175 cm", "Height in meters: 1.75 m", "BMI: 75 ÷ (1.75²)", "BMI: approximately 24.5"),
-        p("Using a **BMI Calculator kg and cm** can make this process faster because the calculator performs the conversion and calculation for you."),
-      ],
-      { nav: "kg & cm", half: true },
-    ),
-    section(
-      "bmi-lb-in",
-      "BMI Calculator for Pounds and Inches",
-      [
-        p("BMI can also be calculated using U.S. customary units."),
-        p("The formula is:"),
-        eq("BMI = weight (lb) ÷ height (in)² × 703"),
-        p("For example, if a person weighs 165 pounds and is 70 inches tall, the formula can be used to calculate their BMI without converting their measurements to kilograms and meters. The CDC provides both metric and U.S. customary BMI calculation methods."),
-      ],
-      { nav: "lb & in", half: true },
     ),
     section(
       "limits",
@@ -160,8 +116,7 @@ export const bmi: ToolContent = {
     ),
     faqSection("Frequently Asked Questions About BMI"),
     section("calculate-bmi", "Calculate Your BMI Online", [
-      p("Use the **BMI Calculator** above to calculate your Body Mass Index from your height and weight. The result can help you understand where your BMI falls within the standard adult categories."),
-      p("Remember that BMI is only one measure and does not provide a complete picture of your health. If you have questions about your BMI or what your result means for you, consider discussing it with a qualified healthcare professional."),
+      p("Use the **BMI Calculator** above, then read the category with the limits in mind. Discuss the result with a healthcare professional before using it for a medical decision."),
     ]),
   ],
   faqs: [

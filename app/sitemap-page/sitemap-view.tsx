@@ -21,7 +21,7 @@ import SiteHeader from "../components/site-header";
 import { postCards } from "../blog/post-cards";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 
-type SitemapItem = { href: string; label: string; description?: string; icon: IconComponent };
+type SitemapItem = { href: string; label: string; description?: string; icon: IconComponent; niche?: string };
 
 const mainPages: SitemapItem[] = [
   { href: "/", label: "Home", description: "All six calculators, how they work, and the latest guides", icon: Home },
@@ -38,6 +38,7 @@ const toolItems: SitemapItem[] = toolLinks.map((tool) => ({
   label: tool.name,
   description: tool.tagline,
   icon: tool.icon,
+  niche: tool.id,
 }));
 
 function SitemapSection({ title, intro, items }: { title: string; intro: string; items: SitemapItem[] }) {
@@ -46,9 +47,9 @@ function SitemapSection({ title, intro, items }: { title: string; intro: string;
       <h2 className="section-title">{title}</h2>
       <p className="muted-copy mt-2 max-w-3xl">{intro}</p>
       <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map(({ href, label, description, icon: Icon }, index) => (
+        {items.map(({ href, label, description, icon: Icon, niche }, index) => (
           <Reveal as="li" key={href} delay={(index % 3) * 80} className="h-full">
-            <Link href={href} className="spotlight group card-lift card-surface tool-card">
+            <Link href={href} data-niche={niche} className="spotlight group card-lift card-surface tool-card">
               <span className="icon-badge brand-badge">
                 <Icon className="h-4 w-4" />
               </span>

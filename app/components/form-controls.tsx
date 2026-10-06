@@ -41,10 +41,10 @@ export function FieldShell({
 }
 
 const activeOptionClass =
-  "bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/25";
+  "niche-fill bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/25";
 
 const iconTileOpenClass =
-  "bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/30 ring-1 ring-emerald-600";
+  "niche-fill bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/30 ring-1 ring-emerald-600";
 
 const VIEWPORT_MARGIN = 12;
 const POPUP_GAP = 8;
@@ -628,7 +628,7 @@ export function DatePicker({ value, onChange, placeholder = "Select a date" }: D
                           : isSelected
                             ? activeOptionClass
                             : isToday
-                              ? "menu-option ring-2 ring-inset ring-emerald-400 text-emerald-800"
+                              ? "menu-option niche-today ring-2 ring-inset ring-emerald-400 text-emerald-800"
                               : "menu-option",
                       ].join(" ")}
                     >

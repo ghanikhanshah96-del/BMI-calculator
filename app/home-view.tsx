@@ -122,7 +122,7 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
                 const detail = item.paragraphs[1].replace(/\*\*/g, "");
                 return (
                   <Reveal as="li" key={item.id} delay={(index % 3) * 100} className="min-w-0">
-                    <article data-tip={detail} className="spotlight group card-lift card-surface popular-card">
+                    <article data-niche={item.id} data-tip={detail} className="spotlight group card-lift card-surface popular-card">
                       <div className="flex items-center gap-3">
                         <span className="icon-badge h-11 w-11 rounded-xl">
                           <tool.icon className="h-5 w-5" />

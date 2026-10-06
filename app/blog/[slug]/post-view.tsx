@@ -68,8 +68,9 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
   };
 
   return (
-    <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
+    <div className="flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
+      <div data-niche={post.toolId} className="bg-mesh flex flex-1 flex-col">
       <PageHero
         image={post.image}
         imageAlt={post.imageAlt}
@@ -116,7 +117,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
             <div className="space-y-6">
               {post.sections.map((section, index) => (
                 <Reveal key={section.heading} delay={Math.min(index, 2) * 60}>
-                  <section id={sectionId(section.heading)} className="spotlight card-lift card-surface scroll-mt-28 p-6 sm:p-8">
+                  <section id={sectionId(section.heading)} className="card-surface scroll-mt-28 p-6 sm:p-8">
                     <h2 className="section-title">{section.heading}</h2>
                     {section.paragraphs.map((paragraph) => (
                       <p key={paragraph.slice(0, 24)} className="post-copy">
@@ -132,7 +133,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 </h2>
                 <div className="mt-5 grid gap-4">
                   {post.faqs.map((faq) => (
-                    <article key={faq.question} className="spotlight card-lift card-surface p-5 sm:p-6">
+                    <article key={faq.question} className="card-surface p-5 sm:p-6">
                       <h3 className="text-lg font-semibold text-slate-900">{faq.question}</h3>
                       <p className="body-copy mt-2">{renderInline(faq.answer)}</p>
                     </article>
@@ -176,6 +177,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 <li key={item.slug}>
                   <Link
                     href={`/blog/${item.slug}`}
+                    data-niche={item.toolId}
                     className="spotlight group card-lift card-surface post-card"
                   >
                     <div className="relative aspect-16/10 overflow-hidden">
@@ -188,7 +190,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                       />
                     </div>
                     <div className="flex flex-1 flex-col p-5">
-                      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">
+                      <span className="niche-link text-xs font-semibold uppercase tracking-[0.12em]">
                         {item.toolLabel}
                       </span>
                       <span className="mt-1.5 text-sm font-semibold leading-snug text-slate-800 group-hover:text-emerald-800">
@@ -202,6 +204,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
           </aside>
         )}
       </main>
+      </div>
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
     </div>

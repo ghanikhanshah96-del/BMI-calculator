@@ -29,12 +29,12 @@ export default function NotFoundView() {
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {toolLinks.map((tool) => (
             <li key={tool.id}>
-              <Link href={toolHref(tool)} className="spotlight group card-lift card-surface flex items-center gap-3 p-4">
+              <Link href={toolHref(tool)} data-niche={tool.id} className="spotlight group card-lift card-surface flex items-center gap-3 p-4">
                 <span className="icon-badge h-10 w-10 flex-none rounded-xl">
                   <tool.icon className="h-5 w-5" />
                 </span>
                 <span className="flex-1 font-semibold">{tool.name}</span>
-                <ArrowRight className="arrow-nudge text-emerald-600" />
+                <ArrowRight className="arrow-nudge niche-link" />
               </Link>
             </li>
           ))}

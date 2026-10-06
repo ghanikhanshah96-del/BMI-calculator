@@ -72,7 +72,7 @@ export default function LegalLayout({
             <div className="mt-6 space-y-6 first:mt-0">
               {sections.map(({ id, title: sectionTitle, icon: Icon, body }, index) => (
                 <Reveal key={id} id={id} as="section" delay={Math.min(index, 3) * 80} className="scroll-mt-28">
-                  <div className="spotlight group card-lift card-surface p-6 sm:p-8">
+                  <div className="card-surface p-6 sm:p-8">
                     <div className="flex items-center gap-4">
                       <span className="icon-badge h-11 w-11 flex-none rounded-xl">
                         <Icon className="h-5 w-5" />

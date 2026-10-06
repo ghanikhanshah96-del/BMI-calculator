@@ -45,7 +45,7 @@ export default function HeroToolCards() {
       <div className="hero-floats">
       {toolLinks.map((tool) => {
         return (
-          <div key={tool.id} className="hero-tool-float group">
+          <div key={tool.id} data-niche={tool.id} className="hero-tool-float group">
             <span className="stat-glow" />
             <div data-tilt className="relative h-full">
               <Link href={toolHref(tool)} className="spotlight hero-tool">
