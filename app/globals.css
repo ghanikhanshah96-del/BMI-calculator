@@ -558,6 +558,27 @@ a {
     @apply rounded-2xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-900/5;
   }
 
+  /* Document-page section boxes (About, Contact, Privacy, Terms, etc.) */
+  .doc-section {
+    @apply scroll-mt-28 rounded-2xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-900/5 sm:p-6 lg:p-7;
+  }
+
+  .doc-section-title {
+    @apply text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl;
+  }
+
+  .doc-section-body {
+    @apply mt-3 space-y-3 text-base leading-7 text-slate-700;
+  }
+
+  .doc-section-list {
+    @apply mt-4 grid list-disc gap-x-10 gap-y-2 pl-5 text-base leading-7 text-slate-700 marker:text-emerald-700 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .doc-sections {
+    @apply grid gap-4 sm:gap-5;
+  }
+
   .live-frame {
     border: 2px solid transparent;
     border-radius: 1.5rem;
@@ -622,7 +643,7 @@ a {
   }
 
   .hero-inner {
-    @apply mx-auto max-w-7xl px-4 pt-5 pb-5 sm:px-6 sm:pt-6 sm:pb-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 pt-5 pb-5 text-left sm:px-6 sm:pt-6 sm:pb-6 lg:px-8;
   }
 
   .hero-pill {
@@ -630,12 +651,18 @@ a {
   }
 
   .hero-title {
-    @apply mt-2 text-3xl leading-tight text-slate-950 sm:text-4xl lg:text-[2.75rem];
+    @apply mt-2 w-full text-left text-3xl leading-tight text-slate-950 sm:text-4xl lg:text-[2.75rem];
+    text-align: left !important;
     text-shadow: 0 1px 0 rgba(246, 251, 248, 0.8);
   }
 
   .hero-copy {
-    @apply mt-3 max-w-none text-base leading-7 text-slate-700 sm:text-lg;
+    @apply mt-3 w-full max-w-none text-left text-base leading-7 text-slate-700 sm:text-lg;
+    text-align: left !important;
+  }
+
+  .hero-copy p {
+    text-align: left !important;
   }
 
   /* Soft readable band behind long-form page content over the hero photo (no border/card look) */

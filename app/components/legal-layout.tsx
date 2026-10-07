@@ -63,8 +63,8 @@ export default function LegalLayout({
           title={title}
           description={
             <>
-              <p>{intro}</p>
-              <p className="mt-3 text-sm text-slate-500">Last updated: {updated}</p>
+              <p className="text-left">{intro}</p>
+              <p className="mt-3 text-left text-sm text-slate-500">Last updated: {updated}</p>
             </>
           }
         >
@@ -72,41 +72,41 @@ export default function LegalLayout({
         </PageHero>
 
         <main className="page-main section-block relative z-10">
-          <article className="content-readable w-full">
+          <div className="doc-sections w-full">
             {notice ? (
-              <div className="mb-8 border-l-4 border-amber-400 pl-4 text-sm leading-6 text-slate-700">{notice}</div>
+              <aside className="doc-section border-l-4 border-l-amber-400">
+                <div className="text-sm leading-6 text-slate-700">{notice}</div>
+              </aside>
             ) : null}
 
-            <div className="divide-y divide-slate-200">
-              {sections.map(({ id, title: sectionTitle, body, points }) => (
-                <section key={id} id={id} className="scroll-mt-28 py-8 first:pt-0 last:pb-0">
-                  <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">{sectionTitle}</h2>
-                  {body?.length ? (
-                    <div className="mt-3 space-y-3 text-base leading-7 text-slate-700">
-                      {body.map((paragraph, paragraphIndex) => (
-                        <p key={paragraphIndex}>{paragraph}</p>
-                      ))}
-                    </div>
-                  ) : null}
-                  {points?.length ? (
-                    <ul className="mt-4 grid list-disc gap-x-10 gap-y-2 pl-5 text-base leading-7 text-slate-700 marker:text-emerald-700 sm:grid-cols-2 lg:grid-cols-3">
-                      {points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </section>
-              ))}
-            </div>
+            {sections.map(({ id, title: sectionTitle, body, points }) => (
+              <section key={id} id={id} className="doc-section">
+                <h2 className="doc-section-title">{sectionTitle}</h2>
+                {body?.length ? (
+                  <div className="doc-section-body">
+                    {body.map((paragraph, paragraphIndex) => (
+                      <p key={paragraphIndex}>{paragraph}</p>
+                    ))}
+                  </div>
+                ) : null}
+                {points?.length ? (
+                  <ul className="doc-section-list">
+                    {points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
+            ))}
 
-            <div className="mt-10 border-t border-slate-200 pt-8">
-              <h2 className="text-xl font-semibold text-slate-900">{cta.title}</h2>
-              <p className="mt-2 text-base leading-7 text-slate-700">{cta.text}</p>
+            <section className="doc-section">
+              <h2 className="doc-section-title">{cta.title}</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">{cta.text}</p>
               <Link href="/contact-us" className="content-link mt-4 inline-block font-semibold">
                 Contact us
               </Link>
-            </div>
-          </article>
+            </section>
+          </div>
         </main>
       </div>
       <SiteFooter />

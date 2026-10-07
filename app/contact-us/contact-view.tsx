@@ -68,69 +68,67 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
         </div>
 
         <main className="page-main section-block relative z-10">
-          <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Contact Us", href: "/contact-us" }]} />
-
-          <ContactForm />
-
-          <div className="content-readable mt-10">
-          <header>
-            <h1 className="hero-title">Contact Us</h1>
-            <p className="hero-copy">
+          <div className="mb-6 w-full text-left">
+            <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Contact Us", href: "/contact-us" }]} />
+            <h1 className="hero-title text-left">Contact Us</h1>
+            <p className="hero-copy text-left">
               Thank you for visiting FitnessCalculatorPro.com. Send feedback about calculators, guides, corrections,
               accessibility, or ideas for new tools.
             </p>
-            <p className="mt-4 text-base leading-7 text-slate-700">
-              We typically reply within 1–2 business days. Your message is used to respond to you — see our{" "}
-              <Link href="/privacy-policy" className="content-link">
-                Privacy Policy
-              </Link>{" "}
-              for details.
-            </p>
-          </header>
+          </div>
 
-          <div className="mt-10 divide-y divide-slate-200">
-            <section className="pb-8">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                What you can contact us about
-              </h2>
-              <p className="mt-3 text-base leading-7 text-slate-600">
+          <ContactForm />
+
+          <div className="doc-sections mt-6 w-full">
+            <section className="doc-section">
+              <h2 className="doc-section-title">Reply time and privacy</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
+                We typically reply within 1–2 business days. Your message is used to respond to you — see our{" "}
+                <Link href="/privacy-policy" className="content-link">
+                  Privacy Policy
+                </Link>{" "}
+                for details.
+              </p>
+            </section>
+
+            <section className="doc-section">
+              <h2 className="doc-section-title">What you can contact us about</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
                 When reporting a calculator problem, mention the calculator, values entered, unit system, and the result
                 you received.
               </p>
-              <ul className="mt-4 grid list-disc gap-x-10 gap-y-2 pl-5 text-base leading-7 text-slate-600 marker:text-emerald-700 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="doc-section-list">
                 {contactTopics.map((topic) => (
                   <li key={topic}>{topic}</li>
                 ))}
               </ul>
             </section>
 
-            <section className="py-8">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                Medical and personal health
-              </h2>
-              <p className="mt-3 text-base leading-7 text-slate-600">
+            <section className="doc-section">
+              <h2 className="doc-section-title">Medical and personal health</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
                 We cannot diagnose conditions, interpret personal medical records, recommend treatment, or provide
                 individualized medical, nutrition, pregnancy, or fertility advice. For personal health questions, contact
                 a qualified healthcare professional.
               </p>
             </section>
 
-            <section className="py-8">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Reporting an error</h2>
-              <p className="mt-3 text-base leading-7 text-slate-600">
+            <section className="doc-section">
+              <h2 className="doc-section-title">Reporting an error</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
                 Accuracy matters to us. If you believe a calculator, formula, article, or guide contains an error, please
                 include:
               </p>
-              <ul className="mt-4 grid list-disc gap-x-10 gap-y-2 pl-5 text-base leading-7 text-slate-600 marker:text-emerald-700 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="doc-section-list">
                 {errorTips.map((tip) => (
                   <li key={tip}>{tip}</li>
                 ))}
               </ul>
             </section>
 
-            <section className="py-8">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Looking for answers first?</h2>
-              <p className="mt-3 text-base leading-7 text-slate-600">
+            <section className="doc-section">
+              <h2 className="doc-section-title">Looking for answers first?</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
                 Read our{" "}
                 <Link href="/blog" className="content-link">
                   calculator guides
@@ -143,11 +141,10 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
               </p>
             </section>
 
-            <section className="pt-8">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Contact FAQ</h2>
+            <section className="doc-section">
+              <h2 className="doc-section-title">Contact FAQ</h2>
               <FaqAccordion items={faqs} className="mt-5" />
             </section>
-          </div>
           </div>
         </main>
       </div>

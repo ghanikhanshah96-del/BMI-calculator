@@ -28,8 +28,8 @@ export default function PageHero({
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
         <HeroBackdrop image={image} imageAlt={imageAlt} />
       </div>
-      <div className="hero-inner relative z-10">
-        <div className="content-readable w-full">
+      <div className="hero-inner relative z-10 text-left">
+        <div className="mr-auto w-full max-w-none text-left">
           {children}
           <h1 className="hero-title">{title}</h1>
           {description ? <div className="hero-copy">{description}</div> : null}
