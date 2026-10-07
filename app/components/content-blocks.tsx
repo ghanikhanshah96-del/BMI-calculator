@@ -78,9 +78,9 @@ const isFlow = (block: ContentBlock): block is FlowBlock =>
 
 /**
  * Short chips share one desktop row. Medium labels use 2 or 3 columns.
- * Lists that would leave a single orphan in a 3-column grid switch to pairs.
+ * Seven-item short lists use a 4+3 band so they finish in two even rows.
  */
-export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "row" | "short" | "pair" | "stack" {
+export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "row" | "band" | "short" | "pair" | "stack" {
   if (block.ordered || block.items.length < 2) return "stack";
   const count = block.items.length;
   const longest = Math.max(...block.items.map(plainLength));
@@ -89,7 +89,8 @@ export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "row" 
   if (longest <= 28 && count <= 6) return "row";
   // Small sets such as muscle-gain points also share one desktop row.
   if (count <= 4 && longest <= 65) return "row";
-  // Avoid a lone third-column orphan: prefer two columns instead.
+  // 7 / 10 / 13 short points: two-or-more even rows instead of a tall 2-column stack.
+  if (count >= 7 && count % 3 === 1) return "band";
   if (count === 2 || count % 3 === 1) return "pair";
   return "short";
 }
