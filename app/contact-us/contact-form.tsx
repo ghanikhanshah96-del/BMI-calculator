@@ -11,6 +11,7 @@ import {
   validateMessage,
   validateName,
 } from "../lib/contact-validation";
+import "./contact.css";
 
 type Status = "idle" | "loading" | "success" | "error";
 type Field = "name" | "email" | "message";
@@ -172,56 +173,58 @@ export default function ContactForm() {
       </div>
 
       <div className="flex flex-1 flex-col gap-5">
-        <div>
-          <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-slate-700">
-            Name
-          </label>
-          <input
-            ref={nameRef}
-            id="contact-name"
-            type="text"
-            name="name"
-            autoComplete="name"
-            required
-            maxLength={NAME_MAX_LENGTH}
-            value={values.name}
-            onChange={(e) => onChange("name", e.target.value)}
-            onBlur={() => onBlur("name")}
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={errors.name ? "contact-name-error" : undefined}
-            className={inputClass("name")}
-            placeholder="Your name"
-          />
-          <FieldError id="contact-name-error" message={errors.name} />
-        </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-slate-700">
+              Name
+            </label>
+            <input
+              ref={nameRef}
+              id="contact-name"
+              type="text"
+              name="name"
+              autoComplete="name"
+              required
+              maxLength={NAME_MAX_LENGTH}
+              value={values.name}
+              onChange={(e) => onChange("name", e.target.value)}
+              onBlur={() => onBlur("name")}
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={errors.name ? "contact-name-error" : undefined}
+              className={inputClass("name")}
+              placeholder="Your name"
+            />
+            <FieldError id="contact-name-error" message={errors.name} />
+          </div>
 
-        <div>
-          <label htmlFor="contact-email" className="mb-2 block text-sm font-medium text-slate-700">
-            Email
-          </label>
-          <input
-            ref={emailRef}
-            id="contact-email"
-            type="email"
-            name="email"
-            autoComplete="email"
-            required
-            maxLength={EMAIL_MAX_LENGTH}
-            value={values.email}
-            onChange={(e) => onChange("email", e.target.value)}
-            onBlur={() => onBlur("email")}
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "contact-email-error" : undefined}
-            className={inputClass("email")}
-            placeholder="you@example.com"
-          />
-          {checkingEmail && !errors.email && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Checking email domain…
-            </p>
-          )}
-          <FieldError id="contact-email-error" message={errors.email} />
+          <div>
+            <label htmlFor="contact-email" className="mb-2 block text-sm font-medium text-slate-700">
+              Email
+            </label>
+            <input
+              ref={emailRef}
+              id="contact-email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              required
+              maxLength={EMAIL_MAX_LENGTH}
+              value={values.email}
+              onChange={(e) => onChange("email", e.target.value)}
+              onBlur={() => onBlur("email")}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "contact-email-error" : undefined}
+              className={inputClass("email")}
+              placeholder="you@example.com"
+            />
+            {checkingEmail && !errors.email && (
+              <p className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking email domain…
+              </p>
+            )}
+            <FieldError id="contact-email-error" message={errors.email} />
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col">
@@ -240,7 +243,7 @@ export default function ContactForm() {
             onBlur={() => onBlur("message")}
             aria-invalid={Boolean(errors.message)}
             aria-describedby={errors.message ? "contact-message-error" : undefined}
-            className={`${inputClass("message")} min-h-36 flex-1 resize-none overflow-y-auto`}
+            className={`${inputClass("message")} contact-message`}
             placeholder="How can we help?"
           />
           <FieldError id="contact-message-error" message={errors.message} />

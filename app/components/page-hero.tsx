@@ -2,35 +2,39 @@ import type { IconComponent } from "./icons";
 import type { ReactNode } from "react";
 import HeroBackdrop from "./hero-backdrop";
 
+/**
+ * Page title block + tools-page-style photo backdrop.
+ * Parent must be `relative isolate` so the tall backdrop fades behind the page content
+ * (same pattern as calculator tool pages).
+ */
 export default function PageHero({
-  eyebrow,
-  icon: Icon,
+  image,
+  imageAlt,
   title,
   description,
   children,
 }: {
   image: string;
   imageAlt: string;
-  eyebrow: string;
+  /** Kept for call-site compatibility; not rendered. */
+  eyebrow?: string;
   icon?: IconComponent;
   title: string;
   description?: ReactNode;
   children?: ReactNode;
 }) {
   return (
-    <section className="hero-shell">
-      <HeroBackdrop />
-      <div className="hero-inner">
-        <div className="max-w-3xl">
+    <>
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
+        <HeroBackdrop image={image} imageAlt={imageAlt} />
+      </div>
+      <div className="hero-inner relative z-10">
+        <div className="content-readable w-full">
           {children}
-          <p className="hero-pill">
-            {Icon ? <Icon className="h-3.5 w-3.5" aria-hidden="true" /> : null}
-            {eyebrow}
-          </p>
           <h1 className="hero-title">{title}</h1>
           {description ? <div className="hero-copy">{description}</div> : null}
         </div>
       </div>
-    </section>
+    </>
   );
 }

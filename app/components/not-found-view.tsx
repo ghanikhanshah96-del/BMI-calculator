@@ -12,7 +12,7 @@ export default function NotFoundView() {
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="home" />
       <div className="relative isolate flex-1">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem]" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
           <HeroBackdrop image="/images/hero-bg.jpg" imageAlt="" />
         </div>
       <main className="page-main relative z-10 py-14 lg:py-20">

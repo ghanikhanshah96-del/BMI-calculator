@@ -580,7 +580,7 @@ a {
   }
 
   .section-block {
-    @apply py-10 lg:py-14;
+    @apply py-6 lg:py-8;
   }
 
   .section-gap {
@@ -592,7 +592,7 @@ a {
   }
 
   .hero-shell {
-    @apply relative isolate min-h-80 overflow-hidden sm:min-h-96 lg:min-h-[28rem];
+    @apply relative isolate overflow-hidden;
   }
 
   /* Fades only the left edge of the hero photo. The box size and position stay the same. */
@@ -603,8 +603,8 @@ a {
 
   /* Dissolves the bottom of the photo so the hero does not meet the next section in a line. */
   .hero-photo-bottom {
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 48%, rgba(0, 0, 0, 0.55) 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, rgba(0, 0, 0, 0.55) 72%, transparent 100%);
   }
 
   .hero-overlay {
@@ -622,7 +622,7 @@ a {
   }
 
   .hero-inner {
-    @apply mx-auto max-w-7xl px-4 pt-8 pb-2 sm:px-6 sm:pt-10 lg:px-8 lg:pt-12;
+    @apply mx-auto max-w-7xl px-4 pt-5 pb-5 sm:px-6 sm:pt-6 sm:pb-6 lg:px-8;
   }
 
   .hero-pill {
@@ -630,11 +630,22 @@ a {
   }
 
   .hero-title {
-    @apply mt-4 text-3xl leading-tight text-slate-950 sm:text-4xl lg:text-[2.75rem];
+    @apply mt-2 text-3xl leading-tight text-slate-950 sm:text-4xl lg:text-[2.75rem];
+    text-shadow: 0 1px 0 rgba(246, 251, 248, 0.8);
   }
 
   .hero-copy {
-    @apply mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg;
+    @apply mt-3 max-w-none text-base leading-7 text-slate-700 sm:text-lg;
+  }
+
+  /* Soft readable band behind long-form page content over the hero photo (no border/card look) */
+  .content-readable {
+    @apply relative;
+  }
+
+  .content-readable::before {
+    content: "";
+    @apply pointer-events-none absolute -inset-x-3 -inset-y-2 -z-10 rounded-xl bg-[#f6fbf8]/92 sm:-inset-x-4;
   }
 
   .cta-panel {

@@ -91,7 +91,7 @@ export default function ToolView({
             <p>
               These results are estimates to help you learn and plan. They are not a medical diagnosis, and a clinician can
               help you decide what the number means for you.{" "}
-              <Link href="/about">See how the calculators work</Link>.
+              <Link href="/about-us">See how the calculators work</Link>.
             </p>
             {sources.length ? (
               <p className="result-notice-sources">

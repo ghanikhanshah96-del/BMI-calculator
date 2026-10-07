@@ -69,7 +69,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
-      <div className="flex flex-1 flex-col">
+      <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image={post.image}
         imageAlt={post.imageAlt}
@@ -96,7 +96,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
         />
       </PageHero>
 
-      <main className="page-main section-block">
+      <main className="page-main section-block relative z-10">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
           <article className="min-w-0">
             <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">

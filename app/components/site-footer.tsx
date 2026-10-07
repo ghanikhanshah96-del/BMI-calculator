@@ -34,12 +34,14 @@ const groups: { id: string; title: string; links: FooterLink[] }[] = [
     id: "company",
     title: "Company",
     links: [
-      { href: "/about", label: "About" },
+      { href: "/about-us", label: "About Us" },
       { href: "/blog", label: "Blog" },
-      { href: "/contact", label: "Contact" },
+      { href: "/contact-us", label: "Contact Us" },
       { href: "/sitemap-page", label: "Sitemap" },
-      { href: "/privacy", label: "Privacy Policy" },
-      { href: "/terms", label: "Terms of Use" },
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/terms-and-conditions", label: "Terms and Conditions" },
+      { href: "/disclaimer", label: "Disclaimer" },
+      { href: "/editorial-policy", label: "Editorial Policy" },
     ],
   },
 ];

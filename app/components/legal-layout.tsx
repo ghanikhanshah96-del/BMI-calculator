@@ -1,14 +1,28 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Breadcrumbs from "./breadcrumbs";
-import DocNav from "./doc-nav";
-import { ArrowRight, type IconComponent } from "./icons";
+import { type IconComponent } from "./icons";
 import PageHero from "./page-hero";
-import Reveal from "./reveal";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
 
-export type LegalSection = { id: string; title: string; icon: IconComponent; body: ReactNode[] };
+export type LegalSection = {
+  id: string;
+  title: string;
+  icon?: IconComponent;
+  body?: ReactNode[];
+  points?: string[];
+  columns?: 2 | 3;
+};
+
+type LegalPage =
+  | "privacy"
+  | "terms"
+  | "disclaimer"
+  | "editorial-policy"
+  | "about"
+  | "contact"
+  | "sitemap";
 
 export default function LegalLayout({
   siteUrl,
@@ -25,7 +39,7 @@ export default function LegalLayout({
   cta,
 }: {
   siteUrl: string;
-  page: "privacy" | "terms";
+  page: LegalPage;
   path: string;
   crumb: string;
   eyebrow: string;
@@ -37,70 +51,64 @@ export default function LegalLayout({
   sections: LegalSection[];
   cta: { title: string; text: ReactNode };
 }) {
-  const contents = sections.map(({ id, title: sectionTitle }) => ({ id, label: sectionTitle }));
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage={page} />
-      <PageHero
-        image="/images/legal.jpg"
-        imageAlt="Stethoscope resting on a white sheet"
-        eyebrow={eyebrow}
-        icon={icon}
-        title={title}
-        description={
-          <>
-            <p>{intro}</p>
-            <p className="mt-3 text-sm text-slate-500">Last updated: {updated}</p>
-          </>
-        }
-      >
-        <Breadcrumbs siteUrl={siteUrl} items={[{ name: crumb, href: path }]} />
-      </PageHero>
+      <div className="relative isolate flex flex-1 flex-col">
+        <PageHero
+          image="/images/legal.jpg"
+          imageAlt="Stethoscope resting on a white sheet"
+          eyebrow={eyebrow}
+          icon={icon}
+          title={title}
+          description={
+            <>
+              <p>{intro}</p>
+              <p className="mt-3 text-sm text-slate-500">Last updated: {updated}</p>
+            </>
+          }
+        >
+          <Breadcrumbs siteUrl={siteUrl} items={[{ name: crumb, href: path }]} />
+        </PageHero>
 
-      <main className="page-main section-block">
-        <div className="grid gap-10 lg:grid-cols-[272px_1fr]">
-          <aside className="hidden lg:block">
-            <div className="sticky top-24">
-              <DocNav items={contents} />
-            </div>
-          </aside>
+        <main className="page-main section-block relative z-10">
+          <article className="content-readable w-full">
+            {notice ? (
+              <div className="mb-8 border-l-4 border-amber-400 pl-4 text-sm leading-6 text-slate-700">{notice}</div>
+            ) : null}
 
-          <div className="min-w-0">
-            {notice}
-            <div className="mt-6 space-y-6 first:mt-0">
-              {sections.map(({ id, title: sectionTitle, icon: Icon, body }, index) => (
-                <Reveal key={id} id={id} as="section" delay={Math.min(index, 3) * 80} className="scroll-mt-28">
-                  <div className="card-surface p-6 sm:p-8">
-                    <div className="flex items-center gap-4">
-                      <span className="icon-badge h-11 w-11 flex-none rounded-xl">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <h2 className="text-2xl text-slate-900">{sectionTitle}</h2>
-                    </div>
-                    <div className="mt-4 space-y-3 text-base leading-7 text-slate-600">
+            <div className="divide-y divide-slate-200">
+              {sections.map(({ id, title: sectionTitle, body, points }) => (
+                <section key={id} id={id} className="scroll-mt-28 py-8 first:pt-0 last:pb-0">
+                  <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">{sectionTitle}</h2>
+                  {body?.length ? (
+                    <div className="mt-3 space-y-3 text-base leading-7 text-slate-700">
                       {body.map((paragraph, paragraphIndex) => (
                         <p key={paragraphIndex}>{paragraph}</p>
                       ))}
                     </div>
-                  </div>
-                </Reveal>
+                  ) : null}
+                  {points?.length ? (
+                    <ul className="mt-4 grid list-disc gap-x-10 gap-y-2 pl-5 text-base leading-7 text-slate-700 marker:text-emerald-700 sm:grid-cols-2 lg:grid-cols-3">
+                      {points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </section>
               ))}
             </div>
 
-            <aside className="cta-panel mt-10 lg:flex lg:items-center lg:justify-between lg:gap-10">
-              <div className="cta-glow" />
-              <div className="min-w-0 flex-1">
-                <h2 className="text-2xl text-white">{cta.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">{cta.text}</p>
-              </div>
-              <Link href="/contact" className="group cta-button shrink-0 lg:mt-0">
-                Contact us <ArrowRight className="arrow-nudge" />
+            <div className="mt-10 border-t border-slate-200 pt-8">
+              <h2 className="text-xl font-semibold text-slate-900">{cta.title}</h2>
+              <p className="mt-2 text-base leading-7 text-slate-700">{cta.text}</p>
+              <Link href="/contact-us" className="content-link mt-4 inline-block font-semibold">
+                Contact us
               </Link>
-            </aside>
-          </div>
-        </div>
-      </main>
-
+            </div>
+          </article>
+        </main>
+      </div>
       <SiteFooter />
     </div>
   );

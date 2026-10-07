@@ -85,6 +85,7 @@ export default function CalculatorsView({
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="all-tools" />
+      <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image="/images/tools-bg.jpg"
         imageAlt="Colorful salad bowl with avocado, chickpeas, tomatoes, and sweet potato"
@@ -101,7 +102,7 @@ export default function CalculatorsView({
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Calculators", href: "/calculators" }]} />
       </PageHero>
 
-      <main className="page-main section-block">
+      <main className="page-main section-block relative z-10">
         <ToolClusterGrid tone="light" headingLevel="h2" guides={guides} />
 
         <section aria-labelledby="choose-tool" className="section-gap">
@@ -179,7 +180,7 @@ export default function CalculatorsView({
             </p>
             <p className="body-copy">
               Results are educational estimates rather than a diagnosis. See{" "}
-              <Link href="/about" className="content-link">
+              <Link href="/about-us" className="content-link">
                 how our calculators work
               </Link>{" "}
               for the full list of formulas and sources.
@@ -187,6 +188,7 @@ export default function CalculatorsView({
           </div>
         </section>
       </main>
+      </div>
 
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />

@@ -3,8 +3,10 @@
 import Link from "next/link";
 import Breadcrumbs from "../components/breadcrumbs";
 import {
+  AlertTriangle,
   ArrowUpRight,
   BookOpen,
+  BookOpenCheck,
   FileText,
   Home,
   Info,
@@ -27,10 +29,12 @@ const mainPages: SitemapItem[] = [
   { href: "/", label: "Home", description: "All six calculators, how they work, and the latest guides", icon: Home },
   { href: "/calculators", label: "All Calculators", description: "Every tool grouped by goal, with tips on which result to check first", icon: LayoutGrid },
   { href: "/blog", label: "Blog", description: "Guides that explain the formula, result, and limits of each calculator", icon: BookOpen },
-  { href: "/about", label: "About", description: "Our mission, the formulas we use, and how we review content", icon: Info },
-  { href: "/contact", label: "Contact", description: "Send questions, corrections, or feedback to our team", icon: Mail },
-  { href: "/privacy", label: "Privacy Policy", description: "What we collect, what stays in your browser, and your choices", icon: ShieldCheck },
-  { href: "/terms", label: "Terms of Use", description: "Educational use, medical disclaimers, and responsible use of results", icon: FileText },
+  { href: "/about-us", label: "About Us", description: "Our mission, calculator methodology, and educational standards", icon: Info },
+  { href: "/contact-us", label: "Contact Us", description: "Send questions, corrections, or feedback to our team", icon: Mail },
+  { href: "/privacy-policy", label: "Privacy Policy", description: "How information, cookies, analytics, and contact data may be handled", icon: ShieldCheck },
+  { href: "/terms-and-conditions", label: "Terms and Conditions", description: "Rules for using our calculators and educational content", icon: FileText },
+  { href: "/disclaimer", label: "Disclaimer", description: "Medical, estimate, advertising, and responsibility limits", icon: AlertTriangle },
+  { href: "/editorial-policy", label: "Editorial Policy", description: "How we research, write, review, update, and correct content", icon: BookOpenCheck },
 ];
 
 const toolItems: SitemapItem[] = toolLinks.map((tool) => ({
@@ -79,6 +83,7 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="sitemap" />
+      <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image="/images/sitemap.jpg"
         imageAlt="Table of fresh vegetables and healthy ingredients"
@@ -89,7 +94,7 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
       >
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Sitemap", href: "/sitemap-page" }]} />
       </PageHero>
-      <main className="page-main section-block">
+      <main className="page-main section-block relative z-10">
         <section aria-labelledby="site-structure" className="live-frame mb-14 p-6 sm:p-8">
           <h2 id="site-structure" className="section-title">
             How the site is organized
@@ -123,6 +128,7 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
           items={guideItems}
         />
       </main>
+      </div>
       <SiteFooter />
     </div>
   );

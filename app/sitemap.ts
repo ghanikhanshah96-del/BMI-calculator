@@ -48,11 +48,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const company: MetadataRoute.Sitemap = [
-    { url: `${siteUrl}/about`, lastModified: updated, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${siteUrl}/contact`, lastModified: updated, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${siteUrl}/about-us`, lastModified: updated, changeFrequency: "yearly", priority: 0.6 },
+    { url: `${siteUrl}/contact-us`, lastModified: updated, changeFrequency: "yearly", priority: 0.5 },
     { url: `${siteUrl}/sitemap-page`, lastModified: updated, changeFrequency: "monthly", priority: 0.4 },
-    { url: `${siteUrl}/privacy`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${siteUrl}/terms`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/privacy-policy`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/terms-and-conditions`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/disclaimer`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/editorial-policy`, lastModified: updated, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   return [...core, ...toolPages, ...blog, ...company];

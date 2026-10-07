@@ -16,7 +16,18 @@ import { useEffect, useRef, useState } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
 
-type ActivePage = "home" | "calculators" | "all-tools" | "blog" | "about" | "privacy" | "terms" | "contact" | "sitemap";
+type ActivePage =
+  | "home"
+  | "calculators"
+  | "all-tools"
+  | "blog"
+  | "about"
+  | "privacy"
+  | "terms"
+  | "disclaimer"
+  | "editorial-policy"
+  | "contact"
+  | "sitemap";
 
 const baseLinkClass = "group nav-link";
 const activeLinkClass = "nav-link-active";
@@ -24,8 +35,8 @@ const activeLinkClass = "nav-link-active";
 const links: { href: string; label: string; page: ActivePage; icon: IconComponent }[] = [
   { href: "/calculators", label: "All Tools", page: "all-tools", icon: LayoutGrid },
   { href: "/blog", label: "Blog", page: "blog", icon: Newspaper },
-  { href: "/about", label: "About", page: "about", icon: BadgeCheck },
-  { href: "/contact", label: "Contact", page: "contact", icon: Mail },
+  { href: "/about-us", label: "About", page: "about", icon: BadgeCheck },
+  { href: "/contact-us", label: "Contact", page: "contact", icon: Mail },
 ];
 
 function HoverUnderline() {

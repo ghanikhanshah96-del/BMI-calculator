@@ -53,6 +53,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
+      <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image="/images/blog-hero.jpg"
         imageAlt="Colorful bowl of fresh vegetables and greens"
@@ -63,7 +64,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
       >
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Blog", href: "/blog" }]} />
       </PageHero>
-      <main className="page-main section-block">
+      <main className="page-main section-block relative z-10">
         <p className="body-copy">
           Every guide explains the formula behind one calculator, walks through how to read your result, and covers the
           situations where the number can mislead, such as a muscular build, pregnancy, or an irregular cycle. Read a
@@ -171,6 +172,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           </div>
         </section>
       </main>
+      </div>
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
     </div>

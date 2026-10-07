@@ -4,10 +4,10 @@ import { getSiteUrl } from "../lib/site-url";
 import TermsView from "./terms-view";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Terms of Use",
+  title: "Terms and Conditions",
   description:
-    "Terms for using FitnessCalculatorPro.com free BMI, TDEE, body fat, macro, pregnancy due date, and ovulation calculators.",
-  path: "/terms",
+    "Review the Terms and Conditions governing your use of FitnessCalculatorPro.com, its free health and fitness calculators, educational content, and website features.",
+  path: "/terms-and-conditions",
 });
 
 export default function TermsPage() {

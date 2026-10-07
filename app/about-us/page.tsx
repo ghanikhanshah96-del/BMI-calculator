@@ -4,12 +4,12 @@ import { getSiteUrl } from "../lib/site-url";
 import AboutView from "./about-view";
 
 const description =
-  "Why FitnessCalculatorPro.com builds free health calculators, the published formulas behind each tool, our sources, and the limits of every estimate.";
+  "Learn about FitnessCalculatorPro.com, our mission, calculator methodology, editorial standards, and commitment to providing clear and useful fitness and health information.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About Us and Our Methodology",
+  title: "About Us",
   description,
-  path: "/about",
+  path: "/about-us",
 });
 
 export default function AboutPage() {

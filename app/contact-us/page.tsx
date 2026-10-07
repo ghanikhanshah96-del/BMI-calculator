@@ -6,8 +6,8 @@ import ContactView from "./contact-view";
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
   description:
-    "Contact FitnessCalculatorPro.com with questions about our BMI, TDEE, macro, body fat, pregnancy, and ovulation calculators.",
-  path: "/contact",
+    "Contact FitnessCalculatorPro.com with calculator questions, error reports, website feedback, corrections, accessibility issues, or suggestions for new tools.",
+  path: "/contact-us",
 });
 
 export default function ContactPage() {
