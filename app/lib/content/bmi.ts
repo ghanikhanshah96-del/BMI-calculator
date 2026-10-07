@@ -154,8 +154,8 @@ export const bmi: ToolContent = {
     },
   ],
   sources: [
-    { label: "CDC — Adult BMI Categories", url: "https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" },
-    { label: "CDC — BMI FAQs", url: "https://www.cdc.gov/bmi/faq/" },
-    { label: "NHLBI — Overweight and Obesity", url: "https://www.nhlbi.nih.gov/health/overweight-and-obesity/symptoms" },
+    { label: "CDC - Adult BMI Categories", url: "https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" },
+    { label: "CDC - BMI FAQs", url: "https://www.cdc.gov/bmi/faq/" },
+    { label: "NHLBI - Overweight and Obesity", url: "https://www.nhlbi.nih.gov/health/overweight-and-obesity/symptoms" },
   ],
 };

@@ -304,6 +304,7 @@ export default function MacroCalculator() {
       <CalcForm>
         <CalcHeader
           icon={Apple}
+          niche="macro"
           eyebrow="Macros"
           title="Nutrition guidance"
           description="Daily calories plus protein, carb, and fat targets for your goal."

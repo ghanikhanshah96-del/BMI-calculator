@@ -381,6 +381,7 @@ export default function TdeeCalculator() {
       <CalcForm>
         <CalcHeader
           icon={Activity}
+          niche="tdee"
           eyebrow="TDEE"
           title="Daily energy needs"
           description="Estimate maintenance calories, BMR, and goal targets."

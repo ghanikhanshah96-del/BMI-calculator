@@ -64,7 +64,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Blog", href: "/blog" }]} />
       </PageHero>
       <main className="page-main section-block">
-        <p className="body-copy max-w-3xl">
+        <p className="body-copy">
           Every guide explains the formula behind one calculator, walks through how to read your result, and covers the
           situations where the number can mislead, such as a muscular build, pregnancy, or an irregular cycle. Read a
           guide before or after using its calculator to get more out of your result.
@@ -75,7 +75,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
             return (
               <section key={cluster.id} aria-labelledby={`blog-${cluster.id}`}>
                 <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                  <div className="max-w-2xl">
+                  <div className="min-w-0 flex-1">
                     <h2 id={`blog-${cluster.id}`} className="section-title">
                       {cluster.title} guides
                     </h2>
@@ -135,7 +135,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           <h2 id="start-here" className="section-title">
             Not sure where to start?
           </h2>
-          <p className="muted-copy mt-2 max-w-3xl">Pick the goal that fits you best and follow the suggested reading order.</p>
+          <p className="muted-copy mt-2">Pick the goal that fits you best and follow the suggested reading order.</p>
           <ul className="mt-6 grid gap-5 md:grid-cols-3">
             {startingPoints.map((item, index) => (
               <Reveal as="li" key={item.goal} delay={index * 90} className="h-full">

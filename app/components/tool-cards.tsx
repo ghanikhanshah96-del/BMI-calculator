@@ -40,7 +40,7 @@ export default function ToolClusterGrid({
         const clusterTools = toolLinksInCluster(cluster.id);
         return (
           <section key={cluster.id} aria-labelledby={`cluster-${cluster.id}-${tone}`}>
-            <div className={`max-w-2xl ${compact ? "mb-3" : "mb-4"}`}>
+            <div className={compact ? "mb-3" : "mb-4"}>
               <Heading
                 id={`cluster-${cluster.id}-${tone}`}
                 className={`font-semibold ${compact ? "text-lg" : "text-xl sm:text-2xl"} ${dark ? "text-white" : "text-slate-900"}`}

@@ -6,11 +6,26 @@ import { ArrowRight } from "./icons";
 
 const INLINE_TOKEN = /(\*\*.+?\*\*|\[[^\]]+\]\([^)]+\))/g;
 
+function plainLength(text: string) {
+  return text.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").length;
+}
+
 /** Renders `**bold**` as <strong> and `[label](/path)` as a link; everything else is plain text. */
 export function Inline({ text }: { text: string }) {
   return text.split(INLINE_TOKEN).map((part, index) => {
     if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
-    if (part.startsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("**")) {
+      const inner = part.slice(2, -2);
+      const link = inner.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (link) {
+        return (
+          <Link key={index} href={link[2]} className="inline-link">
+            <strong>{link[1]}</strong>
+          </Link>
+        );
+      }
+      return <strong key={index}>{inner}</strong>;
+    }
     const [, label, href] = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/) ?? [];
     return (
       <Link key={index} href={href} className="inline-link">
@@ -61,16 +76,94 @@ type FlowBlock = Extract<ContentBlock, { kind: "text" | "formula" | "list" }>;
 const isFlow = (block: ContentBlock): block is FlowBlock =>
   block.kind === "text" || block.kind === "formula" || block.kind === "list";
 
-/** Label-length points sit in pairs. Sentence-length points stay in one vertical list. */
-export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "short" | "stack" {
-  if (block.ordered || block.items.length < 4) return "stack";
-  const longest = Math.max(
-    ...block.items.map((item) => item.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").length),
-  );
-  return longest <= 72 ? "short" : "stack";
+/**
+ * Short chips share one desktop row. Medium labels use 2 or 3 columns.
+ * Lists that would leave a single orphan in a 3-column grid switch to pairs.
+ */
+export function listMode(block: Extract<ContentBlock, { kind: "list" }>): "row" | "short" | "pair" | "stack" {
+  if (block.ordered || block.items.length < 2) return "stack";
+  const count = block.items.length;
+  const longest = Math.max(...block.items.map(plainLength));
+  if (longest > 72) return "stack";
+  // Tiny chips (cycle days, etc.) share one desktop row.
+  if (longest <= 28 && count <= 6) return "row";
+  // Small sets such as muscle-gain points also share one desktop row.
+  if (count <= 4 && longest <= 65) return "row";
+  // Avoid a lone third-column orphan: prefer two columns instead.
+  if (count === 2 || count % 3 === 1) return "pair";
+  return "short";
 }
 
-function FlowItem({ block }: { block: FlowBlock }) {
+function isFormulaLead(text: string) {
+  const plain = text.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").trim();
+  const length = plainLength(plain);
+  if (length <= 28) return true;
+  return plain.endsWith(":") && length <= 52;
+}
+
+function FormulaRow({ label, formula }: { label?: string; formula: string }) {
+  const lead = !label || isFormulaLead(label);
+  return (
+    <div className={lead ? "formula-row formula-row-lead" : "formula-row"}>
+      {label ? (
+        <p className="formula-row-text">
+          <Inline text={label} />
+        </p>
+      ) : null}
+      <p className="formula-row-eq">{formula}</p>
+    </div>
+  );
+}
+
+function renderFlow(blocks: FlowBlock[]) {
+  const nodes = [];
+  let index = 0;
+  while (index < blocks.length) {
+    const block = blocks[index];
+    if (block.kind === "text") {
+      const parts: string[] = [];
+      while (index < blocks.length && blocks[index].kind === "text") {
+        const text = blocks[index];
+        if (text.kind === "text") parts.push(text.text);
+        index += 1;
+      }
+      const nextIsFormula = blocks[index]?.kind === "formula";
+      const last = parts.at(-1) ?? "";
+      if (nextIsFormula && isFormulaLead(last)) {
+        const before = parts.slice(0, -1);
+        if (before.length) {
+          nodes.push(
+            <p key={`text-${index}`} className="prose-text">
+              <Inline text={before.join(" ")} />
+            </p>,
+          );
+        }
+        const formula = blocks[index];
+        if (formula.kind === "formula") {
+          nodes.push(<FormulaRow key={`eq-${index}`} label={last} formula={formula.text} />);
+        }
+        index += 1;
+        continue;
+      }
+      nodes.push(
+        <p key={`text-${index}`} className="prose-text">
+          <Inline text={parts.join(" ")} />
+        </p>,
+      );
+      continue;
+    }
+    if (block.kind === "formula") {
+      nodes.push(<FormulaRow key={`eq-${index}`} formula={block.text} />);
+      index += 1;
+      continue;
+    }
+    nodes.push(<FlowItem key={`item-${index}`} block={block} />);
+    index += 1;
+  }
+  return nodes;
+}
+
+function FlowItem({ block }: { block: Exclude<FlowBlock, { kind: "formula" }> }) {
   switch (block.kind) {
     case "text":
       return (
@@ -78,8 +171,6 @@ function FlowItem({ block }: { block: FlowBlock }) {
           <Inline text={block.text} />
         </p>
       );
-    case "formula":
-      return <p className="formula-chip text-black">{block.text}</p>;
     case "list": {
       const List = block.ordered ? "ol" : "ul";
       return (
@@ -176,13 +267,7 @@ export function Blocks({
     <div className={`content-blocks ${className}`}>
       {groups.map((group, index) => {
         if (!Array.isArray(group)) return <WideBlock key={index} block={group} actionHref={actionHref} />;
-        return (
-          <div key={index} className="flow-run">
-            {group.map((block, blockIndex) => (
-              <FlowItem key={blockIndex} block={block} />
-            ))}
-          </div>
-        );
+        return <div key={index} className="flow-run">{renderFlow(group)}</div>;
       })}
     </div>
   );

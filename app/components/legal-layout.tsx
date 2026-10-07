@@ -5,7 +5,6 @@ import DocNav from "./doc-nav";
 import { ArrowRight, type IconComponent } from "./icons";
 import PageHero from "./page-hero";
 import Reveal from "./reveal";
-import SectionNav from "./section-nav";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
 
@@ -51,7 +50,7 @@ export default function LegalLayout({
         description={
           <>
             <p>{intro}</p>
-            <p className="mt-3 text-sm text-emerald-100">Last updated: {updated}</p>
+            <p className="mt-3 text-sm text-slate-500">Last updated: {updated}</p>
           </>
         }
       >
@@ -67,7 +66,6 @@ export default function LegalLayout({
           </aside>
 
           <div className="min-w-0">
-            <SectionNav items={contents} className="-mt-4 mb-6 lg:hidden" />
             {notice}
             <div className="mt-6 space-y-6 first:mt-0">
               {sections.map(({ id, title: sectionTitle, icon: Icon, body }, index) => (
@@ -89,11 +87,13 @@ export default function LegalLayout({
               ))}
             </div>
 
-            <aside className="cta-panel mt-10">
+            <aside className="cta-panel mt-10 lg:flex lg:items-center lg:justify-between lg:gap-10">
               <div className="cta-glow" />
-              <h2 className="text-2xl text-white">{cta.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">{cta.text}</p>
-              <Link href="/contact" className="group cta-button">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-2xl text-white">{cta.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">{cta.text}</p>
+              </div>
+              <Link href="/contact" className="group cta-button shrink-0 lg:mt-0">
                 Contact us <ArrowRight className="arrow-nudge" />
               </Link>
             </aside>

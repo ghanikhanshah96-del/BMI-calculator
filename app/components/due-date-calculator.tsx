@@ -274,6 +274,7 @@ export default function DueDateCalculator() {
       <CalcForm>
         <CalcHeader
           icon={CalendarHeart}
+          niche="pregnancy"
           eyebrow="Due date"
           title="Pregnancy timeline"
           description="Estimate your due date, gestational age, and trimester."

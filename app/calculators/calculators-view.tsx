@@ -137,7 +137,7 @@ export default function CalculatorsView({
           <h2 id="quick-reference" className="section-title">
             What each result tells you
           </h2>
-          <p className="body-copy mt-3 max-w-3xl">
+          <p className="body-copy mt-3">
             Every calculator answers a different question. Use this quick reference to see what a tool measures and when
             it is most useful, then open the tool page for step-by-step instructions and a guide to reading your result.
           </p>
@@ -170,7 +170,7 @@ export default function CalculatorsView({
           <h2 id="how-built" className="section-title">
             How these calculators are built
           </h2>
-          <div className="mt-3 grid max-w-3xl gap-y-3">
+          <div className="mt-3 grid gap-y-3">
             <p className="body-copy">
               Each tool uses a published, widely used formula, such as the WHO adult BMI categories, the Mifflin-St Jeor
               energy equation, the U.S. Navy circumference method, and Naegele&apos;s rule for due dates. Results appear

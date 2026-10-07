@@ -5,7 +5,7 @@ import type { CSSProperties, ReactNode, Ref } from "react";
 
 export function CalcLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6">
+    <div className="calc-layout grid items-start gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-stretch lg:gap-6">
       {children}
     </div>
   );
@@ -20,15 +20,17 @@ export function CalcHeader({
   eyebrow,
   title,
   description,
+  niche,
 }: {
   icon: IconComponent;
   eyebrow: string;
   title: string;
   description?: string;
+  niche?: string;
 }) {
   return (
     <div className="flex items-start gap-3.5">
-      <span className="icon-badge h-12 w-12 flex-none rounded-2xl">
+      <span data-niche={niche} className="icon-badge h-12 w-12 flex-none rounded-2xl">
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0">
@@ -198,7 +200,11 @@ export function ResultCard({
         </p>
         {toolbar}
       </div>
-      <div className={`flex-1 rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-900/5 sm:p-5 ${bodyClassName}`}>
+      <div
+        tabIndex={0}
+        aria-label="Your result"
+        className={`result-body flex-1 rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-900/5 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:p-5 ${bodyClassName}`}
+      >
         {children}
       </div>
     </div>

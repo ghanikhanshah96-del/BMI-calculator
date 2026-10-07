@@ -8,7 +8,6 @@ import DocNav from "../../components/doc-nav";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
 import Reveal from "../../components/reveal";
-import SectionNav from "../../components/section-nav";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { organizationRef } from "../../lib/seo";
@@ -68,9 +67,9 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
   };
 
   return (
-    <div className="flex min-h-screen flex-col text-slate-900">
+    <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
-      <div data-niche={post.toolId} className="bg-mesh flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col">
       <PageHero
         image={post.image}
         imageAlt={post.imageAlt}
@@ -80,7 +79,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
         description={
           <>
             <p>{post.excerpt}</p>
-            <p className="mt-3 text-sm text-emerald-100">
+            <p className="mt-3 text-sm text-slate-500">
               <time dateTime={post.publishedAt}>Published {post.publishedAt}</time>
               {" · "}
               <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
@@ -100,7 +99,6 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
       <main className="page-main section-block">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
           <article className="min-w-0">
-            <SectionNav items={contents} className="-mt-4 mb-6 lg:hidden" />
             <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
                 Key takeaways

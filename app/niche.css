@@ -103,44 +103,6 @@
     radial-gradient(at 50% 100%, color-mix(in srgb, var(--niche-200) 70%, transparent) 0, transparent 52%);
 }
 
-[data-niche] .hero-shell {
-  background-color: var(--niche-800);
-}
-
-[data-niche] .hero-shell img {
-  opacity: 0.22;
-}
-
-[data-niche] .hero-overlay {
-  background-color: var(--niche-800);
-  background-image: linear-gradient(
-    115deg,
-    var(--niche-900) 0%,
-    var(--niche-800) 46%,
-    var(--niche-700) 100%
-  );
-}
-
-[data-niche] .hero-glow-teal {
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--niche-400) 42%, transparent), transparent 65%);
-}
-
-[data-niche] .hero-glow-lime {
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--niche-300) 36%, transparent), transparent 65%);
-}
-
-[data-niche] .hero-pill,
-[data-niche] .hero-copy,
-[data-niche] .hero-copy p,
-[data-niche] .hero-shell nav,
-[data-niche] .hero-shell nav a {
-  color: color-mix(in srgb, white 88%, var(--niche-100));
-}
-
-[data-niche] .hero-shell nav a:hover {
-  color: #fff;
-}
-
 [data-niche] .btn-gradient,
 [data-niche] .niche-fill,
 [data-niche] .niche-fill p,
@@ -156,6 +118,7 @@
   border-color: var(--niche-200);
 }
 
+[data-niche].icon-badge,
 [data-niche] .icon-badge,
 [data-niche] .tool-badge-dark {
   background-image: linear-gradient(135deg, var(--niche-500), var(--niche-700));
@@ -433,33 +396,82 @@
 .result-notice {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.85rem;
   margin-top: 1rem;
-  border: 1px solid #f6d98a;
+  border: 1px solid #f3e6c8;
   border-radius: 1rem;
-  background: #fffbeb;
-  padding: 0.9rem 1rem;
-  color: #78350f;
-  font-size: 0.875rem;
-  line-height: 1.55;
+  background: #fffdf8;
+  box-shadow: inset 3px 0 0 #e8b86a;
+  padding: 0.95rem 1.1rem;
+  color: #3f3f46;
+  font-size: 0.9375rem;
+  line-height: 1.6;
 }
 
-.result-notice svg {
-  margin-top: 0.1rem;
+.result-notice-icon {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
   flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.result-notice-icon svg {
+  margin: 0;
+  color: inherit;
+}
+
+.result-notice-kicker {
+  margin: 0 0 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #b45309;
 }
 
 .result-notice a {
   font-weight: 650;
-  color: #92400e;
+  color: #047857;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
+.result-notice a:hover {
+  color: #065f46;
+}
+
 .result-notice-sources {
-  display: block;
-  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin: 0.55rem 0 0;
+  color: #78716c;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.result-notice-based {
+  margin-right: 0.4rem;
+  font-weight: 500;
+}
+
+.result-notice-sep {
+  margin: 0 0.55rem;
+  color: #a8a29e;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.result-notice-sources a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  white-space: nowrap;
 }
 
 [data-niche] .live-frame {

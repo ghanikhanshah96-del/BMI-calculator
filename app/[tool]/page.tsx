@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { pageMetadata } from "../lib/seo";
 import { getSiteUrl } from "../lib/site-url";
-import { clusters, getToolBySlug, SITE_UPDATED, toolHref, tools } from "../lib/tools";
+import { getToolBySlug, SITE_UPDATED, toolHref, tools } from "../lib/tools";
 import ToolView from "./tool-view";
 
 type PageProps = {
@@ -35,14 +35,12 @@ export default async function ToolPage({ params }: PageProps) {
   const tool = getToolBySlug(slug);
   if (!tool) notFound();
 
-  const cluster = clusters.find((item) => item.id === tool.cluster);
   const { id, heroImage, heroImageAlt, metaDescription, relatedToolIds } = tool;
 
   return (
     <ToolView
       siteUrl={getSiteUrl()}
       updated={SITE_UPDATED}
-      clusterTitle={cluster?.title ?? "Calculator"}
       tool={{ id, heroImage, heroImageAlt, metaDescription, relatedToolIds }}
     />
   );

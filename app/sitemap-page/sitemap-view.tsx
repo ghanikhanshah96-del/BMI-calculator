@@ -45,7 +45,7 @@ function SitemapSection({ title, intro, items }: { title: string; intro: string;
   return (
     <section className="mt-14 first:mt-0">
       <h2 className="section-title">{title}</h2>
-      <p className="muted-copy mt-2 max-w-3xl">{intro}</p>
+      <p className="muted-copy mt-2">{intro}</p>
       <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map(({ href, label, description, icon: Icon, niche }, index) => (
           <Reveal as="li" key={href} delay={(index % 3) * 80} className="h-full">

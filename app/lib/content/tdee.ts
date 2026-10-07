@@ -274,12 +274,12 @@ export const tdee: ToolContent = {
     },
   ],
   sources: [
-    { label: "National Academies / NCBI — Factors Affecting Energy Expenditure and Requirements", url: "https://www.ncbi.nlm.nih.gov/books/NBK591031/" },
-    { label: "NIDDK — Body Weight Planner", url: "https://www.niddk.nih.gov/bwp" },
+    { label: "National Academies / NCBI - Factors Affecting Energy Expenditure and Requirements", url: "https://www.ncbi.nlm.nih.gov/books/NBK591031/" },
+    { label: "NIDDK - Body Weight Planner", url: "https://www.niddk.nih.gov/bwp" },
     {
-      label: "NIDDK — Eating & Physical Activity to Lose or Maintain Weight",
+      label: "NIDDK - Eating & Physical Activity to Lose or Maintain Weight",
       url: "https://www.niddk.nih.gov/health-information/weight-management/adult-overweight-obesity/eating-physical-activity",
     },
-    { label: "NCBI Endotext — Estimating Resting Metabolic Rate", url: "https://www.ncbi.nlm.nih.gov/books/NBK278991/" },
+    { label: "NCBI Endotext - Estimating Resting Metabolic Rate", url: "https://www.ncbi.nlm.nih.gov/books/NBK278991/" },
   ],
 };

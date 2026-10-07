@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { toolHref, toolLinks } from "../lib/tool-nav";
+import HeroBackdrop from "./hero-backdrop";
 import { ArrowRight, LayoutGrid } from "./icons";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
@@ -10,7 +11,11 @@ export default function NotFoundView() {
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="home" />
-      <main className="page-main relative py-14 lg:py-20">
+      <div className="relative isolate flex-1">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem]" aria-hidden="true">
+          <HeroBackdrop image="/images/hero-bg.jpg" imageAlt="" />
+        </div>
+      <main className="page-main relative z-10 py-14 lg:py-20">
         <div className="hero-orb hero-orb-a" aria-hidden="true" />
         <div className="hero-orb hero-orb-b" aria-hidden="true" />
         <div className="mx-auto max-w-2xl text-center">
@@ -40,6 +45,7 @@ export default function NotFoundView() {
           ))}
         </ul>
       </main>
+      </div>
       <SiteFooter />
     </div>
   );

@@ -592,7 +592,19 @@ a {
   }
 
   .hero-shell {
-    @apply relative isolate overflow-hidden bg-emerald-950;
+    @apply relative isolate min-h-80 overflow-hidden sm:min-h-96 lg:min-h-[28rem];
+  }
+
+  /* Fades only the left edge of the hero photo. The box size and position stay the same. */
+  .hero-photo-left {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 16%);
+    mask-image: linear-gradient(to right, transparent, #000 16%);
+  }
+
+  /* Dissolves the bottom of the photo so the hero does not meet the next section in a line. */
+  .hero-photo-bottom {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
   }
 
   .hero-overlay {
@@ -610,19 +622,19 @@ a {
   }
 
   .hero-inner {
-    @apply mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16;
+    @apply mx-auto max-w-7xl px-4 pt-8 pb-2 sm:px-6 sm:pt-10 lg:px-8 lg:pt-12;
   }
 
   .hero-pill {
-    @apply inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-50 ring-1 ring-white/20;
+    @apply inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800 ring-1 ring-emerald-200;
   }
 
   .hero-title {
-    @apply mt-5 text-3xl leading-tight text-white sm:text-4xl lg:text-[2.75rem];
+    @apply mt-4 text-3xl leading-tight text-slate-950 sm:text-4xl lg:text-[2.75rem];
   }
 
   .hero-copy {
-    @apply mt-4 max-w-2xl text-base leading-7 text-emerald-50 sm:text-lg;
+    @apply mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg;
   }
 
   .cta-panel {
@@ -949,7 +961,7 @@ a {
   }
 
   .tool-panel {
-    @apply relative z-10 -mt-8 scroll-mt-20 rounded-3xl bg-white p-4 shadow-2xl shadow-emerald-900/15 sm:-mt-12 sm:p-5 md:p-6;
+    @apply relative z-10 mt-4 scroll-mt-20 rounded-3xl bg-white p-4 shadow-2xl shadow-emerald-900/15 sm:mt-6 sm:p-5 md:p-6;
     border: 2px solid transparent;
     background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #6ee7b7, #2dd4bf 55%, #a3e635);
     background-origin: border-box;
@@ -1037,7 +1049,7 @@ a {
 
   .faq-answer p,
   .faq-answer li {
-    @apply break-words;
+    @apply wrap-break-word;
   }
 
   .faq-cards .faq-item {
@@ -1077,11 +1089,11 @@ a {
   }
 
   .popular-card-title {
-    @apply mt-4 text-lg font-semibold leading-snug break-words text-slate-900;
+    @apply mt-4 text-lg font-semibold leading-snug wrap-break-word text-slate-900;
   }
 
   .popular-card-text {
-    @apply mt-3 border-t border-emerald-100 pt-3 text-sm leading-6 break-words text-slate-600;
+    @apply mt-3 border-t border-emerald-100 pt-3 text-sm leading-6 wrap-break-word text-slate-600;
   }
 
   .popular-card-text strong {
@@ -1270,6 +1282,45 @@ a {
 
   .result-shell {
     @apply relative flex min-w-0 scroll-mt-24 flex-col rounded-3xl bg-linear-to-br from-emerald-50/80 via-white to-teal-50/70 p-1.5 shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100;
+  }
+
+  .result-body {
+    min-height: 0;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #047857 #ecfdf5;
+  }
+
+  .result-body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .result-body::-webkit-scrollbar-track {
+    background: #ecfdf5;
+    border-radius: 999px;
+  }
+
+  .result-body::-webkit-scrollbar-thumb {
+    background: #047857;
+    border: 2px solid #ecfdf5;
+    border-radius: 999px;
+  }
+
+  @media (width < 64rem) {
+    .result-body {
+      max-height: 28rem;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .calc-layout > .result-shell {
+      height: 0;
+      min-height: 100%;
+      overflow: hidden;
+    }
   }
 
   /* Empty result preview */

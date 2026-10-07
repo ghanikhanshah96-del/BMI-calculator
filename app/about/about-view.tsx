@@ -126,7 +126,7 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
               How our calculators work
             </h2>
           </div>
-          <p className="body-copy mt-3 max-w-3xl">
+          <p className="body-copy mt-3">
             Each tool below links to its own page, where you will find step-by-step instructions, a guide to reading your
             result, and answers to common questions.
           </p>
@@ -201,21 +201,23 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
           </section>
         </div>
 
-        <aside className="cta-panel mt-12">
+        <aside className="cta-panel mt-12 lg:flex lg:items-center lg:justify-between lg:gap-10">
           <div className="cta-glow" />
-          <h2 className="text-2xl text-white">Spotted an error or have a suggestion?</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-emerald-50 sm:text-base">
-            We review every message about accuracy. You can also browse{" "}
-            <Link href="/calculators" className={ctaLink}>
-              all health calculators
-            </Link>{" "}
-            or read our{" "}
-            <Link href="/blog" className={ctaLink}>
-              calculator guides
-            </Link>
-            .
-          </p>
-          <Link href="/contact" className="group cta-button">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-2xl text-white">Spotted an error or have a suggestion?</h2>
+            <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">
+              We review every message about accuracy. You can also browse{" "}
+              <Link href="/calculators" className={ctaLink}>
+                all health calculators
+              </Link>{" "}
+              or read our{" "}
+              <Link href="/blog" className={ctaLink}>
+                calculator guides
+              </Link>
+              .
+            </p>
+          </div>
+          <Link href="/contact" className="group cta-button shrink-0 lg:mt-0">
             Contact us <ArrowRight className="arrow-nudge" />
           </Link>
         </aside>

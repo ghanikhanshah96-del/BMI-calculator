@@ -51,11 +51,9 @@ function Section({
             {section.steps.map((step) => (
               <li key={step.title} className="how-step">
                 <h3 className="how-step-title">{step.title}</h3>
-                {step.text.map((paragraph) => (
-                  <p key={paragraph} className="mt-1.5">
-                    <Inline text={paragraph} />
-                  </p>
-                ))}
+                <p className="mt-1.5">
+                  <Inline text={step.text.join(" ")} />
+                </p>
               </li>
             ))}
           </ol>

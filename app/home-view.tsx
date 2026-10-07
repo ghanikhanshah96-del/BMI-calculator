@@ -55,12 +55,12 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
       <main className="flex-1">
         {/* Hero */}
         <section aria-labelledby="home-title" className="relative isolate overflow-hidden">
-          <div className="absolute inset-y-0 right-0 -z-20 hidden w-[62%] lg:block">
+          <div className="hero-photo-left absolute inset-y-0 right-0 -z-20 hidden w-[62%] lg:block">
             <Image
               src="/images/hero-bg.jpg"
               alt="Healthy breakfast plate with eggs, greens, tomatoes, and avocado on a wooden table"
               fill
-              quality={45}
+              unoptimized
               sizes="62vw"
               className="object-cover opacity-40"
             />

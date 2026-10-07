@@ -215,12 +215,12 @@ export const pregnancy: ToolContent = {
   ],
   sources: [
     {
-      label: "ACOG — Methods for Estimating the Due Date",
+      label: "ACOG - Methods for Estimating the Due Date",
       url: "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date",
     },
-    { label: "ACOG — How Your Fetus Grows During Pregnancy", url: "https://www.acog.org/womens-health/faqs/how-your-fetus-grows-during-pregnancy" },
-    { label: "ACOG — When Pregnancy Goes Past Your Due Date", url: "https://www.acog.org/womens-health/faqs/when-pregnancy-goes-past-your-due-date" },
-    { label: "NHS — Pregnancy Due Date Calculator", url: "https://www.nhs.uk/pregnancy/finding-out/due-date-calculator/" },
-    { label: "Cleveland Clinic — Due Date Calculator", url: "https://my.clevelandclinic.org/health/diagnostics/22052-due-date-calculator" },
+    { label: "ACOG - How Your Fetus Grows During Pregnancy", url: "https://www.acog.org/womens-health/faqs/how-your-fetus-grows-during-pregnancy" },
+    { label: "ACOG - When Pregnancy Goes Past Your Due Date", url: "https://www.acog.org/womens-health/faqs/when-pregnancy-goes-past-your-due-date" },
+    { label: "NHS - Pregnancy Due Date Calculator", url: "https://www.nhs.uk/pregnancy/finding-out/due-date-calculator/" },
+    { label: "Cleveland Clinic - Due Date Calculator", url: "https://my.clevelandclinic.org/health/diagnostics/22052-due-date-calculator" },
   ],
 };

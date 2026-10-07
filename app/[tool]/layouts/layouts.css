@@ -22,7 +22,7 @@
   }
 
   .how-step {
-    @apply relative ml-14 min-w-0 rounded-2xl p-4 text-sm leading-6 break-words text-slate-600 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
+    @apply relative ml-14 min-w-0 rounded-2xl p-4 text-sm leading-6 wrap-break-word text-slate-600 sm:p-5 lg:mt-14 lg:ml-0 lg:text-center;
     counter-increment: how;
     border-top: 1px solid rgba(6, 95, 70, 0.1);
   }

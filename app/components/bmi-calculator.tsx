@@ -492,6 +492,7 @@ export default function BmiCalculator() {
       <CalcForm>
         <CalcHeader
           icon={Scale}
+          niche="bmi"
           eyebrow="BMI"
           title="Body Mass Index"
           description="Check your BMI category and healthy weight range in seconds."
