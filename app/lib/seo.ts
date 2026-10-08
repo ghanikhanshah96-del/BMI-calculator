@@ -10,7 +10,7 @@ export const defaultOgImage = {
 };
 
 export function organizationLogo(siteUrl: string) {
-  return { "@type": "ImageObject", url: `${siteUrl}/logo.png`, width: 512, height: 512 };
+  return { "@type": "ImageObject", url: `${siteUrl}/logo.png`, width: 256, height: 256 };
 }
 
 export function organizationRef(siteUrl: string) {

@@ -2,6 +2,8 @@ import { useMemo, useRef } from "react";
 
 export const KG_PER_LB = 0.45359237;
 export const CM_PER_IN = 2.54;
+export const OZ_PER_LB = 16;
+export const KG_PER_OZ = KG_PER_LB / OZ_PER_LB;
 
 /** Rounds half away from zero, nudged past binary float error (1.005 → 1.01). */
 export function roundTo(value: number, decimals: number) {
@@ -25,23 +27,80 @@ export const formatCm = (cm: number) => `${roundTo(cm, 1)} cm`;
 export const formatKg = (kg: number) => `${roundTo(kg, 1)} kg`;
 export const formatIn = (cm: number) => `${roundTo(cm / CM_PER_IN, 1)} in`;
 export const formatLb = (kg: number) => `${roundTo(kg / KG_PER_LB, 1)} lb`;
+export const formatOz = (kg: number) => `${roundTo(kg / KG_PER_OZ, 1)} oz`;
 export const formatFeetInches = (cm: number) => {
   const { feet, inches } = feetInchesFromCm(cm);
   return `${feet} ft ${inches} in`;
 };
 
-/** Absorbs display rounding (0.1 in ≈ 0.25 cm) so a value converted from a valid entry is never rejected. */
-const RANGE_SLACK = 0.2;
+export type RangeDisplay = {
+  /** Convert the canonical metric value (kg or cm) into the number shown to the user. */
+  toDisplay: (metric: number) => number;
+  decimals: number;
+  /** Format a metric bound using the same rounding as the inputs. */
+  format: (metric: number) => string;
+  /**
+   * Extra tolerance applied in display units after rounding (default 0).
+   * Used for compound ft+in height where tiny cm drift can appear after conversion.
+   */
+  slack?: number;
+};
 
-/** Checks an exact metric value against a metric range and words the message in the user's units. */
+export const kgDisplay: RangeDisplay = {
+  toDisplay: (kg) => kg,
+  decimals: 1,
+  format: formatKg,
+};
+
+export const lbDisplay: RangeDisplay = {
+  toDisplay: (kg) => kg / KG_PER_LB,
+  decimals: 1,
+  format: formatLb,
+};
+
+export const cmDisplay: RangeDisplay = {
+  toDisplay: (cm) => cm,
+  decimals: 1,
+  format: formatCm,
+};
+
+export const inDisplay: RangeDisplay = {
+  toDisplay: (cm) => cm / CM_PER_IN,
+  decimals: 1,
+  format: formatIn,
+};
+
+/** Compound ft+in bounds — compare in cm; small slack covers 0.1 in display rounding. */
+export const feetInchesDisplay: RangeDisplay = {
+  toDisplay: (cm) => cm,
+  decimals: 2,
+  format: formatFeetInches,
+  slack: 0.3,
+};
+
+/**
+ * Checks a metric measurement against a metric range, but words the message and
+ * enforces limits in the user's selected display unit (so 55 lb is rejected when
+ * the minimum rounds to 55.1 lb).
+ */
 export function checkRange(
   label: string,
-  value: number,
+  metricValue: number,
   [min, max]: readonly [number, number],
-  format: (metric: number) => string,
+  display: RangeDisplay,
 ) {
-  if (value >= min - RANGE_SLACK && value <= max + RANGE_SLACK) return "";
-  return `${label.charAt(0).toUpperCase()}${label.slice(1)} must be between ${format(min)} and ${format(max)}.`;
+  if (!Number.isFinite(metricValue)) {
+    return `${label.charAt(0).toUpperCase()}${label.slice(1)} is invalid.`;
+  }
+
+  const value = roundTo(display.toDisplay(metricValue), display.decimals);
+  const low = roundTo(display.toDisplay(min), display.decimals);
+  const high = roundTo(display.toDisplay(max), display.decimals);
+  const slack = display.slack ?? 0;
+
+  if (value + slack >= low && value - slack <= high) return "";
+
+  return `${label.charAt(0).toUpperCase()}${label.slice(1)} must be between ${display.format(min)} and ${display.format(max)}.`;
 }
 
 /** One measured quantity (height, weight, ...) and the input fields that hold it in each unit mode. */

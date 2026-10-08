@@ -16,12 +16,12 @@ import {
   ResultNote,
   ResultTable,
   SectionTitle,
-  SegmentedControl,
   StatGrid,
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, DatePicker, FieldShell, useToday } from "./form-controls";
 import { validateFields } from "../lib/validate";
+import type { CalculatorReport } from "./download-report";
 
 type CycleRow = {
   periodStart: Date;
@@ -152,6 +152,28 @@ export default function OvulationCalculator() {
     setResultTab("dates");
   };
 
+  const report: CalculatorReport | null = result
+    ? {
+        title: "Ovulation & Fertility Report",
+        filename: "ovulation-report",
+        summary: `Most probable ovulation ${formatShort(result.current.ovulationPeak)}; fertile ${formatRange(result.current.fertileStart, result.current.fertileEnd)}.`,
+        lines: [
+          { label: "Cycle length", value: `${cycleLength || Number(cycleChoice) || "—"} days` },
+          { label: "Last period start", value: formatShort(result.current.periodStart) },
+          { label: "Fertile window", value: formatRange(result.current.fertileStart, result.current.fertileEnd) },
+          { label: "Peak ovulation", value: formatShort(result.current.ovulationPeak) },
+          { label: "Ovulation range", value: formatRange(result.current.ovulationStart, result.current.ovulationEnd) },
+          { label: "Pregnancy test day", value: formatShort(result.current.pregnancyTest) },
+          { label: "Next period", value: formatShort(result.current.nextPeriod) },
+          { label: "Due date if conceived", value: formatShort(result.current.dueDate) },
+          ...result.cycles.map((cycle, index) => ({
+            label: `Cycle ${index + 1} ovulation`,
+            value: `${formatShort(cycle.ovulationPeak)} (fertile ${formatRange(cycle.fertileStart, cycle.fertileEnd)})`,
+          })),
+        ],
+      }
+    : null;
+
   return (
     <CalcLayout>
       <CalcForm>
@@ -182,7 +204,7 @@ export default function OvulationCalculator() {
 
         <FormError message={error} />
 
-        <ActionBar onCalculate={calculate} onClear={clear} />
+        <ActionBar onCalculate={calculate} onClear={clear} report={report} />
 
         <ResultNote tone="info">
           This tool estimates fertile days from cycle tracking. It should not be used as birth control.
@@ -193,17 +215,20 @@ export default function OvulationCalculator() {
         resultRef={resultRef}
         toolbar={
           result ? (
-            <SegmentedControl
-              role="tablist"
-              label="Result sections"
-              size="sm"
-              options={[
-                { value: "dates", label: "This cycle" },
-                { value: "cycles", label: "Next 6 cycles" },
-              ]}
-              value={resultTab}
-              onChange={setResultTab}
-            />
+            <div className="w-44 max-w-full">
+              <CustomSelect
+                ariaLabel="Result section"
+                value={resultTab}
+                placeholder="Select a view"
+                onChange={(value) => {
+                  if (value === "dates" || value === "cycles") setResultTab(value);
+                }}
+                options={[
+                  { value: "dates", label: "This cycle" },
+                  { value: "cycles", label: "Next 6 cycles" },
+                ]}
+              />
+            </div>
           ) : null
         }
       >

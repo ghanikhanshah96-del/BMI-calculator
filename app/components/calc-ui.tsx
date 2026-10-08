@@ -1,7 +1,8 @@
 "use client";
 
 import { Eraser, Play, Sparkles, type IconComponent } from "./icons";
-import type { CSSProperties, ReactNode, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref, RefObject } from "react";
+import { ResultReportActions, type CalculatorReport } from "./download-report";
 
 export function CalcLayout({ children }: { children: ReactNode }) {
   return (
@@ -144,13 +145,16 @@ export function ActionBar({
   onCalculate,
   onClear,
   calculateLabel = "Calculate",
+  report,
 }: {
   onCalculate: () => void;
   onClear: () => void;
   calculateLabel?: string;
+  /** Shown after Clear once a result exists. */
+  report?: CalculatorReport | null;
 }) {
   return (
-    <div className="flex gap-2 sm:gap-3">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
       <button
         type="button"
         onClick={onCalculate}
@@ -170,6 +174,7 @@ export function ActionBar({
         <Eraser className="h-4 w-4" aria-hidden="true" />
         Clear
       </button>
+      <ResultReportActions report={report} />
     </div>
   );
 }
@@ -182,23 +187,23 @@ export function ResultCard({
   bodyClassName = "",
 }: {
   children: ReactNode;
-  resultRef?: Ref<HTMLDivElement>;
+  resultRef?: RefObject<HTMLDivElement | null>;
   id?: string;
   toolbar?: ReactNode;
   bodyClassName?: string;
 }) {
   return (
     <div
-      ref={resultRef}
+      ref={resultRef as Ref<HTMLDivElement> | undefined}
       id={id}
       className="result-shell"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 px-3.5 pb-2 pt-3">
-        <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">
-          <Sparkles className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2.5 sm:px-3.5">
+        <p className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">
+          <Sparkles className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
           Your result
         </p>
-        {toolbar}
+        {toolbar ? <div className="min-w-0 max-w-full sm:ml-auto">{toolbar}</div> : null}
       </div>
       <div
         tabIndex={0}

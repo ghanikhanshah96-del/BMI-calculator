@@ -74,7 +74,6 @@ function usePopupPosition(
 
       if (matchWidth) popup.style.minWidth = `${Math.min(rect.width, usableWidth)}px`;
       popup.style.maxWidth = `${Math.min(384, usableWidth)}px`;
-      popup.style.maxHeight = "";
 
       const naturalHeight = Math.min(popup.scrollHeight, maxHeight);
       const spaceBelow = viewportHeight - rect.bottom - VIEWPORT_MARGIN - POPUP_GAP;
@@ -97,11 +96,15 @@ function usePopupPosition(
       frame = requestAnimationFrame(place);
     };
     place();
-    window.addEventListener("scroll", schedule, true);
+    const onScroll = (event: Event) => {
+      if (popupRef.current?.contains(event.target as Node)) return;
+      schedule();
+    };
+    window.addEventListener("scroll", onScroll, true);
     window.addEventListener("resize", schedule);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", schedule);
     };
   }, [open, triggerRef, popupRef, maxHeight, matchWidth]);
@@ -431,7 +434,7 @@ export function CustomSelect({
               aria-activedescendant={`${listId}-opt-${activeIndex}`}
               aria-label={ariaLabel ?? field?.label}
               onKeyDown={onListKeyDown}
-              className="select-popup w-max"
+              className="select-popup max-h-72 w-max overflow-y-auto"
             >
               {listOptions.map((option, index) => {
                 const isPlaceholder = option.value === "";

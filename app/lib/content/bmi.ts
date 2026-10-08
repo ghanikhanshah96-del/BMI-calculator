@@ -98,9 +98,9 @@ export const bmi: ToolContent = {
       "BMI for Children and Teenagers",
       [
         p("Adult BMI categories should **not** be applied to children and teenagers in the same way."),
-        p("For children and adolescents ages 2 through 19, BMI is interpreted using age- and sex-specific BMI percentiles because their bodies are still growing."),
-        p("The CDC recommends using a child and teen BMI calculator that accounts for these factors rather than applying adult BMI ranges to younger people."),
-        p("If you are calculating BMI for a child or teenager, discuss the result with a qualified healthcare professional who can interpret it using the appropriate growth charts and other information."),
+        p("For ages **2–17**, this calculator uses **CDC BMI-for-age percentiles** (LMS method) by age and sex: underweight below the 5th percentile, healthy weight 5th to under the 85th, overweight 85th to under the 95th, and obesity at or above the 95th."),
+        p("From age **18** upward, WHO adult BMI categories apply (including the familiar 18.5–24.9 healthy range)."),
+        p("If you are calculating BMI for a child or teenager, discuss the result with a qualified healthcare professional who can interpret it alongside growth charts and other clinical information."),
       ],
       { nav: "Children & teens", half: true },
     ),

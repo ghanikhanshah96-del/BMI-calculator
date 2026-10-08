@@ -20,16 +20,26 @@ import {
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 import {
+  ENERGY_MAX_AGE,
+  ENERGY_MIN_AGE,
+  activityChoices,
+  activityForAge,
+  activityPaLabel,
+  iomEerKcal,
+  isYouthEnergyAge,
+} from "../lib/iom-eer";
+import {
   checkRange,
-  formatCm,
-  formatFeetInches,
-  formatKg,
-  formatLb,
+  cmDisplay,
+  feetInchesDisplay,
   heightQuantity,
+  kgDisplay,
+  lbDisplay,
   useUnitConversion,
   weightQuantity,
 } from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
+import type { CalculatorReport } from "./download-report";
 
 type UnitMode = "metric" | "us";
 type Gender = "male" | "female";
@@ -42,7 +52,7 @@ type GoalId =
   | "mild-gain"
   | "weight-gain";
 type MacroPref = "balanced" | "low-carb" | "high-carb" | "high-protein";
-type FormulaUsed = "mifflin" | "katch";
+type FormulaUsed = "mifflin" | "katch" | "iom-eer";
 
 type MacroInputs = {
   gender: Gender | "";
@@ -60,6 +70,8 @@ type MacroInputs = {
 
 type MacroResult = {
   formula: FormulaUsed;
+  formulaLabel: string;
+  isYouth: boolean;
   bmr: number;
   tdee: number;
   calories: number;
@@ -74,6 +86,7 @@ type MacroResult = {
   carbsKcal: number;
   fatKcal: number;
   prefLabel: string;
+  paLabel: string;
 };
 
 const ACTIVITY_OPTIONS: Array<{ id: ActivityId; label: string; multiplier: number }> = [
@@ -117,8 +130,13 @@ const EMPTY_INPUTS: MacroInputs = {
   bodyFat: null,
 };
 
-const WEIGHT_KG_RANGE = [30, 300] as const;
-const HEIGHT_CM_RANGE = [120, 230] as const;
+/** Adults keep the original limits; ages 2–17 allow toddler/child sizes (e.g. 12 kg, 87 cm). */
+function measurementRanges(age: number | null) {
+  if (age !== null && isYouthEnergyAge(age)) {
+    return { weight: [5, 200] as const, height: [70, 210] as const };
+  }
+  return { weight: [30, 300] as const, height: [120, 230] as const };
+}
 
 const QUANTITIES = [
   heightQuantity<MacroInputs, UnitMode>("us", "heightCm", "heightFeet", "heightInches"),
@@ -160,38 +178,58 @@ function buildResult(
         { label: "weight", value: inputs.weightKg },
         { label: "height", value: inputs.heightCm },
       ];
+  const age = inputs.age!;
+  const isYouth = isYouthEnergyAge(age);
+  const ranges = measurementRanges(inputs.age);
   const error =
     validateFields([
-      { label: "age", value: inputs.age, min: 15, max: 120 },
+      { label: "age", value: inputs.age, min: ENERGY_MIN_AGE, max: ENERGY_MAX_AGE },
       ...measurementRules,
       { label: "gender", value: inputs.gender, kind: "choice" },
       { label: "activity level", value: inputs.activity, kind: "choice" },
-      { label: "goal", value: inputs.goal, kind: "choice" },
+      ...(isYouth ? [] : [{ label: "goal", value: inputs.goal, kind: "choice" as const }]),
       { label: "macro preference", value: inputs.macroPref, kind: "choice" },
     ]) ||
-    checkRange("weight", exact.weight!, WEIGHT_KG_RANGE, imperial ? formatLb : formatKg) ||
-    checkRange("height", exact.height!, HEIGHT_CM_RANGE, imperial ? formatFeetInches : formatCm);
+    checkRange("weight", exact.weight!, ranges.weight, imperial ? lbDisplay : kgDisplay) ||
+    checkRange("height", exact.height!, ranges.height, imperial ? feetInchesDisplay : cmDisplay);
   if (error) return { ok: false, error };
-  if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
+  if (!isYouth && inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
     return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
   }
 
   const gender = inputs.gender as Gender;
-  const age = inputs.age!;
   const weightKg = exact.weight!;
   const heightCm = exact.height!;
+  const activityId = (activityForAge(age, inputs.activity) || inputs.activity) as ActivityId;
+  const activity = ACTIVITY_OPTIONS.find((a) => a.id === activityId)!;
 
-  const bodyFat = inputs.bodyFat;
-  const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
-  const bmr =
-    formula === "katch" && bodyFat !== null
-      ? katchMcArdle(weightKg, bodyFat)
-      : mifflinStJeor(weightKg, heightCm, age, gender);
+  let formula: FormulaUsed;
+  let formulaLabel: string;
+  let bmr: number;
+  let tdee: number;
+  let calories: number;
+  let goalLabel: string;
 
-  const activity = ACTIVITY_OPTIONS.find((a) => a.id === inputs.activity)!;
-  const goal = GOAL_OPTIONS.find((g) => g.id === inputs.goal)!;
-  const tdee = bmr * activity.multiplier;
-  const calories = Math.max(1200, roundCal(tdee + goal.delta));
+  if (isYouth) {
+    formula = "iom-eer";
+    formulaLabel = "IOM EER (ages 2–17)";
+    tdee = iomEerKcal(age, gender, weightKg, heightCm, activity.id);
+    bmr = tdee;
+    calories = roundCal(tdee);
+    goalLabel = "Maintain (youth — goals disabled)";
+  } else {
+    const bodyFat = inputs.bodyFat;
+    formula = bodyFat !== null ? "katch" : "mifflin";
+    formulaLabel = formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor";
+    bmr =
+      formula === "katch" && bodyFat !== null
+        ? katchMcArdle(weightKg, bodyFat)
+        : mifflinStJeor(weightKg, heightCm, age, gender);
+    const goal = GOAL_OPTIONS.find((g) => g.id === inputs.goal)!;
+    tdee = bmr * activity.multiplier;
+    calories = Math.max(1200, roundCal(tdee + goal.delta));
+    goalLabel = goal.label;
+  }
 
   const pref = MACRO_PRESETS[inputs.macroPref as MacroPref];
   const proteinKcal = calories * pref.protein;
@@ -202,10 +240,12 @@ function buildResult(
     ok: true,
     result: {
       formula,
+      formulaLabel,
+      isYouth,
       bmr: roundCal(bmr),
       tdee: roundCal(tdee),
       calories,
-      goalLabel: goal.label,
+      goalLabel,
       proteinG: Math.round(proteinKcal / 4),
       carbsG: Math.round(carbsKcal / 4),
       fatG: Math.round(fatKcal / 9),
@@ -216,6 +256,7 @@ function buildResult(
       carbsKcal: roundCal(carbsKcal),
       fatKcal: roundCal(fatKcal),
       prefLabel: pref.label,
+      paLabel: activityPaLabel(gender, activity.id),
     },
   };
 }
@@ -291,6 +332,34 @@ export default function MacroCalculator() {
     run(next, mode, true);
   };
 
+  const report: CalculatorReport | null = result
+    ? {
+        title: "Macro Calculator Report",
+        filename: "macro-report",
+        summary: `Daily target ${result.calories.toLocaleString("en-US")} kcal — ${result.goalLabel} (${result.formulaLabel}).`,
+        lines: [
+          { label: "Formula", value: result.formulaLabel },
+          ...(result.isYouth
+            ? [
+                { label: "IOM PA category", value: result.paLabel },
+                { label: "Estimated Energy Requirement", value: `${result.tdee.toLocaleString("en-US")} kcal/day` },
+              ]
+            : [
+                { label: "BMR", value: `${result.bmr.toLocaleString("en-US")} kcal/day` },
+                { label: "TDEE (maintain)", value: `${result.tdee.toLocaleString("en-US")} kcal/day` },
+              ]),
+          { label: "Daily calorie target", value: `${result.calories.toLocaleString("en-US")} kcal/day` },
+          { label: "Goal", value: result.goalLabel },
+          { label: "Macro preference", value: result.prefLabel },
+          { label: "Carbs", value: `${result.carbsG} g (${result.carbsKcal} kcal, ${result.carbsPct}%)` },
+          { label: "Protein", value: `${result.proteinG} g (${result.proteinKcal} kcal, ${result.proteinPct}%)` },
+          { label: "Fat", value: `${result.fatG} g (${result.fatKcal} kcal, ${result.fatPct}%)` },
+        ],
+      }
+    : null;
+
+  const youthMode = inputs.age !== null && isYouthEnergyAge(inputs.age);
+
   const clear = () => {
     units.reset();
     setInputs(EMPTY_INPUTS);
@@ -333,7 +402,7 @@ export default function MacroCalculator() {
             />
           </FieldShell>
           <FieldShell label="Age">
-            <NumberStepper value={inputs.age} min={15} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
+            <NumberStepper value={inputs.age} min={ENERGY_MIN_AGE} max={ENERGY_MAX_AGE} step={1} placeholder={30} onChange={(age) => update({ age })} />
           </FieldShell>
         </InputGroup>
 
@@ -343,22 +412,22 @@ export default function MacroCalculator() {
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightKg}
-                  min={30}
-                  max={300}
+                  min={youthMode ? 5 : 30}
+                  max={youthMode ? 200 : 300}
                   step={0.5}
                   suffix="kg"
-                  placeholder={70}
+                  placeholder={youthMode ? 14 : 70}
                   onChange={(weightKg) => update({ weightKg })}
                 />
               </FieldShell>
               <FieldShell label="Height">
                 <NumberStepper
                   value={inputs.heightCm}
-                  min={120}
-                  max={230}
+                  min={youthMode ? 70 : 120}
+                  max={youthMode ? 210 : 230}
                   step={1}
                   suffix="cm"
-                  placeholder={175}
+                  placeholder={youthMode ? 95 : 175}
                   onChange={(heightCm) => update({ heightCm })}
                 />
               </FieldShell>
@@ -368,11 +437,11 @@ export default function MacroCalculator() {
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightLb}
-                  min={66}
-                  max={660}
-                  step={1}
+                  min={youthMode ? 11 : 66.1}
+                  max={youthMode ? 440.9 : 661.4}
+                  step={0.5}
                   suffix="lb"
-                  placeholder={155}
+                  placeholder={youthMode ? 31 : 155}
                   onChange={(weightLb) => update({ weightLb })}
                 />
               </FieldShell>
@@ -380,11 +449,11 @@ export default function MacroCalculator() {
                 <div className="grid grid-cols-2 gap-2">
                   <NumberStepper
                     value={inputs.heightFeet}
-                    min={3}
+                    min={youthMode ? 2 : 3}
                     max={7}
                     step={1}
                     suffix="ft"
-                    placeholder={5}
+                    placeholder={youthMode ? 3 : 5}
                     onChange={(heightFeet) => update({ heightFeet })}
                   />
                   <NumberStepper
@@ -405,21 +474,27 @@ export default function MacroCalculator() {
         <InputGroup step={3} title="Goal & preferences">
           <FieldShell label="Activity">
             <CustomSelect
-              value={inputs.activity}
+              value={activityForAge(inputs.age, inputs.activity)}
               placeholder="Select activity level"
               onChange={(activity) => update({ activity: activity as ActivityId })}
-              options={ACTIVITY_OPTIONS.map((a) => ({ value: a.id, label: a.label }))}
+              options={activityChoices(inputs.age).map((choice) => ({ value: choice.id, label: choice.label }))}
             />
           </FieldShell>
 
-          <FieldShell label="Goal">
-            <CustomSelect
-              value={inputs.goal}
-              placeholder="Select your goal"
-              onChange={(goal) => update({ goal: goal as GoalId })}
-              options={GOAL_OPTIONS.map((g) => ({ value: g.id, label: g.label }))}
-            />
-          </FieldShell>
+          {youthMode ? (
+            <ResultNote tone="info">
+              Under 18: weight-loss/gain goals are disabled. Calories use <strong>IOM EER</strong> (maintain only).
+            </ResultNote>
+          ) : (
+            <FieldShell label="Goal">
+              <CustomSelect
+                value={inputs.goal}
+                placeholder="Select your goal"
+                onChange={(goal) => update({ goal: goal as GoalId })}
+                options={GOAL_OPTIONS.map((g) => ({ value: g.id, label: g.label }))}
+              />
+            </FieldShell>
+          )}
 
           <FieldShell label="Macro preference">
             <CustomSelect
@@ -430,23 +505,27 @@ export default function MacroCalculator() {
             />
           </FieldShell>
 
-          <FieldShell label="Body fat % (optional)">
-            <NumberStepper
-              value={inputs.bodyFat}
-              min={1}
-              max={59}
-              step={0.5}
-              suffix="%"
-              placeholder={15}
-              onChange={(bodyFat) => update({ bodyFat })}
-            />
-            <p className="mt-1.5 text-xs leading-5 text-slate-600">Blank = Mifflin–St Jeor. With % = Katch–McArdle.</p>
-          </FieldShell>
+          {youthMode ? null : (
+            <FieldShell label="Body fat % (optional)">
+              <NumberStepper
+                value={inputs.bodyFat}
+                min={1}
+                max={59}
+                step={0.5}
+                suffix="%"
+                placeholder={15}
+                onChange={(bodyFat) => update({ bodyFat })}
+              />
+              <p className="mt-1.5 text-xs leading-5 text-slate-600">
+                Blank = Mifflin–St Jeor. With % = Katch–McArdle. Ages 18+ only.
+              </p>
+            </FieldShell>
+          )}
         </InputGroup>
 
         <FormError message={error} />
 
-        <ActionBar onCalculate={calculate} onClear={clear} />
+        <ActionBar onCalculate={calculate} onClear={clear} report={report} />
       </CalcForm>
 
       <ResultCard resultRef={resultRef}>
@@ -465,8 +544,8 @@ export default function MacroCalculator() {
               unit="kcal/day"
               badge={result.goalLabel}
             >
-              {result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"} · maintenance{" "}
-              {formatCalories(result.tdee)} kcal
+              {result.formulaLabel}
+              {result.isYouth ? ` · ${result.paLabel}` : ` · maintenance ${formatCalories(result.tdee)} kcal`}
             </ResultHero>
 
             <div className="space-y-1">
@@ -500,8 +579,20 @@ export default function MacroCalculator() {
               caption="Calorie and macro summary"
               align={["left", "right"]}
               rows={[
-                { key: "bmr", cells: ["BMR", `${formatCalories(result.bmr)} kcal`] },
-                { key: "tdee", cells: ["Maintenance (TDEE)", `${formatCalories(result.tdee)} kcal`] },
+                {
+                  key: "bmr",
+                  cells: [
+                    result.isYouth ? "IOM EER" : "BMR",
+                    `${formatCalories(result.bmr)} kcal`,
+                  ],
+                },
+                {
+                  key: "tdee",
+                  cells: [
+                    result.isYouth ? "Daily energy target" : "Maintenance (TDEE)",
+                    `${formatCalories(result.tdee)} kcal`,
+                  ],
+                },
                 { key: "target", selected: true, cells: ["Target calories", `${formatCalories(result.calories)} kcal`] },
                 { key: "carbs", cells: ["Carbs", `${result.carbsG} g (${result.carbsPct}%)`] },
                 { key: "protein", cells: ["Protein", `${result.proteinG} g (${result.proteinPct}%)`] },

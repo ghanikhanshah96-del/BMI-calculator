@@ -1,7 +1,7 @@
 "use client";
 
 import { Activity } from "./icons";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionBar,
   CalcForm,
@@ -22,24 +22,34 @@ import {
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 import {
+  ENERGY_MAX_AGE,
+  ENERGY_MIN_AGE,
+  activityChoices,
+  activityForAge,
+  activityPaLabel,
+  iomEerKcal,
+  isYouthEnergyAge,
+} from "../lib/iom-eer";
+import {
   checkRange,
-  formatCm,
-  formatFeetInches,
-  formatKg,
-  formatLb,
+  cmDisplay,
+  feetInchesDisplay,
   heightQuantity,
   KG_PER_LB,
+  kgDisplay,
+  lbDisplay,
   useUnitConversion,
   weightQuantity,
 } from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
+import type { CalculatorReport } from "./download-report";
 
 type UnitMode = "metric" | "imperial";
 type Gender = "male" | "female";
 type ActivityId = "sedentary" | "light" | "moderate" | "heavy" | "athlete";
 type MacroGoal = "cut" | "maintain" | "bulk";
 type MacroCarb = "low" | "moderate" | "high";
-type FormulaUsed = "mifflin" | "katch";
+type FormulaUsed = "mifflin" | "katch" | "iom-eer";
 type ResultTab = "overview" | "activity" | "macros" | "body";
 
 type TdeeInputs = {
@@ -58,6 +68,8 @@ type IdealWeightRow = { name: string; year: string; kg: number };
 
 type TdeeResult = {
   formula: FormulaUsed;
+  formulaLabel: string;
+  isYouth: boolean;
   bmr: number;
   harrisBenedict: number;
   tdee: number;
@@ -79,6 +91,7 @@ type TdeeResult = {
   cutCalories: number;
   bulkCalories: number;
   unitMode: UnitMode;
+  paLabel: string;
 };
 
 const ACTIVITY_OPTIONS: Array<{ id: ActivityId; label: string; multiplier: number }> = [
@@ -114,8 +127,13 @@ const EMPTY_INPUTS: TdeeInputs = {
   bodyFat: null,
 };
 
-const WEIGHT_KG_RANGE = [30, 300] as const;
-const HEIGHT_CM_RANGE = [120, 230] as const;
+/** Adults keep the original limits; ages 2–17 allow toddler/child sizes (e.g. 12 kg, 87 cm). */
+function measurementRanges(age: number | null) {
+  if (age !== null && isYouthEnergyAge(age)) {
+    return { weight: [5, 200] as const, height: [70, 210] as const };
+  }
+  return { weight: [30, 300] as const, height: [120, 230] as const };
+}
 
 const QUANTITIES = [
   heightQuantity<TdeeInputs, UnitMode>("imperial", "heightCm", "heightFeet", "heightInches"),
@@ -217,15 +235,16 @@ function buildResult(
         { label: "weight", value: inputs.weightKg },
         { label: "height", value: inputs.heightCm },
       ];
+  const ranges = measurementRanges(inputs.age);
   const error =
     validateFields([
-      { label: "age", value: inputs.age, min: 15, max: 120 },
+      { label: "age", value: inputs.age, min: ENERGY_MIN_AGE, max: ENERGY_MAX_AGE },
       ...measurementRules,
       { label: "gender", value: inputs.gender, kind: "choice" },
       { label: "activity level", value: inputs.activity, kind: "choice" },
     ]) ||
-    checkRange("weight", exact.weight!, WEIGHT_KG_RANGE, imperial ? formatLb : formatKg) ||
-    checkRange("height", exact.height!, HEIGHT_CM_RANGE, imperial ? formatFeetInches : formatCm);
+    checkRange("weight", exact.weight!, ranges.weight, imperial ? lbDisplay : kgDisplay) ||
+    checkRange("height", exact.height!, ranges.height, imperial ? feetInchesDisplay : cmDisplay);
   if (error) return { ok: false, error };
   if (inputs.bodyFat !== null && (inputs.bodyFat < 1 || inputs.bodyFat > 59)) {
     return { ok: false, error: "Body fat % must be between 1 and 59, or leave it blank." };
@@ -235,25 +254,47 @@ function buildResult(
   const age = inputs.age!;
   const weightKg = exact.weight!;
   const heightCm = exact.height!;
-
-  const bodyFat = inputs.bodyFat;
-  const formula: FormulaUsed = bodyFat !== null ? "katch" : "mifflin";
-  const bmr =
-    formula === "katch" && bodyFat !== null
-      ? katchMcArdle(weightKg, bodyFat)
-      : mifflinStJeor(weightKg, heightCm, age, gender);
-
-  const harris = harrisBenedictRevised(weightKg, heightCm, age, gender);
   const activityMeta = ACTIVITY_OPTIONS.find((a) => a.id === inputs.activity)!;
-  const tdee = bmr * activityMeta.multiplier;
+  const isYouth = isYouthEnergyAge(age);
 
-  const activityRows = ACTIVITY_OPTIONS.map((a) => ({
-    id: a.id,
-    label: a.label,
-    calories: roundCal(bmr * a.multiplier),
-    selected: a.id === inputs.activity,
-  }));
+  let formula: FormulaUsed;
+  let formulaLabel: string;
+  let bmr: number;
+  let tdee: number;
+  let bodyFat = inputs.bodyFat;
+  let activityRows: TdeeResult["activityRows"];
 
+  if (isYouth) {
+    // IOM EER already includes activity (PA) + growth — do not use adult BMR × multiplier.
+    bodyFat = null;
+    formula = "iom-eer";
+    formulaLabel = "IOM EER (ages 2–17)";
+    tdee = iomEerKcal(age, gender, weightKg, heightCm, activityMeta.id);
+    bmr = tdee; // EER is total daily energy, not resting BMR
+    const selected = activityForAge(age, inputs.activity);
+    activityRows = activityChoices(age).map((choice) => ({
+      id: choice.id,
+      label: choice.label,
+      calories: roundCal(iomEerKcal(age, gender, weightKg, heightCm, choice.id)),
+      selected: choice.id === selected,
+    }));
+  } else {
+    formula = bodyFat !== null ? "katch" : "mifflin";
+    formulaLabel = formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor";
+    bmr =
+      formula === "katch" && bodyFat !== null
+        ? katchMcArdle(weightKg, bodyFat)
+        : mifflinStJeor(weightKg, heightCm, age, gender);
+    tdee = bmr * activityMeta.multiplier;
+    activityRows = ACTIVITY_OPTIONS.map((a) => ({
+      id: a.id,
+      label: a.label,
+      calories: roundCal(bmr * a.multiplier),
+      selected: a.id === inputs.activity,
+    }));
+  }
+
+  const harris = isYouth ? 0 : harrisBenedictRevised(weightKg, heightCm, age, gender);
   const heightM = heightCm / 100;
   const bmi = weightKg / (heightM * heightM);
   const bmiCat = getBmiCategory(bmi);
@@ -272,6 +313,8 @@ function buildResult(
     ok: true,
     result: {
       formula,
+      formulaLabel,
+      isYouth,
       bmr: roundCal(bmr),
       harrisBenedict: roundCal(harris),
       tdee: roundCal(tdee),
@@ -290,9 +333,10 @@ function buildResult(
       age,
       gender,
       bodyFat,
-      cutCalories: roundCal(tdee * 0.8),
-      bulkCalories: roundCal(tdee * 1.15),
+      cutCalories: isYouth ? roundCal(tdee) : roundCal(tdee * 0.8),
+      bulkCalories: isYouth ? roundCal(tdee) : roundCal(tdee * 1.15),
       unitMode,
+      paLabel: activityPaLabel(gender, activityMeta.id),
     },
   };
 }
@@ -322,10 +366,15 @@ export default function TdeeCalculator() {
 
   const macroCalories = useMemo(() => {
     if (!result) return 0;
+    if (result.isYouth) return result.tdee;
     if (macroGoal === "cut") return result.cutCalories;
     if (macroGoal === "bulk") return result.bulkCalories;
     return result.tdee;
   }, [result, macroGoal]);
+
+  useEffect(() => {
+    if (result?.isYouth && macroGoal !== "maintain") setMacroGoal("maintain");
+  }, [result?.isYouth, macroGoal]);
 
   /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
   const run = (values: TdeeInputs, mode: UnitMode, silent = false) => {
@@ -376,6 +425,41 @@ export default function TdeeCalculator() {
       ? `${(kg / KG_PER_LB).toFixed(0)} lb`
       : `${kg.toFixed(0)} kg`;
 
+  const report: CalculatorReport | null = result
+    ? {
+        title: "TDEE & Calorie Report",
+        filename: "tdee-report",
+        summary: result.isYouth
+          ? `IOM EER ${result.tdee.toLocaleString("en-US")} kcal/day for a ${result.age}-year-old (${result.paLabel}).`
+          : `Maintenance ${result.tdee.toLocaleString("en-US")} kcal/day (${result.formulaLabel}).`,
+        lines: [
+          { label: "Age", value: `${result.age} years` },
+          { label: "Gender", value: result.gender === "male" ? "Male" : "Female" },
+          { label: "Weight", value: weightDisplay(result.weightKg) },
+          { label: "Height", value: `${result.heightCm.toFixed(1)} cm` },
+          { label: "Formula", value: result.formulaLabel },
+          ...(result.isYouth
+            ? [
+                { label: "IOM PA category", value: result.paLabel },
+                { label: "Estimated Energy Requirement", value: `${result.tdee.toLocaleString("en-US")} kcal/day` },
+              ]
+            : [
+                { label: "BMR", value: `${result.bmr.toLocaleString("en-US")} kcal/day` },
+                { label: "Harris–Benedict BMR", value: `${result.harrisBenedict.toLocaleString("en-US")} kcal/day` },
+                { label: "TDEE (maintain)", value: `${result.tdee.toLocaleString("en-US")} kcal/day` },
+                { label: "Cut target", value: `${result.cutCalories.toLocaleString("en-US")} kcal/day` },
+                { label: "Bulk target", value: `${result.bulkCalories.toLocaleString("en-US")} kcal/day` },
+              ]),
+          { label: "Weekly calories", value: `${result.weekly.toLocaleString("en-US")} kcal` },
+          { label: "BMI", value: `${result.bmi} (${result.bmiCategory})` },
+          ...(result.bodyFat !== null ? [{ label: "Body fat used", value: `${result.bodyFat}%` }] : []),
+        ],
+      }
+    : null;
+
+  const entryRanges = measurementRanges(inputs.age);
+  const youthEntry = inputs.age !== null && isYouthEnergyAge(inputs.age);
+
   return (
     <CalcLayout>
       <CalcForm>
@@ -410,7 +494,7 @@ export default function TdeeCalculator() {
             />
           </FieldShell>
           <FieldShell label="Age">
-            <NumberStepper value={inputs.age} min={15} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
+            <NumberStepper value={inputs.age} min={ENERGY_MIN_AGE} max={ENERGY_MAX_AGE} step={1} placeholder={30} onChange={(age) => update({ age })} />
           </FieldShell>
         </InputGroup>
 
@@ -420,22 +504,22 @@ export default function TdeeCalculator() {
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightKg}
-                  min={30}
-                  max={300}
+                  min={entryRanges.weight[0]}
+                  max={entryRanges.weight[1]}
                   step={0.5}
                   suffix="kg"
-                  placeholder={70}
+                  placeholder={youthEntry ? 14 : 70}
                   onChange={(weightKg) => update({ weightKg })}
                 />
               </FieldShell>
               <FieldShell label="Height">
                 <NumberStepper
                   value={inputs.heightCm}
-                  min={120}
-                  max={230}
+                  min={entryRanges.height[0]}
+                  max={entryRanges.height[1]}
                   step={1}
                   suffix="cm"
-                  placeholder={175}
+                  placeholder={youthEntry ? 95 : 175}
                   onChange={(heightCm) => update({ heightCm })}
                 />
               </FieldShell>
@@ -445,11 +529,11 @@ export default function TdeeCalculator() {
               <FieldShell label="Weight">
                 <NumberStepper
                   value={inputs.weightLb}
-                  min={66}
-                  max={660}
-                  step={1}
+                  min={youthEntry ? 11 : 66.1}
+                  max={youthEntry ? 440.9 : 661.4}
+                  step={0.5}
                   suffix="lb"
-                  placeholder={155}
+                  placeholder={youthEntry ? 31 : 155}
                   onChange={(weightLb) => update({ weightLb })}
                 />
               </FieldShell>
@@ -457,11 +541,11 @@ export default function TdeeCalculator() {
                 <div className="grid grid-cols-2 gap-2">
                   <NumberStepper
                     value={inputs.heightFeet}
-                    min={3}
+                    min={youthEntry ? 2 : 3}
                     max={7}
                     step={1}
                     suffix="ft"
-                    placeholder={5}
+                    placeholder={youthEntry ? 3 : 5}
                     onChange={(heightFeet) => update({ heightFeet })}
                   />
                   <NumberStepper
@@ -482,30 +566,38 @@ export default function TdeeCalculator() {
         <InputGroup step={3} title="Lifestyle">
           <FieldShell label="Activity">
             <CustomSelect
-              value={inputs.activity}
+              value={activityForAge(inputs.age, inputs.activity)}
               placeholder="Select activity level"
               onChange={(activity) => update({ activity: activity as ActivityId })}
-              options={ACTIVITY_OPTIONS.map((a) => ({ value: a.id, label: a.label }))}
+              options={activityChoices(inputs.age).map((choice) => ({ value: choice.id, label: choice.label }))}
             />
           </FieldShell>
 
-          <FieldShell label="Body fat % (optional)">
-            <NumberStepper
-              value={inputs.bodyFat}
-              min={1}
-              max={59}
-              step={0.5}
-              suffix="%"
-              placeholder={15}
-              onChange={(bodyFat) => update({ bodyFat })}
-            />
-            <p className="mt-1.5 text-xs leading-5 text-slate-600">Blank = Mifflin–St Jeor. With % = Katch–McArdle.</p>
-          </FieldShell>
+          {inputs.age !== null && isYouthEnergyAge(inputs.age) ? (
+            <ResultNote tone="info">
+              Under 18: calories use <strong>IOM EER</strong> (not Mifflin/Katch). Weight-cut/bulk goals stay off.
+            </ResultNote>
+          ) : (
+            <FieldShell label="Body fat % (optional)">
+              <NumberStepper
+                value={inputs.bodyFat}
+                min={1}
+                max={59}
+                step={0.5}
+                suffix="%"
+                placeholder={15}
+                onChange={(bodyFat) => update({ bodyFat })}
+              />
+              <p className="mt-1.5 text-xs leading-5 text-slate-600">
+                Blank = Mifflin–St Jeor. With % = Katch–McArdle. Ages 18+ only.
+              </p>
+            </FieldShell>
+          )}
         </InputGroup>
 
         <FormError message={error} />
 
-        <ActionBar onCalculate={calculate} onClear={clear} />
+        <ActionBar onCalculate={calculate} onClear={clear} report={report} />
       </CalcForm>
 
       <ResultCard
@@ -540,50 +632,71 @@ export default function TdeeCalculator() {
             {resultTab === "overview" ? (
               <>
                 <ResultHero
-                  label="Maintenance calories"
+                  label={result.isYouth ? "Estimated Energy Requirement" : "Maintenance calories"}
                   value={formatCalories(result.tdee)}
                   unit="kcal/day"
-                  badge={result.formula === "katch" ? "Katch–McArdle" : "Mifflin–St Jeor"}
+                  badge={result.formulaLabel}
                 >
                   {formatCalories(result.weekly)} kcal/week · {result.age} y/o{" "}
                   <span className="capitalize">{result.gender}</span> · {result.heightCm} cm · {result.weightKg} kg
+                  {result.isYouth ? ` · ${result.paLabel}` : ""}
                   {result.bodyFat !== null ? ` · ${result.bodyFat}% BF` : ""}
                 </ResultHero>
 
-                <StatGrid>
-                  <StatTile
-                    label="BMR"
-                    value={formatCalories(result.bmr)}
-                    hint={result.formula === "katch" ? "Katch–McArdle" : "Mifflin"}
-                  />
-                  <StatTile
-                    label="Harris–Benedict"
-                    value={formatCalories(result.harrisBenedict)}
-                    hint="Reference only"
-                  />
-                </StatGrid>
+                {result.isYouth ? (
+                  <>
+                    <StatGrid>
+                      <StatTile label="IOM EER" value={formatCalories(result.tdee)} hint={result.paLabel} />
+                      <StatTile label="Weekly energy" value={formatCalories(result.weekly)} hint="kcal / week" />
+                    </StatGrid>
+                    <ResultNote tone="info">
+                      Ages under 18 use the IOM Estimated Energy Requirement (EER), which already includes activity
+                      (PA) and growth. Adult cut/bulk targets are disabled for teens.
+                    </ResultNote>
+                  </>
+                ) : (
+                  <>
+                    <StatGrid>
+                      <StatTile
+                        label="BMR"
+                        value={formatCalories(result.bmr)}
+                        hint={result.formula === "katch" ? "Katch–McArdle" : "Mifflin"}
+                      />
+                      <StatTile
+                        label="Harris–Benedict"
+                        value={formatCalories(result.harrisBenedict)}
+                        hint="Reference only"
+                      />
+                    </StatGrid>
 
-                <SectionTitle title="Goal calories" />
-                <StatGrid columns={3}>
-                  <StatTile center tone="rose" label="Cut" value={formatCalories(result.cutCalories)} />
-                  <StatTile center tone="emerald" label="Maintain" value={formatCalories(result.tdee)} />
-                  <StatTile center tone="sky" label="Bulk" value={formatCalories(result.bulkCalories)} />
-                </StatGrid>
+                    <SectionTitle title="Goal calories" />
+                    <StatGrid columns={3}>
+                      <StatTile center tone="rose" label="Cut" value={formatCalories(result.cutCalories)} />
+                      <StatTile center tone="emerald" label="Maintain" value={formatCalories(result.tdee)} />
+                      <StatTile center tone="sky" label="Bulk" value={formatCalories(result.bulkCalories)} />
+                    </StatGrid>
 
-                {result.formula !== "katch" ? (
-                  <ResultNote tone="info">Add your body fat % to switch to the Katch–McArdle formula.</ResultNote>
-                ) : null}
+                    {result.formula !== "katch" ? (
+                      <ResultNote tone="info">Add your body fat % to switch to the Katch–McArdle formula.</ResultNote>
+                    ) : null}
+                  </>
+                )}
               </>
             ) : null}
 
             {resultTab === "activity" ? (
               <>
-                <SectionTitle title="Calories by activity" hint="Your activity level is highlighted." />
+                <SectionTitle
+                  title="Calories by activity"
+                  hint={result.isYouth ? "IOM EER at each PA level." : "Your activity level is highlighted."}
+                />
                 <ResultTable
                   caption="Calories by activity level"
                   align={["left", "right"]}
                   rows={[
-                    { key: "bmr", cells: ["Basal Metabolic Rate", formatCalories(result.bmr)] },
+                    ...(result.isYouth
+                      ? []
+                      : [{ key: "bmr", cells: ["Basal Metabolic Rate", formatCalories(result.bmr)] }]),
                     ...result.activityRows.map((row) => ({
                       key: row.id,
                       selected: row.selected,
@@ -596,18 +709,27 @@ export default function TdeeCalculator() {
 
             {resultTab === "macros" ? (
               <>
-                <SectionTitle title="Macronutrients" hint="Goal and carb style update grams instantly." />
-                <SegmentedControl
-                  label="Calorie goal"
-                  size="sm"
-                  options={[
-                    { value: "cut", label: "Cutting" },
-                    { value: "maintain", label: "Maintenance" },
-                    { value: "bulk", label: "Bulking" },
-                  ]}
-                  value={macroGoal}
-                  onChange={setMacroGoal}
+                <SectionTitle
+                  title="Macronutrients"
+                  hint={
+                    result.isYouth
+                      ? "Maintenance EER only — cut/bulk disabled under 18."
+                      : "Goal and carb style update grams instantly."
+                  }
                 />
+                {!result.isYouth ? (
+                  <SegmentedControl
+                    label="Calorie goal"
+                    size="sm"
+                    options={[
+                      { value: "cut", label: "Cutting" },
+                      { value: "maintain", label: "Maintenance" },
+                      { value: "bulk", label: "Bulking" },
+                    ]}
+                    value={macroGoal}
+                    onChange={setMacroGoal}
+                  />
+                ) : null}
                 <SegmentedControl
                   label="Carb style"
                   size="sm"

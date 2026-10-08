@@ -23,18 +23,19 @@ import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
 import {
   checkRange,
   CM_PER_IN,
-  formatCm,
-  formatFeetInches,
-  formatIn,
-  formatKg,
-  formatLb,
+  cmDisplay,
+  feetInchesDisplay,
   heightQuantity,
+  inDisplay,
   KG_PER_LB,
+  kgDisplay,
+  lbDisplay,
   lengthQuantity,
   useUnitConversion,
   weightQuantity,
 } from "../lib/units";
 import { validateFields, type FieldRule } from "../lib/validate";
+import type { CalculatorReport } from "./download-report";
 
 type UnitMode = "us" | "metric";
 type Gender = "male" | "female";
@@ -226,11 +227,11 @@ function readMeasurements(inputs: BodyFatInputs, unitMode: UnitMode, gender: Gen
         { label: "waist", value: inputs.waistCm },
         ...(needsHip ? [{ label: "hip", value: inputs.hipCm }] : []),
       ];
-  const length = imperial ? formatIn : formatCm;
+  const length = imperial ? inDisplay : cmDisplay;
   const error =
     validateFields(presence) ||
-    checkRange("weight", exact.weight!, RANGES.weight, imperial ? formatLb : formatKg) ||
-    checkRange("height", exact.height!, RANGES.height, imperial ? formatFeetInches : formatCm) ||
+    checkRange("weight", exact.weight!, RANGES.weight, imperial ? lbDisplay : kgDisplay) ||
+    checkRange("height", exact.height!, RANGES.height, imperial ? feetInchesDisplay : cmDisplay) ||
     checkRange("neck", exact.neck!, RANGES.neck, length) ||
     checkRange("waist", exact.waist!, RANGES.waist, length) ||
     (needsHip ? checkRange("hip", exact.hip!, RANGES.hip, length) : "");
@@ -437,6 +438,27 @@ export default function BodyFatCalculator() {
   const mass = (kg: number) =>
     displayUnits === "us" ? `${(kg / KG_PER_LB).toFixed(1)} lb` : `${kg.toFixed(1)} kg`;
 
+  const report: CalculatorReport | null = result
+    ? {
+        title: "Body Fat Percentage Report",
+        filename: "body-fat-report",
+        summary: `U.S. Navy body fat ${result.navyPct}% — ${result.category}.`,
+        lines: [
+          { label: "Gender", value: result.gender === "male" ? "Male" : "Female" },
+          { label: "Body fat (U.S. Navy)", value: `${result.navyPct}%` },
+          { label: "Category (ACE)", value: result.category },
+          { label: "Fat mass", value: mass(result.fatMassKg) },
+          { label: "Lean mass", value: mass(result.leanMassKg) },
+          { label: "Ideal body fat for age", value: `${result.idealPct}%` },
+          {
+            label: "Fat to lose to ideal",
+            value: result.fatToLoseKg > 0 ? mass(result.fatToLoseKg) : "At or below ideal",
+          },
+          { label: "Body fat (BMI method)", value: `${result.bmiPct}%` },
+        ],
+      }
+    : null;
+
   return (
     <CalcLayout>
       <CalcForm>
@@ -480,8 +502,8 @@ export default function BodyFatCalculator() {
             <FieldShell label="Weight">
               <NumberStepper
                 value={inputs.weightLb}
-                min={50}
-                max={700}
+                min={55.1}
+                max={705.5}
                 step={0.5}
                 suffix="lb"
                 placeholder={160}
@@ -610,7 +632,7 @@ export default function BodyFatCalculator() {
 
         <FormError message={error} />
 
-        <ActionBar onCalculate={calculate} onClear={clear} />
+        <ActionBar onCalculate={calculate} onClear={clear} report={report} />
       </CalcForm>
 
       <ResultCard

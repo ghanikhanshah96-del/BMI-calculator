@@ -22,6 +22,7 @@ import {
 } from "./calc-ui";
 import { CustomSelect, DatePicker, FieldShell, NumberStepper, useToday } from "./form-controls";
 import { validateFields } from "../lib/validate";
+import type { CalculatorReport } from "./download-report";
 
 type MethodId = "lmp" | "conception" | "ultrasound" | "ivf";
 type IvfEmbryo = "day3" | "day5";
@@ -263,6 +264,30 @@ export default function DueDateCalculator() {
     });
   };
 
+  const report: CalculatorReport | null = result
+    ? {
+        title: "Due Date Report",
+        filename: "due-date-report",
+        summary: `Estimated due date ${formatDate(result.dueDate)} (${result.methodLabel}).`,
+        lines: [
+          { label: "Method", value: result.methodLabel },
+          { label: "Estimated due date", value: formatDate(result.dueDate) },
+          { label: "Estimated conception", value: formatShort(result.conceptionEstimate) },
+          { label: "Estimated LMP", value: formatShort(result.lmpEstimate) },
+          {
+            label: "Gestational age today",
+            value: result.isPastDue
+              ? `Past due by ${result.daysPastDue} day(s)`
+              : `${result.gestationalWeeks} weeks, ${result.gestationalDays} days`,
+          },
+          { label: "Trimester", value: result.trimester },
+          ...(result.isPastDue
+            ? []
+            : [{ label: "Days remaining", value: String(result.daysRemaining) }]),
+        ],
+      }
+    : null;
+
   const clear = () => {
     setInputs(EMPTY_INPUTS);
     setError("");
@@ -357,7 +382,7 @@ export default function DueDateCalculator() {
 
         <FormError message={error} />
 
-        <ActionBar onCalculate={calculate} onClear={clear} />
+        <ActionBar onCalculate={calculate} onClear={clear} report={report} />
       </CalcForm>
 
       <ResultCard resultRef={resultRef}>
