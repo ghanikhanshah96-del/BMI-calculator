@@ -94,8 +94,8 @@ export default function CalculatorsView({
         title={title}
         description={
           <p>
-            Six free tools for weight, energy, and pregnancy planning. Pick a calculator below, or read the matching guide
-            to understand how each result is worked out.
+            Six free tools for weight, energy, and pregnancy planning. Pick a calculator below. The BMI article explains
+            why that number can miss muscle mass.
           </p>
         }
       >

@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
     return [
       { source: "/body-fat-calculator", destination: "/body-fat-percentage-calculator", permanent: true },
       { source: "/due-date-calculator", destination: "/pregnancy-due-date-calculator", permanent: true },
+      { source: "/blog/bmi", destination: "/blog/why-bmi-is-not-accurate-for-muscular-people", permanent: true },
+      { source: "/blog/body-fat", destination: "/blog/why-bmi-is-not-accurate-for-muscular-people", permanent: true },
+      { source: "/blog/tdee", destination: "/blog", permanent: true },
+      { source: "/blog/macro", destination: "/blog", permanent: true },
+      { source: "/blog/pregnancy", destination: "/blog", permanent: true },
+      { source: "/blog/ovulation", destination: "/blog", permanent: true },
       { source: "/about", destination: "/about-us", permanent: true },
       { source: "/contact", destination: "/contact-us", permanent: true },
       { source: "/privacy", destination: "/privacy-policy", permanent: true },

@@ -1217,6 +1217,14 @@ a {
     @apply mt-3 text-base leading-7 text-slate-700 sm:text-[1.0625rem] sm:leading-8;
   }
 
+  .article-figure {
+    @apply my-6 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200;
+  }
+
+  .article-caption {
+    @apply px-4 py-3 text-sm leading-6 text-slate-600;
+  }
+
   .card-tag {
     @apply absolute left-4 top-4 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white shadow-md;
   }

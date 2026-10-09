@@ -22,12 +22,10 @@ const groups: { id: string; title: string; links: FooterLink[] }[] = [
     id: "resources",
     title: "Resources",
     links: [
-      { href: "/blog/bmi", label: "BMI Guide" },
-      { href: "/blog/tdee", label: "TDEE & Calories" },
-      { href: "/blog/macro", label: "Macro Planning" },
-      { href: "/blog/body-fat", label: "Body Fat Guide" },
-      { href: "/blog/pregnancy", label: "Due Date Guide" },
-      { href: "/blog/ovulation", label: "Ovulation Guide" },
+      {
+        href: "/blog/why-bmi-is-not-accurate-for-muscular-people",
+        label: "Why BMI Is Not Accurate for Muscular People",
+      },
     ],
   },
   {

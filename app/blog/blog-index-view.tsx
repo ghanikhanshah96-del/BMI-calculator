@@ -8,34 +8,27 @@ import PageHero from "../components/page-hero";
 import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
-import { clusters, getToolLink, toolHref, toolLinksInCluster } from "../lib/tool-nav";
 import { postCards as posts } from "./post-cards";
 
-const startingPoints = [
+const nextSteps = [
   {
-    goal: "Checking your weight",
-    text: "Start with the BMI guide for the formula and categories, then read the body fat guide to see how much of your weight is lean mass.",
-    href: "/blog/bmi",
-    label: "Read the BMI guide",
+    title: "Check a BMI result",
+    text: "Use the BMI Calculator for a height-and-weight screening number, then read the article before treating that number as body fat.",
+    href: "/bmi-calculator",
+    label: "Open the BMI Calculator",
   },
   {
-    goal: "Losing fat or building muscle",
-    text: "Read the TDEE guide to find your maintenance calories, then the macro guide to turn that number into protein, carb, and fat targets.",
-    href: "/blog/tdee",
-    label: "Read the TDEE guide",
+    title: "Add a body-fat estimate",
+    text: "The Body Fat Percentage Calculator uses tape measurements and can add context when muscle makes BMI look high.",
+    href: "/body-fat-percentage-calculator",
+    label: "Open the Body Fat Percentage Calculator",
   },
   {
-    goal: "Planning or tracking a pregnancy",
-    text: "The ovulation guide explains the fertile window and cycle timing, and the due date guide covers LMP, ultrasound, and IVF dating.",
-    href: "/blog/ovulation",
-    label: "Read the ovulation guide",
+    title: "Browse every tool",
+    text: "Calories, macros, due date, and ovulation each have their own calculator page with instructions and limits.",
+    href: "/calculators",
+    label: "See all calculators",
   },
-];
-
-const guideParts = [
-  { title: "The formula", text: "Each guide shows the exact equation its calculator uses, with the units and constants spelled out." },
-  { title: "Reading the result", text: "Categories, ranges, and targets are explained in plain language so you know what your number means." },
-  { title: "Limits and next steps", text: "We list the situations where the estimate can mislead and point to the next useful tool or professional." },
 ];
 
 export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
@@ -55,93 +48,61 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
       <SiteHeader activePage="blog" />
       <div className="relative isolate flex flex-1 flex-col">
       <PageHero
-        image="/images/blog-hero.jpg"
-        imageAlt="Colorful bowl of fresh vegetables and greens"
+        image="/blog/adult-barbell-strength-training.jpg"
+        imageAlt=""
         eyebrow="Blog"
         icon={BookOpen}
-        title="Guides for every calculator"
-        description="Clear overviews of BMI, TDEE, body fat, macros, due date, and ovulation so you know what each tool measures and how to use results responsibly."
+        title="Health articles"
+        description="One published article explains why BMI can misclassify muscular people and which other measurements add context."
       >
         <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Blog", href: "/blog" }]} />
       </PageHero>
       <main className="page-main section-block relative z-10">
         <p className="body-copy">
-          Every guide explains the formula behind one calculator, walks through how to read your result, and covers the
-          situations where the number can mislead, such as a muscular build, pregnancy, or an irregular cycle. Read a
-          guide before or after using its calculator to get more out of your result.
+          BMI compares weight with height. It does not separate muscle from fat. The article below walks through the
+          formula, the standard adult categories, and the situations where a high result needs more than the BMI number.
         </p>
-        <div className="mt-12 space-y-16">
-          {clusters.map((cluster, clusterIndex) => {
-            const clusterPosts = posts.filter((post) => getToolLink(post.toolId).cluster === cluster.id);
-            return (
-              <section key={cluster.id} aria-labelledby={`blog-${cluster.id}`}>
-                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                  <div className="min-w-0 flex-1">
-                    <h2 id={`blog-${cluster.id}`} className="section-title">
-                      {cluster.title} guides
-                    </h2>
-                    <p className="muted-copy mt-1.5">{cluster.description}</p>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post, index) => (
+            <Reveal as="article" key={post.slug} delay={index * 110} className="h-full">
+              <Link href={`/blog/${post.slug}`} data-niche={post.toolId} className="spotlight group card-lift card-surface post-card">
+                <div className="relative aspect-[2/1] overflow-hidden bg-emerald-50">
+                  <Image
+                    src={post.image}
+                    alt={post.imageAlt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                    className="img-zoom object-cover"
+                    priority={index === 0}
+                  />
+                  <span className="card-tag">{post.toolLabel}</span>
+                </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <h2 className="card-title">{post.title}</h2>
+                  <p className="muted-copy mt-2 line-clamp-3">{post.excerpt}</p>
+                  <div className="mt-auto flex items-center justify-between pt-4">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                      Read article <ArrowRight className="arrow-nudge" />
+                    </span>
+                    <time dateTime={post.updatedAt} className="text-xs text-slate-500">
+                      Updated {post.updatedAt}
+                    </time>
                   </div>
-                  <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                    {toolLinksInCluster(cluster.id).map((tool) => (
-                      <Link key={tool.id} href={toolHref(tool)} data-niche={tool.id} className="niche-link link-grow font-semibold">
-                        {tool.name}
-                      </Link>
-                    ))}
-                  </p>
                 </div>
-                <div className="grid gap-7 sm:grid-cols-2">
-                  {clusterPosts.map((post, index) => (
-                    <Reveal as="article" key={post.slug} delay={index * 110} className="h-full">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        data-niche={post.toolId}
-                        className="spotlight group card-lift card-surface post-card"
-                      >
-                        <div className="relative aspect-video overflow-hidden bg-emerald-50">
-                          <Image
-                            src={post.image}
-                            alt={post.imageAlt}
-                            fill
-                            sizes="(max-width: 640px) 100vw, 50vw"
-                            className="img-zoom"
-                            fetchPriority={clusterIndex === 0 && index === 0 ? "high" : "auto"}
-                          />
-                          <span className="card-tag">{post.toolLabel}</span>
-                        </div>
-                        <div className="flex flex-1 flex-col p-6">
-                          <h3 className="card-title">
-                            {post.title}
-                          </h3>
-                          <p className="muted-copy mt-2">{post.excerpt}</p>
-                          <div className="mt-auto flex items-center justify-between pt-5">
-                            <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
-                              Read guide <ArrowRight className="arrow-nudge" />
-                            </span>
-                            <time dateTime={post.updatedAt} className="text-xs text-slate-500">
-                              Updated {post.updatedAt}
-                            </time>
-                          </div>
-                        </div>
-                      </Link>
-                    </Reveal>
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+              </Link>
+            </Reveal>
+          ))}
         </div>
 
-        <section aria-labelledby="start-here" className="section-gap">
-          <h2 id="start-here" className="section-title">
-            Not sure where to start?
+        <section aria-labelledby="next-steps" className="section-gap">
+          <h2 id="next-steps" className="section-title">
+            Use a calculator with the article
           </h2>
-          <p className="muted-copy mt-2">Pick the goal that fits you best and follow the suggested reading order.</p>
           <ul className="mt-6 grid gap-5 md:grid-cols-3">
-            {startingPoints.map((item, index) => (
-              <Reveal as="li" key={item.goal} delay={index * 90} className="h-full">
+            {nextSteps.map((item, index) => (
+              <Reveal as="li" key={item.title} delay={index * 90} className="h-full">
                 <div className="card-surface flex h-full flex-col p-6">
-                  <h3 className="text-lg font-semibold">{item.goal}</h3>
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
                   <p className="muted-copy mt-2">{item.text}</p>
                   <Link href={item.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700">
                     {item.label}
@@ -151,25 +112,6 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
               </Reveal>
             ))}
           </ul>
-        </section>
-
-        <section aria-labelledby="guide-structure" className="section-gap">
-          <h2 id="guide-structure" className="section-title">
-            How each guide is structured
-          </h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {guideParts.map((part, index) => (
-              <Reveal key={part.title} delay={index * 90} className="card-surface flex h-full gap-4 p-6">
-                <span className="icon-badge brand-badge text-sm font-semibold" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3 className="font-semibold text-slate-900">{part.title}</h3>
-                  <p className="muted-copy mt-1">{part.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </section>
       </main>
       </div>

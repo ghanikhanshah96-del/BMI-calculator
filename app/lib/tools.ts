@@ -35,7 +35,7 @@ export const tools: Tool[] = [
       "BMI calculator kg and cm",
       "BMI calculator pounds and inches",
     ],
-    guideSlug: "bmi",
+    guideSlug: "why-bmi-is-not-accurate-for-muscular-people",
     relatedToolIds: ["body-fat", "tdee", "macro"],
   },
   {

@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import Breadcrumbs from "../../components/breadcrumbs";
+import { Inline } from "../../components/content-blocks";
 import DocNav from "../../components/doc-nav";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
@@ -11,27 +11,9 @@ import Reveal from "../../components/reveal";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { organizationRef } from "../../lib/seo";
-import { getPostBySlug, type BlogPost } from "../posts";
+import { getPostBySlug, plainPostText, type PostBlock, type PostFigure } from "../posts";
 
-const INLINE_LINK = /\[([^\]]+)\]\((\/[^)\s]*)\)/g;
 const ctaLink = "font-semibold text-white underline decoration-white/50 underline-offset-4 hover:decoration-white";
-
-function renderInline(text: string): ReactNode[] {
-  const nodes: ReactNode[] = [];
-  let lastIndex = 0;
-  for (const match of text.matchAll(INLINE_LINK)) {
-    const [raw, label, href] = match;
-    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
-    nodes.push(
-      <Link key={`${href}-${match.index}`} href={href} className="content-link">
-        {label}
-      </Link>,
-    );
-    lastIndex = match.index + raw.length;
-  }
-  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
-  return nodes;
-}
 
 function sectionId(heading: string) {
   return heading
@@ -40,31 +22,128 @@ function sectionId(heading: string) {
     .replace(/^-|-$/g, "");
 }
 
+function ArticleFigure({ figure, priority = false }: { figure: PostFigure; priority?: boolean }) {
+  return (
+    <figure className="article-figure">
+      <Image
+        src={figure.src}
+        alt={figure.alt}
+        width={figure.width}
+        height={figure.height}
+        sizes="(max-width: 768px) 100vw, 720px"
+        priority={priority}
+        className="h-auto w-full"
+      />
+      <figcaption className="article-caption">
+        <Inline text={figure.caption} />
+      </figcaption>
+    </figure>
+  );
+}
+
+function ArticleBlocks({ blocks, priorityFirstFigure = false }: { blocks: PostBlock[]; priorityFirstFigure?: boolean }) {
+  const firstFigure = priorityFirstFigure ? blocks.findIndex((block) => block.kind === "figure") : -1;
+  return (
+    <>
+      {blocks.map((block, index) => {
+        if (block.kind === "p") {
+          return (
+            <p key={`p-${index}`} className="post-copy">
+              <Inline text={block.text} />
+            </p>
+          );
+        }
+        if (block.kind === "h3") {
+          return (
+            <h3 key={`h3-${index}`} id={sectionId(block.text)} className="mt-8 text-xl font-semibold text-slate-900">
+              {block.text}
+            </h3>
+          );
+        }
+        if (block.kind === "list") {
+          const List = block.ordered ? "ol" : "ul";
+          return (
+            <List key={`list-${index}`} className={block.ordered ? "calc-list mt-4" : "dot-list mt-4"}>
+              {block.items.map((item) => (
+                <li key={item}>
+                  <Inline text={item} />
+                </li>
+              ))}
+            </List>
+          );
+        }
+        if (block.kind === "table") {
+          return (
+            <div key={`table-${index}`} className="data-table-wrap my-6">
+              <table className="data-table">
+                <caption>{block.caption}</caption>
+                <thead>
+                  <tr>
+                    {block.head.map((cell) => (
+                      <th key={cell} scope="col">
+                        {cell}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row) => (
+                    <tr key={row.join("|")}>
+                      {row.map((cell, cellIndex) =>
+                        cellIndex === 0 ? (
+                          <th key={cell} scope="row">
+                            {cell}
+                          </th>
+                        ) : (
+                          <td key={cell}>{cell}</td>
+                        ),
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+        return <ArticleFigure key={block.figure.src} figure={block.figure} priority={index === firstFigure} />;
+      })}
+    </>
+  );
+}
+
 export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: string }) {
   const post = getPostBySlug(slug);
   if (!post) return null;
-  const related = post.relatedSlugs
-    .map((relatedSlug) => getPostBySlug(relatedSlug))
-    .filter((item): item is BlogPost => Boolean(item));
   const contents = [
     { id: "takeaways-section", label: "Key takeaways" },
     ...post.sections.map((section) => ({ id: sectionId(section.heading), label: section.heading })),
-    { id: "questions", label: "Common questions" },
+    { id: "questions", label: "Frequently Asked Questions" },
   ];
   const postUrl = `${siteUrl}/blog/${post.slug}`;
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.description,
-    image: [`${siteUrl}${post.image}`],
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt,
-    author: organizationRef(siteUrl),
-    publisher: organizationRef(siteUrl),
-    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl, name: post.title, url: postUrl },
-    keywords: post.keywords.join(", "),
-  };
+  const articleJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      image: [`${siteUrl}${post.image}`],
+      datePublished: post.publishedAt,
+      dateModified: post.updatedAt,
+      author: organizationRef(siteUrl),
+      publisher: organizationRef(siteUrl),
+      mainEntityOfPage: { "@type": "WebPage", "@id": postUrl, name: post.title, url: postUrl },
+      keywords: post.keywords.join(", "),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: post.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: plainPostText(faq.answer) },
+      })),
+    },
+  ];
 
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
@@ -72,7 +151,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
       <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image={post.image}
-        imageAlt={post.imageAlt}
+        imageAlt=""
         eyebrow={post.toolLabel}
         icon={BookOpen}
         title={post.title}
@@ -91,7 +170,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
           siteUrl={siteUrl}
           items={[
             { name: "Blog", href: "/blog" },
-            { name: `${post.toolLabel} guide`, href: `/blog/${post.slug}` },
+            { name: post.title, href: `/blog/${post.slug}` },
           ]}
         />
       </PageHero>
@@ -99,6 +178,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
       <main className="page-main section-block relative z-10">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
           <article className="min-w-0">
+            <ArticleBlocks blocks={post.intro} priorityFirstFigure />
             <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
                 Key takeaways
@@ -117,23 +197,21 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 <Reveal key={section.heading} delay={Math.min(index, 2) * 60}>
                   <section id={sectionId(section.heading)} className="card-surface scroll-mt-28 p-6 sm:p-8">
                     <h2 className="section-title">{section.heading}</h2>
-                    {section.paragraphs.map((paragraph) => (
-                      <p key={paragraph.slice(0, 24)} className="post-copy">
-                        {renderInline(paragraph)}
-                      </p>
-                    ))}
+                    <ArticleBlocks blocks={section.blocks} />
                   </section>
                 </Reveal>
               ))}
               <section id="questions" aria-labelledby="common-questions" className="scroll-mt-28">
                 <h2 id="common-questions" className="section-title">
-                  Common questions
+                  Frequently Asked Questions
                 </h2>
                 <div className="mt-5 grid gap-4">
                   {post.faqs.map((faq) => (
                     <article key={faq.question} className="card-surface p-5 sm:p-6">
                       <h3 className="text-lg font-semibold text-slate-900">{faq.question}</h3>
-                      <p className="body-copy mt-2">{renderInline(faq.answer)}</p>
+                      <p className="body-copy mt-2">
+                        <Inline text={faq.answer} />
+                      </p>
                     </article>
                   ))}
                 </div>
@@ -146,7 +224,8 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
               <div className="cta-glow" />
               <h2 className="text-xl text-white sm:text-2xl">Try the {post.toolLabel}</h2>
               <p className="mt-2 text-sm leading-6 text-emerald-50">
-                Put this guide into practice with the free {post.toolLabel} and get an instant educational estimate.
+                Use the free {post.toolLabel} to see your screening result, then read it alongside the limits explained
+                in this article.
               </p>
               <Link href={post.toolHref} className="group cta-button">
                 Open the {post.toolLabel}
@@ -162,45 +241,10 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
             </div>
 
             <div className="sticky top-24 hidden lg:block">
-              <DocNav items={contents} title="In this guide" />
+              <DocNav items={contents} title="In this article" />
             </div>
           </aside>
         </div>
-
-        {related.length > 0 && (
-          <aside className="section-gap">
-            <h2 className="text-2xl text-slate-900">Related guides</h2>
-            <ul className="mt-6 grid gap-5 sm:grid-cols-3">
-              {related.map((item) => (
-                <li key={item.slug}>
-                  <Link
-                    href={`/blog/${item.slug}`}
-                    data-niche={item.toolId}
-                    className="spotlight group card-lift card-surface post-card"
-                  >
-                    <div className="relative aspect-16/10 overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.imageAlt}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 33vw"
-                        className="img-zoom"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <span className="niche-link text-xs font-semibold uppercase tracking-[0.12em]">
-                        {item.toolLabel}
-                      </span>
-                      <span className="mt-1.5 text-sm font-semibold leading-snug text-slate-800 group-hover:text-emerald-800">
-                        {item.title}
-                      </span>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        )}
       </main>
       </div>
       <SiteFooter />

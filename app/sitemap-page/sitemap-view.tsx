@@ -102,8 +102,8 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
           <div className="mt-3 grid gap-x-10 gap-y-3 lg:grid-cols-2">
             <p className="body-copy">
               Every calculator has its own page with the tool, step-by-step instructions, the formula it uses, a worked
-              example, and answers to common questions. Each calculator is paired with an in-depth guide on the blog that
-              explains the science and the limits of the result in more detail.
+              example, and answers to common questions. The blog publishes an article on why BMI is not accurate for
+              muscular people and how to read that result with other measurements.
             </p>
             <p className="body-copy">
               The tools are grouped into three areas: weight and body composition (BMI and body fat), energy and
@@ -123,8 +123,8 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
           items={toolItems}
         />
         <SitemapSection
-          title="Calculator guides"
-          intro="In-depth articles that explain the formula behind each calculator, how to interpret your numbers, and when to talk to a professional."
+          title="Articles"
+          intro="Published articles that explain a calculator result, its limits, and when another measurement adds useful context."
           items={guideItems}
         />
       </main>

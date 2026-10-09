@@ -22,11 +22,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return pageMetadata({
     title: post.metaTitle,
+    absoluteTitle: post.metaTitleAbsolute,
     description: post.description,
     path: `/blog/${post.slug}`,
     keywords: post.keywords,
     type: "article",
-    image: { url: post.image, alt: post.imageAlt },
+    image: { url: post.image, alt: post.imageAlt, width: 1023, height: 682 },
     article: { publishedTime: post.publishedAt, modifiedTime: post.updatedAt, section: post.toolLabel },
   });
 }

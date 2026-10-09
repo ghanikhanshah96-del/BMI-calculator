@@ -8,7 +8,7 @@ import CalculatorsView from "./calculators-view";
 
 const title = "All Fitness Calculators";
 const description =
-  "Browse every free calculator on FitnessCalculatorPro.com: BMI, body fat, TDEE, macros, due date, and ovulation, grouped by goal with a guide for each.";
+  "Browse every free calculator on FitnessCalculatorPro.com: BMI, body fat, TDEE, macros, due date, and ovulation, grouped by goal.";
 
 export const metadata: Metadata = pageMetadata({ title, description, path: "/calculators" });
 

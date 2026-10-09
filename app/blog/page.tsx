@@ -4,18 +4,15 @@ import { getSiteUrl } from "../lib/site-url";
 import BlogIndexView from "./blog-index-view";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Health Calculator Blog",
+  title: "BMI and Muscular People",
   description:
-    "In-depth guides for BMI, TDEE, body fat, macros, pregnancy due date, and ovulation calculators from FitnessCalculatorPro.com.",
+    "Read why BMI is not accurate for muscular people, how muscle mass affects the result, and which other measurements can add context.",
   path: "/blog",
-  keywords: [
-    "BMI blog",
-    "TDEE guide",
-    "body fat guide",
-    "macro planner guide",
-    "due date guide",
-    "ovulation guide",
-  ],
+  keywords: ["BMI muscular people", "why BMI is not accurate", "muscle mass and BMI", "BMI vs body fat"],
+  image: {
+    url: "/blog/adult-barbell-strength-training.jpg",
+    alt: "Adult in athletic clothes lifting a barbell from the floor during strength training",
+  },
 });
 
 export default function BlogIndexPage() {

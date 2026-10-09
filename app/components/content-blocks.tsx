@@ -1,6 +1,6 @@
 import "./content-blocks.css";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import type { ContentBlock, ContentTable } from "../lib/content/blocks";
 import { ArrowRight } from "./icons";
 
@@ -10,7 +10,22 @@ function plainLength(text: string) {
   return text.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").length;
 }
 
-/** Renders `**bold**` as <strong> and `[label](/path)` as a link; everything else is plain text. */
+function TextLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+  if (/^https?:\/\//i.test(href)) {
+    return (
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
+/** Renders `**bold**` as <strong> and `[label](url)` as a link; everything else is plain text. */
 export function Inline({ text }: { text: string }) {
   return text.split(INLINE_TOKEN).map((part, index) => {
     if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
@@ -19,18 +34,18 @@ export function Inline({ text }: { text: string }) {
       const link = inner.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (link) {
         return (
-          <Link key={index} href={link[2]} className="inline-link">
+          <TextLink key={index} href={link[2]} className="inline-link">
             <strong>{link[1]}</strong>
-          </Link>
+          </TextLink>
         );
       }
       return <strong key={index}>{inner}</strong>;
     }
     const [, label, href] = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/) ?? [];
     return (
-      <Link key={index} href={href} className="inline-link">
+      <TextLink key={index} href={href} className="inline-link">
         {label}
-      </Link>
+      </TextLink>
     );
   });
 }
