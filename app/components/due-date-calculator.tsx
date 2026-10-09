@@ -301,7 +301,6 @@ export default function DueDateCalculator() {
           icon={CalendarHeart}
           niche="pregnancy"
           eyebrow="Due date"
-          title="Pregnancy timeline"
           description="Estimate your due date, gestational age, and trimester."
         />
 

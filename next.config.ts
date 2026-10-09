@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/body-fat-calculator", destination: "/body-fat-percentage-calculator", permanent: true },
+      { source: "/due-date-calculator", destination: "/pregnancy-due-date-calculator", permanent: true },
       { source: "/about", destination: "/about-us", permanent: true },
       { source: "/contact", destination: "/contact-us", permanent: true },
       { source: "/privacy", destination: "/privacy-policy", permanent: true },

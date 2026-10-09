@@ -165,7 +165,7 @@ export default function SiteHeader({
                         <span className="icon-badge menu-tool-icon">
                           <tool.icon className="h-4 w-4" aria-hidden="true" />
                         </span>
-                        <span className="font-semibold">{tool.name}</span>
+                        <span className="min-w-0 font-semibold leading-snug">{tool.name}</span>
                       </Link>
                     </li>
                   ))}
@@ -237,7 +237,7 @@ export default function SiteHeader({
                       <span className="mobile-tool-icon">
                         <tool.icon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                      <span className="mobile-tool-name">{tool.shortName}</span>
+                      <span className="mobile-tool-name">{tool.name}</span>
                       <span className="mobile-tool-hint">{tool.hint}</span>
                     </Link>
                   </li>

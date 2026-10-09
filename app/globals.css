@@ -921,7 +921,7 @@ a {
   }
 
   .mobile-tool-name {
-    @apply text-sm font-semibold text-slate-900;
+    @apply text-sm font-semibold leading-snug text-slate-900;
   }
 
   .mobile-tool-hint {

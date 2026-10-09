@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
       {
         question: "Why is my BMI high when I exercise a lot?",
         answer:
-          "Muscle is dense, so people who lift weights or play power sports can weigh more than the BMI chart expects for their height. A waist measurement or the [body fat calculator](/body-fat-calculator) shows whether the extra weight is mostly lean tissue.",
+          "Muscle is dense, so people who lift weights or play power sports can weigh more than the BMI chart expects for their height. A waist measurement or the [Body Fat Percentage Calculator](/body-fat-percentage-calculator) shows whether the extra weight is mostly lean tissue.",
       },
       {
         question: "How often should I check my BMI?",
@@ -148,7 +148,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Katch–McArdle (with body fat %)",
         paragraphs: [
           "When you enter body fat percentage, we switch to Katch–McArdle: BMR = 370 + 21.6 × lean body mass (kg). Lean mass = weight × (1 − body fat ÷ 100).",
-          "This is often more accurate for people who know their body composition, and you can [measure body fat with a tape](/body-fat-calculator) in a few minutes. We also show Revised Harris–Benedict as a secondary reference.",
+          "This is often more accurate for people who know their body composition, and you can [measure body fat with a tape](/body-fat-percentage-calculator) in a few minutes. We also show Revised Harris–Benedict as a secondary reference.",
         ],
       },
       {
@@ -232,7 +232,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Measurement tips",
         paragraphs: [
           "Measure at the same time of day, stand relaxed, and keep the tape level. For men, measure waist at the navel level (or as instructed by your protocol). Consistency beats perfection.",
-          "Enter your measurements in the [body fat calculator](/body-fat-calculator) to see fat mass, lean mass, and your category.",
+          "Enter your measurements in the [Body Fat Percentage Calculator](/body-fat-percentage-calculator) to see fat mass, lean mass, and your category.",
         ],
       },
       {
@@ -332,7 +332,7 @@ export const blogPosts: BlogPost[] = [
       {
         question: "How many weeks pregnant am I?",
         answer:
-          "Gestational age is counted from the first day of your last period, not from conception. Two weeks after conception you are already considered about four weeks pregnant. The [due date calculator](/due-date-calculator) shows your current week and trimester.",
+          "Gestational age is counted from the first day of your last period, not from conception. Two weeks after conception you are already considered about four weeks pregnant. The [Pregnancy Due Date Calculator](/pregnancy-due-date-calculator) shows your current week and trimester.",
       },
       {
         question: "Which is more accurate, LMP or ultrasound dating?",
@@ -376,7 +376,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Who it is for",
         paragraphs: [
-          "People planning or tracking a pregnancy who want a clear educational estimate from the [due date calculator](/due-date-calculator). Always confirm dating with prenatal care providers and ultrasound when available.",
+          "People planning or tracking a pregnancy who want a clear educational estimate from the [Pregnancy Due Date Calculator](/pregnancy-due-date-calculator). Always confirm dating with prenatal care providers and ultrasound when available.",
           "Still trying to conceive? The [ovulation calculator](/ovulation-calculator) estimates your fertile window and next six cycles.",
         ],
       },

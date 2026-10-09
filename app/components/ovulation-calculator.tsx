@@ -181,7 +181,6 @@ export default function OvulationCalculator() {
           icon={Sparkles}
           niche="ovulation"
           eyebrow="Ovulation"
-          title="Fertile window"
           description="Predict ovulation, your fertile days, and the next six cycles."
         />
 

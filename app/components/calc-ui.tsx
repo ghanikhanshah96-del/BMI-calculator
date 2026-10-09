@@ -3,6 +3,7 @@
 import { Eraser, Play, Sparkles, type IconComponent } from "./icons";
 import type { CSSProperties, ReactNode, Ref, RefObject } from "react";
 import { ResultReportActions, type CalculatorReport } from "./download-report";
+import { getToolLink, type ToolId } from "../lib/tool-nav";
 
 export function CalcLayout({ children }: { children: ReactNode }) {
   return (
@@ -19,24 +20,24 @@ export function CalcForm({ children }: { children: ReactNode }) {
 export function CalcHeader({
   icon: Icon,
   eyebrow,
-  title,
   description,
   niche,
 }: {
   icon: IconComponent;
   eyebrow: string;
-  title: string;
   description?: string;
-  niche?: string;
+  niche: ToolId;
 }) {
+  const name = getToolLink(niche).name;
+
   return (
     <div className="flex items-start gap-3.5">
       <span data-niche={niche} className="icon-badge h-12 w-12 flex-none rounded-2xl">
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">{eyebrow}</p>
-        <h2 className="text-xl font-semibold leading-tight text-slate-950 sm:text-2xl">{title}</h2>
+        <h1 className="text-balance text-xl font-semibold leading-snug text-slate-950 sm:text-2xl">{name}</h1>
         {description ? (
           <p className="mt-1 text-sm leading-6 text-slate-600">{description}</p>
         ) : null}

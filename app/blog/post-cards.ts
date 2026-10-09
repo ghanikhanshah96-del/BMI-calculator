@@ -43,8 +43,8 @@ export const postCards: PostCard[] = [
     excerpt:
       "See how the DoD/U.S. Navy circumference method estimates body fat from waist, neck, height (and hips for women), and when tape measurements help.",
     toolId: "body-fat",
-    toolLabel: "Body Fat Calculator",
-    toolHref: "/body-fat-calculator",
+    toolLabel: "Body Fat Percentage Calculator",
+    toolHref: "/body-fat-percentage-calculator",
     updatedAt: "2026-09-30",
     image: "/blog/body-fat.jpg",
     imageAlt: "Measuring tape used for waist circumference body composition",
@@ -67,8 +67,8 @@ export const postCards: PostCard[] = [
     excerpt:
       "Estimate your due date from LMP, conception, ultrasound dating, or IVF transfer, then see gestational age, trimester, and days remaining.",
     toolId: "pregnancy",
-    toolLabel: "Due Date Calculator",
-    toolHref: "/due-date-calculator",
+    toolLabel: "Pregnancy Due Date Calculator",
+    toolHref: "/pregnancy-due-date-calculator",
     updatedAt: "2026-09-30",
     image: "/blog/pregnancy.jpg",
     imageAlt: "Calendar and prenatal planning for pregnancy due date",

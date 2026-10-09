@@ -37,7 +37,7 @@ export const toolLinks: ToolLink[] = [
   },
   {
     id: "body-fat",
-    slug: "body-fat-calculator",
+    slug: "body-fat-percentage-calculator",
     name: "Body Fat Percentage Calculator",
     shortName: "Body Fat",
     cluster: "body",
@@ -67,7 +67,7 @@ export const toolLinks: ToolLink[] = [
   },
   {
     id: "pregnancy",
-    slug: "due-date-calculator",
+    slug: "pregnancy-due-date-calculator",
     name: "Pregnancy Due Date Calculator",
     shortName: "Due Date",
     cluster: "pregnancy",

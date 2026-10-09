@@ -467,7 +467,6 @@ export default function TdeeCalculator() {
           icon={Activity}
           niche="tdee"
           eyebrow="TDEE"
-          title="Daily energy needs"
           description="Estimate maintenance calories, BMR, and goal targets."
         />
 

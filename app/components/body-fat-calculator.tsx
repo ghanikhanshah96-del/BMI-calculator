@@ -466,7 +466,6 @@ export default function BodyFatCalculator() {
           icon={HeartPulse}
           niche="body-fat"
           eyebrow="Body fat"
-          title="Body composition"
           description="U.S. Navy tape-measure method with ACE categories."
         />
 

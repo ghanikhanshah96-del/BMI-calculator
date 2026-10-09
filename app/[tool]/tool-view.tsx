@@ -70,7 +70,6 @@ export default function ToolView({
           <HeroBackdrop />
         </div>
       <main className="page-main relative z-10 flex-1 pb-12 lg:pb-16">
-        <h1 className="sr-only">{tool.name}</h1>
         <Breadcrumbs
           siteUrl={siteUrl}
           items={[

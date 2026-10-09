@@ -285,7 +285,7 @@ export const ovulation: ToolContent = {
       p("The **Ovulation Calculator** gives you a simple way to estimate your next ovulation date, fertile window, and most fertile days using your menstrual cycle information."),
       p("Use your result as a planning estimate—not confirmation that ovulation will happen on a specific date."),
       action("Enter the first day of your last period and your average cycle length in the calculator above to calculate your fertile window."),
-      p("If you are trying to conceive, you may also find our [Pregnancy Due Date Calculator](/due-date-calculator) and **Pregnancy Calculator** useful after a positive pregnancy test."),
+      p("If you are trying to conceive, you may also find our [Pregnancy Due Date Calculator](/pregnancy-due-date-calculator) and **Pregnancy Calculator** useful after a positive pregnancy test."),
     ]),
   ],
   faqs: [

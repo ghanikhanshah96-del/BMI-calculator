@@ -696,7 +696,6 @@ export default function BmiCalculator() {
           icon={Scale}
           niche="bmi"
           eyebrow="BMI"
-          title="Body Mass Index"
           description="Check your BMI category and healthy weight range in seconds."
         />
 
