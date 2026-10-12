@@ -45,7 +45,7 @@ export const tools: Tool[] = [
     metaTitle: "Body Fat Percentage Calculator – Estimate Your Body Fat",
     metaTitleAbsolute: true,
     metaDescription:
-      "Use our Body Fat Percentage Calculator to estimate your body fat, understand body fat ranges for men and women.",
+      "Estimate body fat with the U.S. Navy method for adults and RFMp/RFM height-to-waist estimates for ages 8–17.",
     keywords: [
       "Body Fat Percentage Calculator",
       "Body Fat Calculator",
@@ -57,6 +57,9 @@ export const tools: Tool[] = [
       "body composition calculator",
       "BMI vs body fat",
       "body fat measurement",
+      "pediatric body fat",
+      "RFMp",
+      "relative fat mass",
     ],
     guideSlug: "body-fat",
     relatedToolIds: ["bmi", "tdee", "macro"],

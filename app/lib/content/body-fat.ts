@@ -1,9 +1,10 @@
 import { faqSection, p, section, table, ul, type ToolContent } from "./blocks";
 
 export const bodyFat: ToolContent = {
-  intro: "Use our Body Fat Percentage Calculator to estimate your body fat, understand body fat ranges for men and women.",
+  intro: "Use our Body Fat Percentage Calculator to estimate body fat for adults (U.S. Navy) and ages 8–17 (RFMp/RFM).",
   lead: [
     p("Use our **Body Fat Percentage Calculator** to estimate how much of your total body weight is made up of fat. Enter the measurements requested in the calculator above to get an estimated body fat percentage and a clearer picture of your body composition."),
+    p("**Adults 18+** use the U.S. Navy circumference method. **Ages 8–17** use Relative Fat Mass pediatric (RFMp) or adult RFM equations based on height-to-waist ratio, shown as an estimated range rather than a single hard number."),
     p("Body fat percentage can provide information that body weight alone cannot. Two people can weigh the same but have very different proportions of fat, muscle, bone, and other lean tissue."),
     p("Your result should be treated as an **estimate rather than a medical diagnosis**. Home body fat calculators and circumference-based methods are useful for tracking general changes, but their accuracy depends on the formula used and how carefully your measurements are taken."),
   ],
@@ -25,12 +26,29 @@ export const bodyFat: ToolContent = {
       "how-to",
       "How to Use the Body Fat Percentage Calculator",
       [
-        p("To calculate body fat percentage, enter the measurements requested by the calculator as accurately as possible."),
-        p("Depending on the method used by the calculator, you may be asked for measurements such as:"),
-        ul("Sex", "Age", "Height", "Weight", "Waist circumference", "Neck circumference", "Hip circumference"),
-        p("Once you enter the required information, select **Calculate** to see your estimated body fat percentage. Measure the same way each time: a snug tape on bare skin, at the same spot, without pulling the stomach in."),
+        p("To calculate body fat percentage, enter the measurements requested by the calculator as accurately as possible. The fields change with age:"),
+        ul(
+          "Ages 8–17: sex, age, height, weight, and waist (measure at the top of the hip bone / navel level)",
+          "Ages 18+: sex, age, height, weight, neck, waist, and hip (women)",
+        ),
+        p("For children and teens, you can also mark if the child is heavily active or in competitive athletics. When that option is selected, the calculator does not show a body fat percentage because muscle development can skew height-to-waist equations."),
+        p("Once you enter the required information, select **Calculate**. Measure the same way each time: a snug tape on bare skin, at the same spot, without pulling the stomach in."),
       ],
       { nav: "How to use", tone: "brand" },
+    ),
+    section(
+      "pediatric-rfmp",
+      "Body Fat Estimates for Ages 8–17 (RFMp / RFM)",
+      [
+        p("For ages **8–17**, this calculator uses Relative Fat Mass equations validated against DXA in NHANES research (Woolcott & Bergman). The estimate relies on the **height-to-waist ratio** and sex—not BMI."),
+        ul(
+          "Ages 8–14: RFMp = 74 − (22 × height/waist) + (5 × sex)",
+          "Ages 15–17: RFM = 64 − (20 × height/waist) + (12 × sex)",
+        ),
+        p("Sex is coded as 0 for boys and 1 for girls. Height and waist must use the same units (cm or inches). Results are shown as an **estimated range** (about ±2 percentage points) to reflect screening uncertainty."),
+        p("Below age 8, automated public equations are not offered here—body fat fluctuates too much for responsible online estimation. For weight-for-height screening in children, use our [BMI Calculator](/bmi-calculator), which includes CDC BMI-for-age percentiles."),
+      ],
+      { nav: "Ages 8–17" },
     ),
     section(
       "body-fat-chart",
@@ -167,7 +185,12 @@ export const bodyFat: ToolContent = {
     {
       question: "Is a body fat calculator accurate for athletes?",
       answer:
-        "Results may be less representative for people whose body composition differs substantially from the population on which a particular formula was developed.\n\nHighly muscular athletes should therefore interpret calculator results cautiously and may benefit from a professional body-composition assessment when precision is important.",
+        "Results may be less representative for people whose body composition differs substantially from the population on which a particular formula was developed.\n\nHighly muscular athletes should therefore interpret calculator results cautiously and may benefit from a professional body-composition assessment when precision is important. For ages 8–17, the calculator can suppress a percentage entirely when competitive athletics or high muscularity is indicated.",
+    },
+    {
+      question: "Can this calculator estimate body fat for children and teens?",
+      answer:
+        "Yes, for ages 8–17 it uses pediatric Relative Fat Mass (RFMp) for ages 8–14 and the adult RFM equation for ages 15–17, based on height and waist circumference.\n\nResults are shown as an estimated range for general screening only and are not a medical diagnosis. Below age 8, the tool does not provide an automated body fat estimate.",
     },
     {
       question: "Does body fat percentage increase with age?",
