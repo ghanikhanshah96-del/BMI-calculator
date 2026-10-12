@@ -79,7 +79,8 @@ function buildCycle(periodStart: Date, cycleLength: number): CycleRow {
   const fertileEnd = addDays(ovulationPeak, 1);
   const pregnancyTest = addDays(ovulationPeak, 10);
   const nextPeriod = addDays(periodStart, cycleLength);
-  const dueDate = addDays(periodStart, 280);
+  // Conception is estimated at ovulation; pregnancy dating from conception is ~266 days.
+  const dueDate = addDays(ovulationPeak, 266);
 
   return {
     periodStart,

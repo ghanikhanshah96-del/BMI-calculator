@@ -232,9 +232,9 @@ function buildResult(
   }
 
   const pref = MACRO_PRESETS[inputs.macroPref as MacroPref];
-  const proteinKcal = calories * pref.protein;
-  const carbsKcal = calories * pref.carbs;
-  const fatKcal = calories * pref.fat;
+  const proteinG = Math.round((calories * pref.protein) / 4);
+  const carbsG = Math.round((calories * pref.carbs) / 4);
+  const fatG = Math.round((calories * pref.fat) / 9);
 
   return {
     ok: true,
@@ -246,15 +246,16 @@ function buildResult(
       tdee: roundCal(tdee),
       calories,
       goalLabel,
-      proteinG: Math.round(proteinKcal / 4),
-      carbsG: Math.round(carbsKcal / 4),
-      fatG: Math.round(fatKcal / 9),
+      proteinG,
+      carbsG,
+      fatG,
       proteinPct: Math.round(pref.protein * 100),
       carbsPct: Math.round(pref.carbs * 100),
       fatPct: Math.round(pref.fat * 100),
-      proteinKcal: roundCal(proteinKcal),
-      carbsKcal: roundCal(carbsKcal),
-      fatKcal: roundCal(fatKcal),
+      // Derive kcal from rounded grams so 56 g protein always shows as 224 kcal.
+      proteinKcal: proteinG * 4,
+      carbsKcal: carbsG * 4,
+      fatKcal: fatG * 9,
       prefLabel: pref.label,
       paLabel: activityPaLabel(gender, activity.id),
     },
@@ -302,7 +303,13 @@ export default function MacroCalculator() {
   const units = useUnitConversion(QUANTITIES);
   const update = (patch: Partial<MacroInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
-    if ([patch.gender, patch.activity, patch.goal, patch.macroPref].includes("")) setResult(null);
+    // Age changes can switch youth ↔ adult formulas; clear stale results immediately.
+    if (
+      patch.age !== undefined ||
+      [patch.gender, patch.activity, patch.goal, patch.macroPref].includes("")
+    ) {
+      setResult(null);
+    }
   };
 
   /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */

@@ -311,6 +311,8 @@ export function CustomSelect({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const typeahead = useRef({ text: "", timer: 0 });
+  /** Only keyboard moves should scroll options into view; hover must not fight the wheel. */
+  const scrollActiveIntoView = useRef(false);
   const listId = useId();
   const isUnit = variant === "unit";
   /* Every list leads with a "Select ..." entry; picking it clears the choice so no result is shown. */
@@ -335,13 +337,15 @@ export function CustomSelect({
   }, [open]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !scrollActiveIntoView.current) return;
+    scrollActiveIntoView.current = false;
     listRef.current
       ?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`)
       ?.scrollIntoView({ block: "nearest" });
   }, [open, activeIndex]);
 
   const openList = () => {
+    scrollActiveIntoView.current = true;
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
     setOpen(true);
   };
@@ -372,6 +376,7 @@ export function CustomSelect({
     };
     if (keyMoves[event.key]) {
       event.preventDefault();
+      scrollActiveIntoView.current = true;
       setActiveIndex(keyMoves[event.key]());
       return;
     }
@@ -393,7 +398,10 @@ export function CustomSelect({
         state.text = "";
       }, 600);
       const match = listOptions.findIndex((option) => option.value && option.label.toLowerCase().startsWith(state.text));
-      if (match >= 0) setActiveIndex(match);
+      if (match >= 0) {
+        scrollActiveIntoView.current = true;
+        setActiveIndex(match);
+      }
     }
   };
 

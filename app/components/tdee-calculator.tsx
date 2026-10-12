@@ -318,7 +318,8 @@ function buildResult(
       bmr: roundCal(bmr),
       harrisBenedict: roundCal(harris),
       tdee: roundCal(tdee),
-      weekly: roundCal(tdee * 7),
+      // Multiply the displayed daily total so weekly always equals daily × 7.
+      weekly: roundCal(tdee) * 7,
       activity: activityMeta.id,
       activityRows,
       bmi: Number(bmi.toFixed(1)),
@@ -406,7 +407,8 @@ export default function TdeeCalculator() {
 
   const update = (patch: Partial<TdeeInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
-    if ([patch.gender, patch.activity].includes("")) setResult(null);
+    // Age changes can switch youth ↔ adult formulas; clear stale results immediately.
+    if (patch.age !== undefined || [patch.gender, patch.activity].includes("")) setResult(null);
   };
 
   const clear = () => {

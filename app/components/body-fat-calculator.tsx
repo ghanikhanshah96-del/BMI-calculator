@@ -187,14 +187,24 @@ function bfToGaugePos(gender: Gender, bf: number) {
   return 50;
 }
 
-/** U.S. Navy method — USC inches formulas (same as calculator.net) */
-function navyBodyFatPercent(gender: Gender, heightIn: number, neckIn: number, waistIn: number, hipIn: number) {
+/** U.S. Navy / DoD circumference method — USC (inches) regression. */
+function navyBodyFatPercentUsc(gender: Gender, heightIn: number, neckIn: number, waistIn: number, hipIn: number) {
   if (gender === "male") {
     if (waistIn <= neckIn || heightIn <= 0) return null;
     return 86.01 * log10(waistIn - neckIn) - 70.041 * log10(heightIn) + 36.76;
   }
   if (waistIn + hipIn <= neckIn || heightIn <= 0) return null;
   return 163.205 * log10(waistIn + hipIn - neckIn) - 97.684 * log10(heightIn) - 78.387;
+}
+
+/** U.S. Navy / DoD circumference method — metric (centimetres) regression. */
+function navyBodyFatPercentMetric(gender: Gender, heightCm: number, neckCm: number, waistCm: number, hipCm: number) {
+  if (gender === "male") {
+    if (waistCm <= neckCm || heightCm <= 0) return null;
+    return 495 / (1.0324 - 0.19077 * log10(waistCm - neckCm) + 0.15456 * log10(heightCm)) - 450;
+  }
+  if (waistCm + hipCm <= neckCm || heightCm <= 0) return null;
+  return 495 / (1.29579 - 0.35004 * log10(waistCm + hipCm - neckCm) + 0.221 * log10(heightCm)) - 450;
 }
 
 function bmiBodyFatPercent(gender: Gender, age: number, bmi: number) {
@@ -237,6 +247,10 @@ function readMeasurements(inputs: BodyFatInputs, unitMode: UnitMode, gender: Gen
     (needsHip ? checkRange("hip", exact.hip!, RANGES.hip, length) : "");
   if (error) return error;
   return {
+    heightCm: exact.height!,
+    neckCm: exact.neck!,
+    waistCm: exact.waist!,
+    hipCm: needsHip ? exact.hip! : 0,
     heightIn: exact.height! / CM_PER_IN,
     neckIn: exact.neck! / CM_PER_IN,
     waistIn: exact.waist! / CM_PER_IN,
@@ -358,7 +372,7 @@ export default function BodyFatCalculator() {
 
   const update = (patch: Partial<BodyFatInputs>) => {
     setInputs((prev) => ({ ...prev, ...patch }));
-    if (patch.gender === "") setResult(null);
+    if (patch.age !== undefined || patch.gender === "") setResult(null);
   };
   const isFemale = inputs.gender === "female";
 
@@ -369,7 +383,7 @@ export default function BodyFatCalculator() {
       setResult(null);
     };
     const detailsError = validateFields([
-      { label: "age", value: values.age, min: 10, max: 120 },
+      { label: "age", value: values.age, min: 18, max: 120 },
       { label: "gender", value: values.gender, kind: "choice" },
     ]);
     const measured = readMeasurements(values, mode, values.gender, units.metric(values, mode));
@@ -381,7 +395,10 @@ export default function BodyFatCalculator() {
 
     const gender = values.gender as Gender;
     const age = values.age!;
-    const navy = navyBodyFatPercent(gender, measured.heightIn, measured.neckIn, measured.waistIn, measured.hipIn);
+    const navy =
+      mode === "metric"
+        ? navyBodyFatPercentMetric(gender, measured.heightCm, measured.neckCm, measured.waistCm, measured.hipCm)
+        : navyBodyFatPercentUsc(gender, measured.heightIn, measured.neckIn, measured.waistIn, measured.hipIn);
     if (navy === null || !Number.isFinite(navy)) {
       fail(
         gender === "male"
@@ -390,8 +407,14 @@ export default function BodyFatCalculator() {
       );
       return;
     }
+    if (navy < 2 || navy > 60) {
+      fail(
+        "These measurements produce an invalid body fat estimate. Check that height, neck, and waist were entered correctly.",
+      );
+      return;
+    }
 
-    const heightM = measured.heightIn * 0.0254;
+    const heightM = measured.heightCm / 100;
     const bmi = measured.weightKg / (heightM * heightM);
     const ace = getAceCategory(gender, navy);
     const fatMassKg = measured.weightKg * (navy / 100);
@@ -466,7 +489,7 @@ export default function BodyFatCalculator() {
           icon={HeartPulse}
           niche="body-fat"
           eyebrow="Body fat"
-          description="U.S. Navy tape-measure method with ACE categories."
+          description="U.S. Navy tape-measure method for adults 18+ with ACE categories."
         />
 
         <SegmentedControl
@@ -492,7 +515,7 @@ export default function BodyFatCalculator() {
             />
           </FieldShell>
           <FieldShell label="Age">
-            <NumberStepper value={inputs.age} min={10} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
+            <NumberStepper value={inputs.age} min={18} max={120} step={1} placeholder={30} onChange={(age) => update({ age })} />
           </FieldShell>
         </InputGroup>
 
@@ -705,8 +728,8 @@ export default function BodyFatCalculator() {
             </ResultNote>
 
             <ResultNote>
-              Estimates only — not medical advice. Tape measure placement affects Navy results; DEXA or
-              hydrostatic weighing is more precise.
+              Estimates only — not medical advice. The U.S. Navy method is for adults 18 and older. Tape
+              measure placement affects results; DEXA or hydrostatic weighing is more precise.
             </ResultNote>
           </ResultBody>
         )}
