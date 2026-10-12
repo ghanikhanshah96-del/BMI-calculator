@@ -1659,6 +1659,74 @@ a {
   .img-zoom {
     @apply object-cover transition duration-700 ease-out group-hover:scale-105;
   }
+
+  .blog-toolbar {
+    @apply flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between;
+  }
+
+  .blog-filters {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .blog-filter {
+    @apply inline-flex min-h-10 items-center rounded-full bg-white px-4 text-sm font-semibold text-slate-700 ring-1 ring-emerald-100 transition duration-200 hover:bg-emerald-50 hover:text-emerald-800 hover:ring-emerald-200;
+  }
+
+  .blog-filter-active {
+    @apply bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/25 ring-0 hover:bg-linear-to-r hover:text-white hover:ring-0;
+  }
+
+  .blog-search {
+    @apply relative w-full max-w-md lg:ml-auto;
+  }
+
+  .blog-search-input {
+    @apply w-full rounded-full border-0 bg-white py-2.5 pr-11 pl-4 text-sm text-slate-800 shadow-sm ring-1 ring-emerald-100 outline-none transition placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-400;
+  }
+
+  .blog-search-icon {
+    @apply pointer-events-none absolute top-1/2 right-3.5 h-4.5 w-4.5 -translate-y-1/2 text-emerald-700/70;
+  }
+
+  .blog-featured {
+    @apply overflow-hidden;
+  }
+
+  .blog-featured-link {
+    @apply grid md:grid-cols-2;
+  }
+
+  .blog-featured-media {
+    @apply relative aspect-16/10 overflow-hidden bg-emerald-50 md:aspect-auto md:min-h-80;
+  }
+
+  .blog-featured-body {
+    @apply flex flex-col p-6 sm:p-8 lg:p-10;
+  }
+
+  .blog-featured-badge {
+    @apply inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-emerald-800 uppercase ring-1 ring-emerald-100;
+  }
+
+  .blog-featured-title {
+    @apply mt-4 font-display text-2xl leading-snug font-medium tracking-tight text-slate-950 sm:text-[1.75rem] lg:text-[2rem];
+  }
+
+  .blog-featured-meta {
+    @apply mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500;
+  }
+
+  .blog-featured-cta {
+    @apply mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-600/25 transition duration-300 group-hover:shadow-lg group-hover:shadow-emerald-600/30;
+  }
+
+  .blog-card-meta {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500;
+  }
+
+  .blog-card-cta {
+    @apply mt-5 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200 transition duration-300 group-hover:bg-emerald-50 group-hover:ring-emerald-300;
+  }
 }
 
 button,

@@ -2,13 +2,103 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import Breadcrumbs from "../components/breadcrumbs";
 import { ArrowRight, BookOpen } from "../components/icons";
 import PageHero from "../components/page-hero";
 import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
-import { postCards as posts } from "./post-cards";
+import { getToolLink } from "../lib/tool-nav";
+import { postCards as posts, type PostCard } from "./post-cards";
+
+function formatPostDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function postCategory(post: PostCard) {
+  return getToolLink(post.toolId).shortName;
+}
+
+function SearchIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className} aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function FeaturedPostCard({ post }: { post: PostCard }) {
+  const category = postCategory(post);
+  return (
+    <article data-niche={post.toolId} className="spotlight group card-lift card-surface blog-featured">
+      <Link href={`/blog/${post.slug}`} className="blog-featured-link">
+        <div className="blog-featured-media">
+          <Image
+            src={post.image}
+            alt={post.imageAlt}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="img-zoom object-cover"
+            priority
+          />
+        </div>
+        <div className="blog-featured-body">
+          <span className="blog-featured-badge">Latest article</span>
+          <h2 className="blog-featured-title">{post.title}</h2>
+          <p className="muted-copy mt-3 line-clamp-3 sm:text-base sm:leading-7">{post.excerpt}</p>
+          <p className="blog-featured-meta">
+            <time dateTime={post.updatedAt}>{formatPostDate(post.updatedAt)}</time>
+            <span aria-hidden="true">·</span>
+            <span>{category}</span>
+          </p>
+          <span className="blog-featured-cta">
+            Read article
+            <ArrowRight className="arrow-nudge h-4 w-4" />
+          </span>
+        </div>
+      </Link>
+    </article>
+  );
+}
+
+function GridPostCard({ post }: { post: PostCard }) {
+  const category = postCategory(post);
+  return (
+    <article data-niche={post.toolId} className="h-full">
+      <Link href={`/blog/${post.slug}`} className="spotlight group card-lift card-surface post-card h-full">
+        <div className="relative aspect-16/10 overflow-hidden bg-emerald-50">
+          <Image
+            src={post.image}
+            alt={post.imageAlt}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="img-zoom object-cover"
+          />
+        </div>
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
+          <p className="blog-card-meta">
+            <time dateTime={post.updatedAt}>{formatPostDate(post.updatedAt)}</time>
+            <span aria-hidden="true">·</span>
+            <span>{category}</span>
+          </p>
+          <h2 className="card-title mt-2">{post.title}</h2>
+          <p className="muted-copy mt-2 line-clamp-3">{post.excerpt}</p>
+          <span className="blog-card-cta mt-auto">
+            Read more
+            <ArrowRight className="arrow-nudge h-3.5 w-3.5" />
+          </span>
+        </div>
+      </Link>
+    </article>
+  );
+}
 
 const nextSteps = [
   {
@@ -32,6 +122,41 @@ const nextSteps = [
 ];
 
 export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
+  const [filter, setFilter] = useState("all");
+  const [query, setQuery] = useState("");
+
+  const categories = useMemo(() => {
+    const seen = new Set<string>();
+    const list: string[] = [];
+    for (const post of posts) {
+      const label = postCategory(post);
+      if (!seen.has(label)) {
+        seen.add(label);
+        list.push(label);
+      }
+    }
+    return list;
+  }, []);
+
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return posts.filter((post) => {
+      const category = postCategory(post);
+      if (filter !== "all" && category !== filter) return false;
+      if (!needle) return true;
+      return (
+        post.title.toLowerCase().includes(needle) ||
+        post.excerpt.toLowerCase().includes(needle) ||
+        category.toLowerCase().includes(needle) ||
+        post.toolLabel.toLowerCase().includes(needle)
+      );
+    });
+  }, [filter, query]);
+
+  const showFeatured = filter === "all" && !query.trim() && filtered.length > 0;
+  const featured = showFeatured ? filtered[0] : null;
+  const gridPosts = showFeatured ? filtered.slice(1) : filtered;
+
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -47,73 +172,101 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="blog" />
       <div className="relative isolate flex flex-1 flex-col">
-      <PageHero
-        image="/blog/adult-barbell-strength-training.jpg"
-        imageAlt=""
-        eyebrow="Blog"
-        icon={BookOpen}
-        title="Health articles"
-        description="One published article explains why BMI can misclassify muscular people and which other measurements add context."
-      >
-        <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Blog", href: "/blog" }]} />
-      </PageHero>
-      <main className="page-main section-block relative z-10">
-        <p className="body-copy">
-          BMI compares weight with height. It does not separate muscle from fat. The article below walks through the
-          formula, the standard adult categories, and the situations where a high result needs more than the BMI number.
-        </p>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <Reveal as="article" key={post.slug} delay={index * 110} className="h-full">
-              <Link href={`/blog/${post.slug}`} data-niche={post.toolId} className="spotlight group card-lift card-surface post-card">
-                <div className="relative aspect-[2/1] overflow-hidden bg-emerald-50">
-                  <Image
-                    src={post.image}
-                    alt={post.imageAlt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-                    className="img-zoom object-cover"
-                    priority={index === 0}
-                  />
-                  <span className="card-tag">{post.toolLabel}</span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h2 className="card-title">{post.title}</h2>
-                  <p className="muted-copy mt-2 line-clamp-3">{post.excerpt}</p>
-                  <div className="mt-auto flex items-center justify-between pt-4">
-                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
-                      Read article <ArrowRight className="arrow-nudge" />
-                    </span>
-                    <time dateTime={post.updatedAt} className="text-xs text-slate-500">
-                      Updated {post.updatedAt}
-                    </time>
-                  </div>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+        <PageHero
+          image="/blog/adult-barbell-strength-training.jpg"
+          imageAlt=""
+          eyebrow="Blog"
+          icon={BookOpen}
+          title="Health articles"
+          description="Guides that explain how our calculators work, what the results mean, and where a single number needs more context."
+        >
+          <Breadcrumbs siteUrl={siteUrl} items={[{ name: "Blog", href: "/blog" }]} />
+        </PageHero>
 
-        <section aria-labelledby="next-steps" className="section-gap">
-          <h2 id="next-steps" className="section-title">
-            Use a calculator with the article
-          </h2>
-          <ul className="mt-6 grid gap-5 md:grid-cols-3">
-            {nextSteps.map((item, index) => (
-              <Reveal as="li" key={item.title} delay={index * 90} className="h-full">
-                <div className="card-surface flex h-full flex-col p-6">
-                  <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="muted-copy mt-2">{item.text}</p>
-                  <Link href={item.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700">
-                    {item.label}
-                    <ArrowRight className="arrow-nudge" />
-                  </Link>
+        <main className="page-main section-block relative z-10">
+          <div className="blog-toolbar">
+            <div className="blog-filters" role="group" aria-label="Filter articles by topic">
+              <button
+                type="button"
+                className={filter === "all" ? "blog-filter blog-filter-active" : "blog-filter"}
+                aria-pressed={filter === "all"}
+                onClick={() => setFilter("all")}
+              >
+                All
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={filter === category ? "blog-filter blog-filter-active" : "blog-filter"}
+                  aria-pressed={filter === category}
+                  onClick={() => setFilter(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            <label className="blog-search">
+              <span className="sr-only">Search articles</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search articles..."
+                className="blog-search-input"
+              />
+              <SearchIcon className="blog-search-icon" />
+            </label>
+          </div>
+
+          {filtered.length === 0 ? (
+            <p className="body-copy mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-900/5">
+              No articles match that filter. Try another topic or clear the search.
+            </p>
+          ) : (
+            <div className="mt-8 space-y-6">
+              {featured ? (
+                <Reveal>
+                  <FeaturedPostCard post={featured} />
+                </Reveal>
+              ) : null}
+
+              {gridPosts.length > 0 ? (
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {gridPosts.map((post, index) => (
+                    <Reveal key={post.slug} delay={index * 90} className="h-full">
+                      <GridPostCard post={post} />
+                    </Reveal>
+                  ))}
                 </div>
-              </Reveal>
-            ))}
-          </ul>
-        </section>
-      </main>
+              ) : null}
+            </div>
+          )}
+
+          <section aria-labelledby="next-steps" className="section-gap">
+            <h2 id="next-steps" className="section-title">
+              Use a calculator with the article
+            </h2>
+            <ul className="mt-6 grid gap-5 md:grid-cols-3">
+              {nextSteps.map((item, index) => (
+                <Reveal as="li" key={item.title} delay={index * 90} className="h-full">
+                  <div className="card-surface flex h-full flex-col p-6">
+                    <h3 className="text-lg font-semibold">{item.title}</h3>
+                    <p className="muted-copy mt-2">{item.text}</p>
+                    <Link
+                      href={item.href}
+                      className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700"
+                    >
+                      {item.label}
+                      <ArrowRight className="arrow-nudge" />
+                    </Link>
+                  </div>
+                </Reveal>
+              ))}
+            </ul>
+          </section>
+        </main>
       </div>
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
