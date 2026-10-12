@@ -34,6 +34,7 @@ function SearchIcon({ className }: { className?: string }) {
   );
 }
 
+/** One article: full-width horizontal card (image + copy). */
 function FeaturedPostCard({ post }: { post: PostCard }) {
   const category = postCategory(post);
   return (
@@ -68,10 +69,11 @@ function FeaturedPostCard({ post }: { post: PostCard }) {
   );
 }
 
-function GridPostCard({ post }: { post: PostCard }) {
+/** Multi-article grid card: equal width in a row of up to three. */
+function GridPostCard({ post, priority = false }: { post: PostCard; priority?: boolean }) {
   const category = postCategory(post);
   return (
-    <article data-niche={post.toolId} className="h-full">
+    <article data-niche={post.toolId} className="blog-grid-item">
       <Link href={`/blog/${post.slug}`} className="spotlight group card-lift card-surface post-card h-full">
         <div className="relative aspect-16/10 overflow-hidden bg-emerald-50">
           <Image
@@ -80,6 +82,7 @@ function GridPostCard({ post }: { post: PostCard }) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="img-zoom object-cover"
+            priority={priority}
           />
         </div>
         <div className="flex flex-1 flex-col p-5 sm:p-6">
@@ -153,10 +156,6 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
     });
   }, [filter, query]);
 
-  const showFeatured = filter === "all" && !query.trim() && filtered.length > 0;
-  const featured = showFeatured ? filtered[0] : null;
-  const gridPosts = showFeatured ? filtered.slice(1) : filtered;
-
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -224,23 +223,15 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
             <p className="body-copy mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-900/5">
               No articles match that filter. Try another topic or clear the search.
             </p>
+          ) : filtered.length === 1 ? (
+            <div className="mt-8">
+              <FeaturedPostCard post={filtered[0]} />
+            </div>
           ) : (
-            <div className="mt-8 space-y-6">
-              {featured ? (
-                <Reveal>
-                  <FeaturedPostCard post={featured} />
-                </Reveal>
-              ) : null}
-
-              {gridPosts.length > 0 ? (
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {gridPosts.map((post, index) => (
-                    <Reveal key={post.slug} delay={index * 90} className="h-full">
-                      <GridPostCard post={post} />
-                    </Reveal>
-                  ))}
-                </div>
-              ) : null}
+            <div className="blog-post-grid mt-8">
+              {filtered.map((post, index) => (
+                <GridPostCard key={post.slug} post={post} priority={index === 0} />
+              ))}
             </div>
           )}
 

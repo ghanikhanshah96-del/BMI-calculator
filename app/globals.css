@@ -1720,6 +1720,50 @@ a {
     @apply mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-600/25 transition duration-300 group-hover:shadow-lg group-hover:shadow-emerald-600/30;
   }
 
+  /*
+   * Up to 3 cards per row. flex-grow fills leftover space so:
+   * 2 cards → half each, 3 → thirds, a lone 4th on the next row → full width.
+   */
+  .blog-post-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .blog-grid-item {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  @media (width >= 40rem) {
+    .blog-grid-item {
+      flex: 1 1 calc(50% - 0.625rem);
+      max-width: calc(50% - 0.625rem);
+    }
+
+    .blog-post-grid > .blog-grid-item:nth-child(odd):last-child {
+      max-width: none;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .blog-grid-item {
+      flex: 1 1 calc(33.333% - 0.875rem);
+      max-width: calc(33.333% - 0.875rem);
+    }
+
+    /* One orphan on the last row spans full width. */
+    .blog-post-grid > .blog-grid-item:nth-child(3n + 1):last-child {
+      max-width: none;
+    }
+
+    /* Two orphans on the last row share 50/50. */
+    .blog-post-grid > .blog-grid-item:nth-child(3n + 1):nth-last-child(2),
+    .blog-post-grid > .blog-grid-item:nth-child(3n + 2):last-child {
+      max-width: calc(50% - 0.625rem);
+    }
+  }
+
   .blog-card-meta {
     @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500;
   }
