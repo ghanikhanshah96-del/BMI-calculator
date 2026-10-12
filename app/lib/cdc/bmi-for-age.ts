@@ -5,8 +5,8 @@
  * Child mode in this app: completed ages 2–17 (under 18).
  * Adult WHO categories apply at age 18+.
  *
- * Age in whole years → mid-year months (years × 12 + 6), matching CDC guidance
- * when only completed years are known.
+ * Age in whole years is the completed age at 0 months (years × 12), matching the
+ * CDC Child and Teen BMI Calculator when years are entered and months are 0.
  */
 
 import { BMI_LMS_ROWS } from "./bmi-lms-data";
@@ -152,6 +152,16 @@ export function percentileFromZ(z: number): number {
   return normCdf(z) * 100;
 }
 
+/** Whole-number percentile label, matching the CDC calculator (22nd, not 22th). */
+export function percentileLabel(percentile: number): string {
+  const n = Math.round(percentile);
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  const suffix =
+    mod100 >= 11 && mod100 <= 13 ? "th" : mod10 === 1 ? "st" : mod10 === 2 ? "nd" : mod10 === 3 ? "rd" : "th";
+  return `${n}${suffix}`;
+}
+
 function categoryFromPercentile(p: number): { label: ChildBmiCategory; tone: string } {
   // CDC: <5th underweight; 5th–<85th healthy; 85th–<95th overweight; ≥95th obesity
   if (p < 5) return { label: "Underweight", tone: "text-amber-700" };
@@ -172,8 +182,8 @@ export function isChildBmiAge(ageYears: number): boolean {
 export function assessChildBmi(bmi: number, ageYears: number, sex: Sex): ChildBmiAssessment | null {
   if (!isChildBmiAge(ageYears) || !(bmi > 0)) return null;
 
-  // Mid-year month when only completed years are collected (CDC guidance).
-  const ageMonths = ageYears * 12 + 6;
+  // Completed years with 0 months, same age the CDC calculator uses for that year.
+  const ageMonths = ageYears * 12;
   const lms = interpolateLms(sex, ageMonths);
   if (!lms) return null;
 
@@ -186,7 +196,8 @@ export function assessChildBmi(bmi: number, ageYears: number, sex: Sex): ChildBm
   const healthyBmiMax = bmiFromZ(normInv(0.85), lms);
 
   return {
-    percentile: Number(percentile.toFixed(1)),
+    // CDC's calculator shows the percentile as a whole number (21.8 → 22).
+    percentile: Math.round(percentile),
     zScore: Number(zScore.toFixed(2)),
     category: label,
     categoryTone: tone,

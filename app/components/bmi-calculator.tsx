@@ -21,7 +21,7 @@ import {
   StatTile,
 } from "./calc-ui";
 import { CustomSelect, FieldShell, NumberStepper } from "./form-controls";
-import { assessChildBmi, isChildBmiAge, type ChildBmiAssessment } from "../lib/cdc/bmi-for-age";
+import { assessChildBmi, isChildBmiAge, percentileLabel, type ChildBmiAssessment } from "../lib/cdc/bmi-for-age";
 import {
   checkRange,
   cmDisplay,
@@ -353,7 +353,7 @@ function BmiGauge({
   const needleRef = useRef<SVGLineElement>(null);
   const markerId = `bmi-arrow-${uid}-${animationKey}`;
   const curveIds = [1, 2, 3, 4].map((n) => `bmi-curve-${uid}-${animationKey}-${n}`);
-  const centerLabel = isPercentile ? `${value.toFixed(1)}th` : `BMI = ${value.toFixed(1)}`;
+  const centerLabel = isPercentile ? percentileLabel(value) : `BMI = ${value.toFixed(1)}`;
 
   useEffect(() => {
     const needle = needleRef.current;
@@ -387,7 +387,7 @@ function BmiGauge({
         role="img"
         aria-label={
           isPercentile
-            ? `CDC BMI-for-age gauge pointing to the ${value.toFixed(1)}th percentile`
+            ? `CDC BMI-for-age gauge pointing to the ${percentileLabel(value)} percentile`
             : `BMI gauge pointing to ${value.toFixed(1)}`
         }
       >
@@ -652,7 +652,7 @@ export default function BmiCalculator() {
         title: "BMI Body Mass Index Report",
         filename: `bmi-report-${result.age}y`,
         summary: result.isChild
-          ? `CDC BMI-for-age for a ${result.age}-year-old ${result.gender}: ${result.bmi} kg/m² (${result.child?.percentile}th percentile) — ${result.category}.`
+          ? `CDC BMI-for-age for a ${result.age}-year-old ${result.gender}: ${result.bmi} kg/m² (${result.child ? percentileLabel(result.child.percentile) : ""} percentile) — ${result.category}.`
           : `Adult BMI: ${result.bmi} kg/m² — ${result.category}.`,
         lines: [
           { label: "Age", value: `${result.age} years` },
@@ -663,7 +663,7 @@ export default function BmiCalculator() {
           { label: "Category", value: result.category },
           ...(result.child
             ? [
-                { label: "CDC percentile", value: `${result.child.percentile}th` },
+                { label: "CDC percentile", value: percentileLabel(result.child.percentile) },
                 { label: "BMI z-score", value: String(result.child.zScore) },
                 {
                   label: "Healthy BMI-for-age range",
@@ -840,7 +840,7 @@ export default function BmiCalculator() {
           <ResultBody animationKey={animationKey}>
             <ResultHero label="Body Mass Index" value={result.bmi} unit="kg/m²" badge={result.category}>
               {result.isChild
-                ? `CDC BMI-for-age: ${result.child?.percentile}th percentile (ages 2–17)`
+                ? `CDC BMI-for-age: ${result.child ? percentileLabel(result.child.percentile) : ""} percentile (ages 2–17)`
                 : `Healthy adult BMI range: ${result.healthyBmiMin} – ${result.healthyBmiMax} kg/m²`}
             </ResultHero>
 
@@ -865,7 +865,7 @@ export default function BmiCalculator() {
                 hint={result.isChild ? "CDC BMI-for-age" : "Adult BMI categories"}
               />
               {result.isChild && result.child ? (
-                <StatTile label="Percentile" value={`${result.child.percentile}th`} hint="Age- & sex-specific" />
+                <StatTile label="Percentile" value={percentileLabel(result.child.percentile)} hint="Age- & sex-specific" />
               ) : (
                 <StatTile label="BMI Prime" value={result.bmiPrime} hint="BMI ÷ 25" />
               )}
