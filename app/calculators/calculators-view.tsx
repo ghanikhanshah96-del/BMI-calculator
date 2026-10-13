@@ -109,7 +109,7 @@ export default function CalculatorsView({
           <h2 id="choose-tool" className="section-title">
             Which calculator should you use?
           </h2>
-          <div className="mt-6 grid gap-5">
+          <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
             {choosingTips.map((tip, index) => {
               const tool = getToolLink(tip.toolId);
               return (
@@ -142,7 +142,7 @@ export default function CalculatorsView({
             Every calculator answers a different question. Use this quick reference to see what a tool measures and when
             it is most useful, then open the tool page for step-by-step instructions and a guide to reading your result.
           </p>
-          <dl className="mt-6 grid gap-4">
+          <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {reference.map((row, index) => {
               const tool = getToolLink(row.toolId);
               return (

@@ -1471,6 +1471,19 @@ a {
     @apply flex h-full items-start gap-4 p-5;
   }
 
+  .tool-card-name {
+    display: block;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  .tool-card-tagline {
+    display: block;
+    margin-top: 0.125rem;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+
   .tool-card-compact {
     @apply gap-3 p-4;
   }

@@ -32,7 +32,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "BMI",
     cluster: "body",
     icon: Scale,
-    tagline: "Use BMI for a quick height-to-weight screening estimate.",
+    tagline: "Use BMI for a quick height-to-weight screening estimate and a healthy range for your height.",
     hint: "Healthy weight range",
   },
   {
@@ -42,7 +42,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "Body Fat",
     cluster: "body",
     icon: HeartPulse,
-    tagline: "Use body measurements to estimate your body fat percentage.",
+    tagline: "Use body measurements to estimate your body fat percentage and see how your weight is made up.",
     hint: "Fat and lean mass",
   },
   {
@@ -52,7 +52,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "TDEE",
     cluster: "energy",
     icon: Activity,
-    tagline: "Use TDEE to estimate how many calories you may burn each day.",
+    tagline: "Use TDEE to estimate how many calories you may burn each day from rest plus daily activity.",
     hint: "Daily calorie needs",
   },
   {
@@ -62,7 +62,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "Macros",
     cluster: "energy",
     icon: Apple,
-    tagline: "Use your calorie needs to estimate daily protein, carbohydrate, and fat targets.",
+    tagline: "Use your calorie needs to estimate daily protein, carbohydrate, and fat targets for your meals.",
     hint: "Protein, carbs and fat",
   },
   {
@@ -72,7 +72,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "Due Date",
     cluster: "pregnancy",
     icon: CalendarHeart,
-    tagline: "Estimate when your baby may be due based on the information you provide.",
+    tagline: "Estimate when your baby may be due based on the information you provide and your current week.",
     hint: "Trimester timeline",
   },
   {
@@ -82,7 +82,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "Ovulation",
     cluster: "pregnancy",
     icon: Sparkles,
-    tagline: "Estimate when ovulation and your fertile window may occur during your menstrual cycle.",
+    tagline: "Estimate when ovulation and your fertile window may occur during your menstrual cycle each month.",
     hint: "Fertile window",
   },
 ];

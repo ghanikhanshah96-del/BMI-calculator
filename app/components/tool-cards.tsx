@@ -51,22 +51,20 @@ export default function ToolClusterGrid({
                 {cluster.description}
               </p>
             </div>
-            <ul className={`grid sm:grid-cols-2 ${compact ? "gap-3 lg:grid-cols-1" : "gap-4"}`}>
+            <ul className={`grid grid-cols-1 items-stretch sm:grid-cols-2 ${compact ? "gap-3 lg:grid-cols-1" : "gap-4"}`}>
               {clusterTools.map((tool) => (
-                <li key={tool.id}>
+                <li key={tool.id} className="flex h-full">
                   <Link
                     href={toolHref(tool)}
                     data-niche={tool.id}
-                    className={`${cardClass[tone]} ${compact ? "tool-card-compact" : ""}`}
+                    className={`${cardClass[tone]} h-full w-full ${compact ? "tool-card-compact" : ""}`}
                   >
                     <span className={badgeClass[tone]}>
                       <tool.icon className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="niche-name block font-semibold">{tool.name}</span>
-                      <span
-                        className={`mt-0.5 block text-sm ${compact ? "leading-5" : "leading-6"} ${dark ? "text-emerald-50/90" : "text-slate-600"}`}
-                      >
+                      <span className="niche-name tool-card-name">{tool.name}</span>
+                      <span className={`tool-card-tagline ${dark ? "text-emerald-50/90" : "text-slate-600"}`}>
                         {tool.tagline}
                       </span>
                     </span>
