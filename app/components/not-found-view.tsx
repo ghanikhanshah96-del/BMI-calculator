@@ -13,7 +13,7 @@ export default function NotFoundView() {
       <SiteHeader activePage="home" />
       <div className="relative isolate flex-1">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
-          <HeroBackdrop image="/images/hero-bg.jpg" imageAlt="" />
+          <HeroBackdrop image="/images/hero-bg.jpg" imageAlt="Salad bowl with egg, avocado, tomatoes, and greens on a wooden table" />
         </div>
       <main className="page-main relative z-10 py-14 lg:py-20">
         <div className="hero-orb hero-orb-a" aria-hidden="true" />

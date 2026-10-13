@@ -219,7 +219,8 @@
 [data-niche] a.content-link:hover,
 [data-niche] .niche-link:hover,
 [data-niche].niche-link:hover,
-[data-niche] .popular-card-link:hover {
+[data-niche] .popular-card-link:hover,
+[data-niche].group:hover .popular-card-link {
   color: var(--niche-900);
 }
 

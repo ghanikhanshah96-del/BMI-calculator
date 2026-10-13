@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import { ChevronDown } from "./icons";
 
 export type FaqEntry = { question: string; answer: string };
@@ -23,11 +23,15 @@ function FaqAnswer({ text }: { text: string }) {
   });
 }
 
-/** Only one answer is open at a time; answers stay in the HTML so they are indexable. */
+/**
+ * Shared FAQ layout for every page. Wide screens use two independent columns:
+ * opening a question only lengthens its own column, and the other column
+ * keeps its questions packed at the top so the spare space stays at the bottom.
+ */
 export default function FaqAccordion({
   items,
   className = "",
-  variant = "list",
+  variant = "split",
 }: {
   items: FaqEntry[];
   className?: string;
@@ -35,40 +39,52 @@ export default function FaqAccordion({
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const baseId = useId();
+  const columns: { item: FaqEntry; index: number }[][] = [[], []];
+  items.forEach((item, index) => {
+    columns[index % 2].push({ item, index });
+  });
 
   return (
-    <div className={`faq-${variant} ${className}`}>
-      {items.map((item, index) => {
-        const open = index === openIndex;
-        const buttonId = `${baseId}-q${index}`;
-        const panelId = `${baseId}-a${index}`;
-        return (
-          <div key={item.question} className={open ? "faq-item faq-item-open" : "faq-item"}>
-            <h3>
-              <button
-                id={buttonId}
-                type="button"
-                aria-expanded={open}
-                aria-controls={panelId}
-                onClick={() => setOpenIndex(open ? null : index)}
-                className="faq-summary"
+    <div className={`faq-layout faq-${variant} ${className}`}>
+      {columns.map((column, columnIndex) => (
+        <div key={columnIndex} className="faq-column">
+          {column.map(({ item, index }) => {
+            const open = index === openIndex;
+            const buttonId = `${baseId}-q${index}`;
+            const panelId = `${baseId}-a${index}`;
+            return (
+              <div
+                key={item.question}
+                className={open ? "faq-item faq-item-open" : "faq-item"}
+                style={{ "--faq-order": index } as CSSProperties}
               >
-                <span className="faq-question">{item.question}</span>
-                <span className="faq-chevron">
-                  <ChevronDown className="h-4 w-4" />
-                </span>
-              </button>
-            </h3>
-            <div id={panelId} role="region" aria-labelledby={buttonId} className={open ? "accordion-panel accordion-open" : "accordion-panel"}>
-              <div className="accordion-inner" inert={!open}>
-                <div className="faq-answer">
-                  <FaqAnswer text={item.answer} />
+                <h3>
+                  <button
+                    id={buttonId}
+                    type="button"
+                    aria-expanded={open}
+                    aria-controls={panelId}
+                    onClick={() => setOpenIndex(open ? null : index)}
+                    className="faq-summary"
+                  >
+                    <span className="faq-question">{item.question}</span>
+                    <span className="faq-chevron">
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </button>
+                </h3>
+                <div id={panelId} role="region" aria-labelledby={buttonId} className={open ? "accordion-panel accordion-open" : "accordion-panel"}>
+                  <div className="accordion-inner" inert={!open}>
+                    <div className="faq-answer">
+                      <FaqAnswer text={item.answer} />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        );
-      })}
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }

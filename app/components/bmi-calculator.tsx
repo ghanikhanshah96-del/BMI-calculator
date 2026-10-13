@@ -391,6 +391,11 @@ function BmiGauge({
             : `BMI gauge pointing to ${value.toFixed(1)}`
         }
       >
+        <title>
+          {isPercentile
+            ? `CDC BMI-for-age gauge pointing to the ${percentileLabel(value)} percentile`
+            : `BMI gauge pointing to ${value.toFixed(1)}`}
+        </title>
         <g transform="translate(18,18)" style={{ fontFamily: "inherit", fontSize: 12 }}>
           <defs>
             <marker

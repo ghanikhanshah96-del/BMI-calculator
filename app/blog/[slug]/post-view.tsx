@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "../../components/breadcrumbs";
+import FaqAccordion from "../../components/faq-accordion";
 import { Inline } from "../../components/content-blocks";
 import DocNav from "../../components/doc-nav";
 import { ArrowRight, BookOpen } from "../../components/icons";
@@ -151,7 +152,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
       <div className="relative isolate flex flex-1 flex-col">
       <PageHero
         image={post.image}
-        imageAlt=""
+        imageAlt={post.imageAlt}
         eyebrow={post.toolLabel}
         icon={BookOpen}
         title={post.title}
@@ -205,16 +206,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 <h2 id="common-questions" className="section-title">
                   Frequently Asked Questions
                 </h2>
-                <div className="mt-5 grid gap-4">
-                  {post.faqs.map((faq) => (
-                    <article key={faq.question} className="card-surface p-5 sm:p-6">
-                      <h3 className="text-lg font-semibold text-slate-900">{faq.question}</h3>
-                      <p className="body-copy mt-2">
-                        <Inline text={faq.answer} />
-                      </p>
-                    </article>
-                  ))}
-                </div>
+                <FaqAccordion items={post.faqs} className="mt-5" />
               </section>
             </div>
           </article>

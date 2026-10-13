@@ -48,7 +48,7 @@ export default function SiteFooter() {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   return (
-    <footer className="defer-render site-footer">
+    <footer className="site-footer">
       <Image
         src="/images/footer-texture.jpg"
         alt="Layered salad jar with fresh vegetables and grains"
@@ -95,18 +95,17 @@ export default function SiteFooter() {
                       />
                     </button>
                   </h2>
-                  <ul
-                    id={panelId}
-                    className={`${open ? "grid" : "hidden"} footer-list md:grid`}
-                  >
-                    {group.links.map((link) => (
-                      <li key={link.label}>
-                        <Link href={link.href} className="link-grow footer-link">
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className={open ? "footer-panel footer-panel-open" : "footer-panel"}>
+                    <ul id={panelId} className="footer-list">
+                      {group.links.map((link) => (
+                        <li key={link.label}>
+                          <Link href={link.href} className="link-grow footer-link">
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               );
             })}

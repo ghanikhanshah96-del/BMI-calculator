@@ -3,7 +3,7 @@ import Image from "next/image";
 /** Same photo treatment as the home/tools hero: image on the right, soft mint wash for readable text. */
 export default function HeroBackdrop({
   image = "/images/hero-bg.jpg",
-  imageAlt = "",
+  imageAlt = "Salad bowl with egg, avocado, tomatoes, and greens on a wooden table",
 }: {
   image?: string;
   imageAlt?: string;

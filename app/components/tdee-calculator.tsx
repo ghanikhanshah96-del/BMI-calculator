@@ -1,7 +1,7 @@
 "use client";
 
 import { Activity } from "./icons";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   ActionBar,
   CalcForm,
@@ -373,10 +373,6 @@ export default function TdeeCalculator() {
     return result.tdee;
   }, [result, macroGoal]);
 
-  useEffect(() => {
-    if (result?.isYouth && macroGoal !== "maintain") setMacroGoal("maintain");
-  }, [result?.isYouth, macroGoal]);
-
   /** `silent` runs after a unit switch: an incomplete form just shows no result instead of an error. */
   const run = (values: TdeeInputs, mode: UnitMode, silent = false) => {
     const built = buildResult(values, mode, units.metric(values, mode));
@@ -387,6 +383,7 @@ export default function TdeeCalculator() {
     }
     setError("");
     setResult(built.result);
+    if (built.result.isYouth) setMacroGoal("maintain");
     setResultTab("overview");
     setAnimationKey((k) => k + 1);
     if (silent) return;

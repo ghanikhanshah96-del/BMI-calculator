@@ -1,10 +1,12 @@
+import Image from "next/image";
+
 export default function BrandLogo({ tone = "light" }: { tone?: "light" | "dark" }) {
   const dark = tone === "dark";
   return (
     <>
-      <img
+      <Image
         src="/logo.png"
-        alt=""
+        alt="FitnessCalculatorPro logo"
         width={40}
         height={40}
         className="h-10 w-10 flex-none rounded-xl object-cover shadow-md shadow-emerald-900/25"

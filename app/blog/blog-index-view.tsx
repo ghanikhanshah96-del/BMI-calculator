@@ -27,19 +27,20 @@ function postCategory(post: PostCard) {
 
 function SearchIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className} aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className} role="img" aria-hidden="true">
+      <title>Search articles</title>
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-3.5-3.5" strokeLinecap="round" />
     </svg>
   );
 }
 
-/** One article: full-width horizontal card (image + copy). */
-function FeaturedPostCard({ post }: { post: PostCard }) {
+/** A card alone on its row stays side by side, so a full-width row does not grow taller. */
+function FeaturedPostCard({ post, priority = false, latest = false }: { post: PostCard; priority?: boolean; latest?: boolean }) {
   const category = postCategory(post);
   return (
-    <article data-niche={post.toolId} className="spotlight group card-lift card-surface blog-featured">
-      <Link href={`/blog/${post.slug}`} className="blog-featured-link">
+    <article data-niche={post.toolId} className="blog-grid-item blog-grid-item-solo">
+      <Link href={`/blog/${post.slug}`} className="spotlight group card-lift card-surface blog-featured-link">
         <div className="blog-featured-media">
           <Image
             src={post.image}
@@ -47,11 +48,11 @@ function FeaturedPostCard({ post }: { post: PostCard }) {
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="img-zoom object-cover"
-            priority
+            priority={priority}
           />
         </div>
         <div className="blog-featured-body">
-          <span className="blog-featured-badge">Latest article</span>
+          {latest ? <span className="blog-featured-badge">Latest article</span> : null}
           <h2 className="blog-featured-title">{post.title}</h2>
           <p className="muted-copy mt-3 line-clamp-3 sm:text-base sm:leading-7">{post.excerpt}</p>
           <p className="blog-featured-meta">
@@ -69,7 +70,7 @@ function FeaturedPostCard({ post }: { post: PostCard }) {
   );
 }
 
-/** Multi-article grid card: equal width in a row of up to three. */
+/** Cards that share a row. Two split the row in half, three split it in thirds. */
 function GridPostCard({ post, priority = false }: { post: PostCard; priority?: boolean }) {
   const category = postCategory(post);
   return (
@@ -173,7 +174,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
       <div className="relative isolate flex flex-1 flex-col">
         <PageHero
           image="/blog/adult-barbell-strength-training.jpg"
-          imageAlt=""
+          imageAlt="Adult in athletic clothes lifting a barbell from the floor during strength training"
           eyebrow="Blog"
           icon={BookOpen}
           title="Health articles"
@@ -223,15 +224,16 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
             <p className="body-copy mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-900/5">
               No articles match that filter. Try another topic or clear the search.
             </p>
-          ) : filtered.length === 1 ? (
-            <div className="mt-8">
-              <FeaturedPostCard post={filtered[0]} />
-            </div>
           ) : (
             <div className="blog-post-grid mt-8">
-              {filtered.map((post, index) => (
-                <GridPostCard key={post.slug} post={post} priority={index === 0} />
-              ))}
+              {filtered.map((post, index) => {
+                const rowStart = Math.floor(index / 3) * 3;
+                const cardsOnRow = Math.min(3, filtered.length - rowStart);
+                if (cardsOnRow === 1) {
+                  return <FeaturedPostCard key={post.slug} post={post} priority={index === 0} latest={index === 0} />;
+                }
+                return <GridPostCard key={post.slug} post={post} priority={index === 0} />;
+              })}
             </div>
           )}
 

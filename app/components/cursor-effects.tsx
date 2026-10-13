@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-const INTERACTIVE = "a, button, [role='button'], [data-magnetic], [data-tilt], summary, label";
+const INTERACTIVE =
+  "a[href], button, select, summary, label, [role='button'], [role='option'], [role='menuitem'], [role='tab'], [role='switch'], [data-magnetic], [data-tilt]";
 const TEXT_ENTRY = "input, textarea, [contenteditable='true']";
 const MAGNET_STRENGTH = 0.25;
 const MAGNET_MAX = 10;

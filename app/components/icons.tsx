@@ -5,9 +5,13 @@ export type IconProps = SVGProps<SVGSVGElement>;
 export type IconComponent = (props: IconProps) => React.JSX.Element;
 
 function createIcon(id: string): IconComponent {
-  function SpriteIcon(props: IconProps) {
+  const label = id.replace(/-/g, " ");
+  function SpriteIcon({ "aria-label": ariaLabel, "aria-hidden": ariaHidden, ...props }: IconProps) {
+    const name = typeof ariaLabel === "string" && ariaLabel.length > 0 ? ariaLabel : label;
+    const hidden = ariaHidden !== false && ariaHidden !== "false";
     return (
-      <svg width="24" height="24" aria-hidden="true" {...props}>
+      <svg width="24" height="24" role="img" aria-hidden={hidden ? true : undefined} aria-label={hidden ? undefined : name} {...props}>
+        <title>{name}</title>
         <use href={`/icons.svg#${id}`} />
       </svg>
     );

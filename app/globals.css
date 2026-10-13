@@ -749,16 +749,21 @@ a {
     @apply px-4 pb-4 text-sm leading-6 text-slate-600 sm:px-5 sm:text-base sm:leading-7;
   }
 
-  .nav-link {
-    @apply relative inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-slate-600 transition-colors duration-200 hover:text-emerald-800;
-  }
-
+  .nav-link,
   .nav-link-active {
-    @apply inline-flex items-center gap-1 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-3.5 py-2 text-white shadow-md shadow-emerald-600/25;
+    @apply inline-flex items-center gap-1 rounded-full px-3.5 py-2 transition duration-200;
   }
 
-  .nav-underline {
-    @apply absolute inset-x-3.5 bottom-1 h-0.5 origin-left scale-x-0 rounded-full bg-linear-to-r from-emerald-500 to-teal-400 transition-transform duration-300 group-hover:scale-x-100;
+  .nav-link {
+    @apply text-slate-600;
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link-active,
+  .nav-link-active:hover,
+  .nav-link-active:focus-visible {
+    @apply bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/25;
   }
 
   .footer-heading {
@@ -770,11 +775,17 @@ a {
   }
 
   .footer-list {
-    @apply justify-items-start pb-3 text-sm md:mt-4 md:gap-2.5 md:pb-0;
+    @apply grid min-h-0 justify-items-start gap-1 overflow-hidden pb-3 text-sm md:mt-4 md:gap-2.5 md:overflow-visible md:pb-0;
+  }
+
+  @media (max-width: 767px) {
+    .footer-panel:not(.footer-panel-open) .footer-list a {
+      visibility: hidden;
+    }
   }
 
   .footer-link {
-    @apply inline-flex min-h-11 items-center text-emerald-50/80 no-underline transition duration-300 hover:translate-x-1 hover:text-lime-200 md:min-h-0 md:pb-0.5;
+    @apply inline-flex min-h-11 items-center text-emerald-50/80 no-underline transition-colors duration-200 hover:text-lime-200 md:min-h-0 md:pb-0.5;
   }
 
   .footer-legal-link {
@@ -979,7 +990,23 @@ a {
 
   .footer-glow {
     @apply absolute -right-32 -top-32 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.22),transparent_65%)];
-    animation: orb-drift 18s ease-in-out infinite;
+  }
+
+  .footer-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+
+  .footer-panel-open {
+    grid-template-rows: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .footer-panel,
+    .footer-panel-open {
+      grid-template-rows: 1fr;
+    }
   }
 
   .footer-chevron {
@@ -1045,20 +1072,23 @@ a {
     @apply scroll-mt-32;
   }
 
-  /* FAQ variants. Pairs share a row on wide screens, but each card keeps its own height. */
-  .faq-list,
-  .faq-split,
-  .faq-cards {
-    display: grid;
-    align-items: start;
+  /*
+   * One FAQ layout everywhere. On wide screens the two columns are separate,
+   * so opening an item only pushes the items under it. The shorter column
+   * keeps its cards packed at the top and the extra space sits at the bottom.
+   */
+  .faq-layout {
+    display: flex;
+    flex-direction: column;
     gap: 0.625rem;
-    grid-template-columns: minmax(0, 1fr);
   }
 
-  .faq-split > .faq-item,
-  .faq-cards > .faq-item {
-    height: auto;
-    align-self: start;
+  .faq-column {
+    display: contents;
+  }
+
+  .faq-item {
+    order: var(--faq-order);
   }
 
   .faq-item > h3 {
@@ -1066,14 +1096,32 @@ a {
   }
 
   @media (min-width: 64rem) {
-    .faq-split,
-    .faq-cards {
+    .faq-layout {
+      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      column-gap: 0.875rem;
     }
 
-    .faq-split > .faq-item:last-child:nth-child(odd),
-    .faq-cards > .faq-item:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
+    .faq-layout:has(.faq-column:empty) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .faq-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      min-width: 0;
+    }
+
+    .faq-column:empty {
+      display: none;
+    }
+
+    .faq-item {
+      order: 0;
+      height: auto;
+      align-self: start;
     }
   }
 
@@ -1139,7 +1187,7 @@ a {
   }
 
   .popular-card-link {
-    @apply mt-auto inline-flex min-h-11 items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-900;
+    @apply mt-auto inline-flex min-h-11 items-center gap-1.5 pt-4 text-sm font-semibold text-emerald-700 transition-colors group-hover:text-emerald-900;
   }
 
   .related-card {
@@ -1688,20 +1736,36 @@ a {
     @apply pointer-events-none absolute top-1/2 right-3.5 h-4.5 w-4.5 -translate-y-1/2 text-emerald-700/70;
   }
 
-  .blog-featured {
-    @apply overflow-hidden;
-  }
-
   .blog-featured-link {
-    @apply grid md:grid-cols-2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: min-content;
+    overflow: hidden;
   }
 
   .blog-featured-media {
-    @apply relative aspect-16/10 overflow-hidden bg-emerald-50 md:aspect-auto md:min-h-80;
+    position: relative;
+    height: 16rem;
+    overflow: hidden;
+    background: #ecfdf5;
   }
 
   .blog-featured-body {
-    @apply flex flex-col p-6 sm:p-8 lg:p-10;
+    @apply flex min-w-0 flex-col justify-center p-6 sm:p-8 lg:p-10;
+  }
+
+  @media (width >= 48rem) {
+    .blog-featured-link {
+      grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+      align-items: stretch;
+    }
+
+    .blog-featured-media {
+      height: auto;
+      min-height: 100%;
+      align-self: stretch;
+    }
   }
 
   .blog-featured-badge {
@@ -1721,8 +1785,8 @@ a {
   }
 
   /*
-   * Up to 3 cards per row. flex-grow fills leftover space so:
-   * 2 cards → half each, 3 → thirds, a lone 4th on the next row → full width.
+   * Shared cards divide the row: two take half each, three take a third.
+   * A card alone on a row keeps the side-by-side layout and the full width.
    */
   .blog-post-grid {
     display: flex;
@@ -1731,36 +1795,26 @@ a {
   }
 
   .blog-grid-item {
+    display: flex;
     flex: 1 1 100%;
+    flex-direction: column;
     min-width: 0;
+    min-height: min-content;
   }
 
-  @media (width >= 40rem) {
-    .blog-grid-item {
-      flex: 1 1 calc(50% - 0.625rem);
-      max-width: calc(50% - 0.625rem);
-    }
+  .blog-grid-item > a {
+    width: 100%;
+    height: auto;
+    min-height: min-content;
+  }
 
-    .blog-post-grid > .blog-grid-item:nth-child(odd):last-child {
-      max-width: none;
-    }
+  .blog-grid-item-solo {
+    flex-basis: 100%;
   }
 
   @media (width >= 64rem) {
-    .blog-grid-item {
-      flex: 1 1 calc(33.333% - 0.875rem);
-      max-width: calc(33.333% - 0.875rem);
-    }
-
-    /* One orphan on the last row spans full width. */
-    .blog-post-grid > .blog-grid-item:nth-child(3n + 1):last-child {
-      max-width: none;
-    }
-
-    /* Two orphans on the last row share 50/50. */
-    .blog-post-grid > .blog-grid-item:nth-child(3n + 1):nth-last-child(2),
-    .blog-post-grid > .blog-grid-item:nth-child(3n + 2):last-child {
-      max-width: calc(50% - 0.625rem);
+    .blog-grid-item:not(.blog-grid-item-solo) {
+      flex: 1 1 calc((100% - 2.5rem) / 3 - 1px);
     }
   }
 
@@ -1897,9 +1951,41 @@ textarea {
   }
 }
 
-.defer-render {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 1200px;
+button:not(:disabled),
+a[href],
+summary,
+select,
+label[for],
+[role="button"]:not([aria-disabled="true"]),
+[role="option"],
+[role="tab"],
+[role="menuitem"],
+[role="switch"],
+[role="checkbox"],
+[role="radio"],
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="file"]:not(:disabled),
+input[type="range"]:not(:disabled),
+input[type="date"]:not(:disabled),
+input[type="datetime-local"]:not(:disabled),
+input[type="month"]:not(:disabled),
+input[type="week"]:not(:disabled),
+input[type="time"]:not(:disabled) {
+  cursor: pointer;
+}
+
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="date"]):not([type="datetime-local"]):not([type="month"]):not([type="week"]):not([type="time"]):not(:disabled),
+textarea:not(:disabled) {
+  cursor: text;
+}
+
+:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }
 
 @media (prefers-reduced-motion: reduce) {

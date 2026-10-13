@@ -29,7 +29,7 @@ type ActivePage =
   | "contact"
   | "sitemap";
 
-const baseLinkClass = "group nav-link";
+const baseLinkClass = "nav-link";
 const activeLinkClass = "nav-link-active";
 
 const links: { href: string; label: string; page: ActivePage; icon: IconComponent }[] = [
@@ -38,12 +38,6 @@ const links: { href: string; label: string; page: ActivePage; icon: IconComponen
   { href: "/about-us", label: "About", page: "about", icon: BadgeCheck },
   { href: "/contact-us", label: "Contact", page: "contact", icon: Mail },
 ];
-
-function HoverUnderline() {
-  return (
-    <span className="nav-underline" />
-  );
-}
 
 export default function SiteHeader({
   activePage,
@@ -146,7 +140,6 @@ export default function SiteHeader({
                 className={`h-4 w-4 transition-transform duration-300 group-hover/menu:rotate-180 ${toolsOpen ? "rotate-180" : ""}`}
                 aria-hidden="true"
               />
-              {calculatorsActive ? null : <HoverUnderline />}
             </button>
             <div
               id="calculators-menu"
@@ -185,7 +178,6 @@ export default function SiteHeader({
                 onClick={closeMenus}
               >
                 {link.label}
-                {isActive ? null : <HoverUnderline />}
               </Link>
             );
           })}

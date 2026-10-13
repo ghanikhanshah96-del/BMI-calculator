@@ -64,7 +64,7 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
       <SiteHeader activePage="contact" />
       <div className="relative isolate flex flex-1 flex-col">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
-          <HeroBackdrop image="/images/contact.jpg" imageAlt="" />
+          <HeroBackdrop image="/images/contact.jpg" imageAlt="Hands typing on a laptop at a wooden desk" />
         </div>
 
         <main className="page-main section-block relative z-10">

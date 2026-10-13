@@ -58,7 +58,7 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
           <div className="hero-photo-left absolute inset-y-0 right-0 -z-20 hidden w-[62%] lg:block">
             <Image
               src="/images/hero-bg.jpg"
-              alt="Healthy breakfast plate with eggs, greens, tomatoes, and avocado on a wooden table"
+              alt="Salad bowl with egg, avocado, tomatoes, and greens on a wooden table"
               fill
               unoptimized
               sizes="62vw"
@@ -122,7 +122,12 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
                 const detail = item.paragraphs[1].replace(/\*\*/g, "");
                 return (
                   <Reveal as="li" key={item.id} delay={(index % 3) * 100} className="min-w-0">
-                    <article data-niche={item.id} data-tip={detail} className="spotlight group card-lift card-surface popular-card">
+                    <Link
+                      href={toolHref(tool)}
+                      data-niche={item.id}
+                      data-tip={detail}
+                      className="spotlight group card-lift card-surface popular-card"
+                    >
                       <div className="flex items-center gap-3">
                         <span className="icon-badge h-11 w-11 rounded-xl">
                           <tool.icon className="h-5 w-5" />
@@ -133,11 +138,11 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
                       <p className="popular-card-text">
                         <Inline text={item.paragraphs[0]} />
                       </p>
-                      <Link href={toolHref(tool)} className="popular-card-link">
+                      <span className="popular-card-link">
                         {item.link}
                         <ArrowRight className="arrow-nudge" />
-                      </Link>
-                    </article>
+                      </span>
+                    </Link>
                   </Reveal>
                 );
               })}
