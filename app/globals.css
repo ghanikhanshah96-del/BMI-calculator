@@ -540,8 +540,13 @@ a {
     opacity: 1;
   }
 
+  html.cursor-hover .cursor-dot {
+    scale: 0.65;
+  }
+
   html.cursor-hover .cursor-ring {
-    border-color: rgba(13, 148, 136, 0.8);
+    border-color: rgba(13, 148, 136, 0.95);
+    scale: 1.45;
   }
 
   html.cursor-text .cursor-dot,
@@ -1951,41 +1956,65 @@ textarea {
   }
 }
 
-button:not(:disabled),
-a[href],
-summary,
-select,
-label[for],
-[role="button"]:not([aria-disabled="true"]),
-[role="option"],
-[role="tab"],
-[role="menuitem"],
-[role="switch"],
-[role="checkbox"],
-[role="radio"],
-input[type="button"]:not(:disabled),
-input[type="submit"]:not(:disabled),
-input[type="reset"]:not(:disabled),
-input[type="checkbox"]:not(:disabled),
-input[type="radio"]:not(:disabled),
-input[type="file"]:not(:disabled),
-input[type="range"]:not(:disabled),
-input[type="date"]:not(:disabled),
-input[type="datetime-local"]:not(:disabled),
-input[type="month"]:not(:disabled),
-input[type="week"]:not(:disabled),
-input[type="time"]:not(:disabled) {
-  cursor: pointer;
+:is(
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label,
+  [role="button"]:not([aria-disabled="true"]),
+  [role="option"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="switch"],
+  [role="checkbox"],
+  [role="radio"],
+  [aria-haspopup]:not([aria-haspopup="false"]),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="reset"]:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="file"]:not(:disabled),
+  input[type="range"]:not(:disabled),
+  input[type="date"]:not(:disabled),
+  input[type="datetime-local"]:not(:disabled),
+  input[type="month"]:not(:disabled),
+  input[type="week"]:not(:disabled),
+  input[type="time"]:not(:disabled),
+  .num-arrow,
+  .num-arrows button,
+  .unit-select,
+  .select-trigger,
+  .select-option,
+  .seg-btn,
+  .step-btn,
+  .today-btn,
+  .calc-btn,
+  .clear-btn,
+  .blog-filter,
+  .faq-summary,
+  .menu-option,
+  .menu-tool,
+  .section-pill,
+  .doc-nav-link,
+  .nav-link,
+  .footer-link
+) {
+  cursor: pointer !important;
 }
 
-input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="date"]):not([type="datetime-local"]):not([type="month"]):not([type="week"]):not([type="time"]):not(:disabled),
-textarea:not(:disabled) {
-  cursor: text;
+:is(
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="date"]):not([type="datetime-local"]):not([type="month"]):not([type="week"]):not([type="time"]):not(:disabled),
+  textarea:not(:disabled),
+  .num-input
+) {
+  cursor: text !important;
 }
 
 :disabled,
 [aria-disabled="true"] {
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

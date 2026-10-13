@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 const INTERACTIVE =
-  "a[href], button, select, summary, label, [role='button'], [role='option'], [role='menuitem'], [role='tab'], [role='switch'], [data-magnetic], [data-tilt]";
-const TEXT_ENTRY = "input, textarea, [contenteditable='true']";
+  "a[href], button, select, summary, label, [role='button'], [role='option'], [role='menuitem'], [role='tab'], [role='switch'], [aria-haspopup], .num-arrow, .unit-select, .select-trigger, .select-option, .seg-btn, .step-btn, .today-btn, .calc-btn, .clear-btn, .faq-summary, .menu-option, [data-magnetic], [data-tilt]";
+const TEXT_ENTRY = "textarea, input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']), [contenteditable='true']";
 const MAGNET_STRENGTH = 0.25;
 const MAGNET_MAX = 10;
 const TILT_MAX = 6;
