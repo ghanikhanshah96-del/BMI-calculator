@@ -47,6 +47,9 @@ export const metadata: Metadata = {
     "health calculator",
   ],
   authors: [{ name: "FitnessCalculatorPro.com" }],
+  verification: {
+    google: "lt61VQpZsjNOwJ6P-Ek_OlZWjf2mu8K10TfXODMLeZk",
+  },
   creator: "FitnessCalculatorPro.com",
   publisher: "FitnessCalculatorPro.com",
   category: "health",

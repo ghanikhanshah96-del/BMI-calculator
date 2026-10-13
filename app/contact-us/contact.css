@@ -31,4 +31,25 @@
   .contact-message::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, #059669, #0f766e);
   }
+
+  .contact-more-toggle {
+    @apply flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-slate-900/5 transition duration-300 hover:ring-emerald-300 sm:p-6;
+  }
+
+  .contact-more-open {
+    @apply ring-emerald-400;
+  }
+
+  .contact-more-open .faq-chevron {
+    @apply rotate-180 bg-emerald-600 text-white;
+  }
+
+  .contact-more-panel {
+    transition-duration: 480ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .contact-more-panel .doc-sections {
+    @apply pt-4;
+  }
 }

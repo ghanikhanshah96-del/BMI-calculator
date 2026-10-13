@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useId, useState } from "react";
 import Breadcrumbs from "../components/breadcrumbs";
 import FaqAccordion from "../components/faq-accordion";
 import HeroBackdrop from "../components/hero-backdrop";
+import { ChevronDown } from "../components/icons";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import ContactForm from "./contact-form";
@@ -59,6 +61,9 @@ const faqs = [
 ];
 
 export default function ContactView({ siteUrl }: { siteUrl: string }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const detailsId = useId();
+
   return (
     <div className="bg-mesh flex min-h-screen flex-col text-slate-900">
       <SiteHeader activePage="contact" />
@@ -79,7 +84,27 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
 
           <ContactForm />
 
-          <div className="doc-sections mt-6 w-full">
+          <div className="contact-more mt-6 w-full">
+            <button
+              type="button"
+              className={detailsOpen ? "contact-more-toggle contact-more-open" : "contact-more-toggle"}
+              aria-expanded={detailsOpen}
+              aria-controls={detailsId}
+              onClick={() => setDetailsOpen((open) => !open)}
+            >
+              <span className="min-w-0 text-left">
+                <span className="block text-base font-semibold text-slate-900">Read more about contacting us</span>
+                <span className="mt-1 block text-sm leading-6 text-slate-600">
+                  Reply times, what to include, privacy, and common questions.
+                </span>
+              </span>
+              <span className="faq-chevron" aria-hidden="true">
+                <ChevronDown className="h-4 w-4" />
+              </span>
+            </button>
+            <div id={detailsId} className={detailsOpen ? "contact-more-panel accordion-panel accordion-open" : "contact-more-panel accordion-panel"}>
+              <div className="accordion-inner" inert={!detailsOpen}>
+          <div className="doc-sections w-full">
             <section className="doc-section">
               <h2 className="doc-section-title">Reply time and privacy</h2>
               <p className="mt-3 text-base leading-7 text-slate-700">
@@ -145,6 +170,9 @@ export default function ContactView({ siteUrl }: { siteUrl: string }) {
               <h2 className="doc-section-title">Contact FAQ</h2>
               <FaqAccordion items={faqs} className="mt-5" />
             </section>
+          </div>
+              </div>
+            </div>
           </div>
         </main>
       </div>
