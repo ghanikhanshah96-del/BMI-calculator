@@ -25,6 +25,7 @@ const fraunces = Fraunces({
 });
 
 const siteUrl = getSiteUrl();
+const googleAnalyticsId = "G-6TVZ9XYLT7";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -90,6 +91,17 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
+      <head>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${googleAnalyticsId}');`,
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
         <SiteJsonLd siteUrl={siteUrl} />
         {children}
