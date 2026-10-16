@@ -31,7 +31,7 @@ export default function ToolView({
   const content = toolContent[page.id];
   const sections = content.article;
   const sources = content.sources ?? [];
-  const guide = postCards.find((card) => card.toolId === page.id);
+  const guides = postCards.filter((card) => card.toolId === page.id);
   const related = page.relatedToolIds.map((id: ToolId) => getToolLink(id));
   const pageUrl = `${siteUrl}${toolHref(tool)}`;
 
@@ -116,8 +116,8 @@ export default function ToolView({
 
         <ToolSections sections={sections} faqs={content.faqs} />
 
-        {guide ? (
-          <section aria-label="In-depth guide" className="cta-panel section-gap lg:flex lg:items-center lg:justify-between lg:gap-10">
+        {guides.map((guide) => (
+          <section key={guide.slug} aria-label="In-depth guide" className="cta-panel section-gap lg:flex lg:items-center lg:justify-between lg:gap-10">
             <div className="cta-glow" />
             <div className="min-w-0 flex-1">
               <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-lime-200">
@@ -128,11 +128,11 @@ export default function ToolView({
               <p className="mt-2 text-sm leading-6 text-emerald-50 sm:text-base">{guide.excerpt}</p>
             </div>
             <Link href={`/blog/${guide.slug}`} className="group cta-button shrink-0 lg:mt-0">
-              Read the {tool.shortName} guide
+              Read the guide
               <ArrowRight className="arrow-nudge" />
             </Link>
           </section>
-        ) : null}
+        ))}
 
         <section aria-labelledby="related-tools" className="section-gap">
           <div className="flex flex-wrap items-end justify-between gap-4">

@@ -61,6 +61,15 @@ const homeDumbbell: PostFigure = {
     "An adult exercising with dumbbells. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54579614508), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/).",
 };
 
+const pregnantGreenDress: PostFigure = {
+  src: "/blog/adult-pregnant-green-dress.jpg",
+  alt: "Adult in a long green dress standing in profile",
+  width: 1280,
+  height: 996,
+  caption:
+    "An adult in a long green dress standing in profile. Photo by [NIAID](https://www.flickr.com/photos/niaid/44244172651/) via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pregnant_woman_(44244172651).jpg), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Resized for this page. NIAID has not endorsed this use.",
+};
+
 const pregnantAdult: PostFigure = {
   src: "/blog/adult-pregnant-holding-abdomen.jpg",
   alt: "Adult in a long-sleeved dress standing in profile with both hands resting on the abdomen",
@@ -80,6 +89,385 @@ const waistTape: PostFigure = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    ...getPostCard("how-many-months-am-i-at-17-weeks"),
+    metaTitle: "How Many Months Am I at 17 Weeks Pregnant? Explained",
+    metaTitleAbsolute: true,
+    description:
+      "How many months am I at 17 weeks pregnant? Learn which pregnancy month and trimester you're in, how weeks convert to months, and what to expect.",
+    relatedSlugs: ["how-accurate-are-due-dates-for-pregnancy"],
+    publishedAt: "2026-10-16",
+    keywords: [
+      "how many months am i at 17 weeks",
+      "17 weeks pregnant in months",
+      "17 weeks pregnant trimester",
+      "pregnancy weeks to months chart",
+      "4 months pregnant in weeks",
+    ],
+    takeaways: [
+      "At 17 weeks, you are about 4 months pregnant and in the second trimester.",
+      "Exactly 17 weeks and 0 days is 119 days pregnant, with about 23 weeks until the 40-week mark.",
+      "Month charts do not all use the same boundaries. Weeks and days are the more reliable way to track pregnancy.",
+      "A due date is an estimate. A calculator can give a starting date, and a healthcare professional confirms it.",
+    ],
+    intro: [
+      {
+        kind: "p",
+        text: "If you're wondering, **how many months am I at 17 weeks?**, the simple answer is that you're approximately **4 months pregnant and in your second trimester**. You're approaching the fifth month of pregnancy, although the exact month label can vary depending on the pregnancy chart you use.",
+      },
+      {
+        kind: "p",
+        text: "Pregnancy is usually tracked in weeks rather than months because calendar months have different numbers of days. That's why your doctor or midwife will describe your pregnancy as 17 weeks instead of giving you an exact number of months.",
+      },
+      {
+        kind: "p",
+        text: "Here's how 17 weeks fits into your pregnancy timeline, what to expect at this stage, and how to estimate the time remaining until your due date.",
+      },
+      { kind: "figure", figure: pregnantGreenDress },
+    ],
+    faqs: [
+      {
+        question: "Is 17 weeks pregnant considered 4 months?",
+        answer:
+          "Yes. At 17 weeks, you're commonly considered approximately four months pregnant. Different conversion charts may place the transition to month five at slightly different weeks.",
+      },
+      {
+        question: "Am I in my fifth month at 17 weeks?",
+        answer:
+          "Some charts may describe this stage as approaching or entering the fifth month. However, most simple pregnancy conversion guides place week 17 in month four. Your exact gestational age remains 17 weeks regardless of the chart.",
+      },
+      {
+        question: "Is 17 weeks pregnant the second trimester?",
+        answer: "Yes. Week 17 falls within the second trimester of pregnancy.",
+      },
+      {
+        question: "How many days pregnant am I at 17 weeks?",
+        answer:
+          "At exactly 17 weeks and 0 days, you're 119 days pregnant when counted from the start of your last menstrual period.",
+      },
+      {
+        question: "How many weeks until my due date at 17 weeks?",
+        answer:
+          "There are approximately 23 weeks until the standard 40-week due date if you're exactly 17 weeks pregnant. Your actual delivery date may be earlier or later.",
+      },
+      {
+        question: "Is it normal not to have a baby bump at 17 weeks?",
+        answer:
+          "Yes. The appearance of a pregnancy bump varies depending on body shape, previous pregnancies, and other individual factors. Some people have a noticeable bump at 17 weeks, while others show later.",
+      },
+      {
+        question: "Can I feel my baby kick at 17 weeks?",
+        answer:
+          "You might notice early movements, but many people do not recognize fetal movement until 18–24 weeks. Contact your maternity care team if you have concerns about your baby's movements.",
+      },
+    ],
+    sections: [
+      {
+        heading: "How Many Months Am I at 17 Weeks? The Simple Answer",
+        blocks: [
+          {
+            kind: "p",
+            text: "At 17 weeks pregnant, you have completed 17 weeks of pregnancy. This is commonly described as being about four months pregnant.",
+          },
+          { kind: "p", text: "Here is a quick breakdown:" },
+          {
+            kind: "table",
+            caption: "Pregnancy milestones at exactly 17 weeks and 0 days",
+            head: ["Pregnancy milestone", "At 17 weeks"],
+            rows: [
+              ["Months pregnant", "Approximately 4 months"],
+              ["Trimester", "Second trimester"],
+              ["Days pregnant", "119 days"],
+              ["Weeks until 40 weeks", "23 weeks"],
+              ["Pregnancy stage", "Approaching the fifth month"],
+            ],
+          },
+          {
+            kind: "p",
+            text: "These figures assume you are exactly 17 weeks and 0 days pregnant. If you're 17 weeks and several days along, the remaining time will be slightly shorter.",
+          },
+          {
+            kind: "p",
+            text: "A typical pregnancy due date is estimated at 40 weeks, but the actual day of delivery can vary.",
+          },
+        ],
+      },
+      {
+        heading: "Is 17 Weeks Pregnant 4 Months or 5 Months?",
+        blocks: [
+          {
+            kind: "p",
+            text: "This is a common source of confusion because pregnancy weeks do not divide neatly into calendar months.",
+          },
+          {
+            kind: "p",
+            text: "A calendar month usually contains 30 or 31 days, while four weeks contain only 28 days. If every pregnancy month were counted as exactly four weeks, a 40-week pregnancy would equal ten four-week periods rather than approximately nine calendar months.",
+          },
+          {
+            kind: "p",
+            text: "Because of this difference, pregnancy conversion charts do not always use identical month boundaries.",
+          },
+          { kind: "h3", text: "Why 17 Weeks Is Commonly Called 4 Months Pregnant" },
+          { kind: "p", text: "At 17 weeks, you have been pregnant for 119 days." },
+          { kind: "p", text: "Using the average calendar month length of approximately 30.4 days:" },
+          { kind: "p", text: "119 ÷ 30.4 = approximately 3.9 months." },
+          { kind: "p", text: "That is why 17 weeks is generally described as about four months pregnant." },
+          { kind: "h3", text: "Why Some Charts Show the Fifth Month" },
+          {
+            kind: "p",
+            text: "Some charts count the fourth month as weeks 14–17 and begin the fifth month at week 18. Others use slightly different boundaries.",
+          },
+          { kind: "p", text: "These differences do not change your actual gestational age." },
+          {
+            kind: "p",
+            text: "For medical appointments, ultrasound reports, and due date calculations, your pregnancy weeks and days are more useful than the month label.",
+          },
+        ],
+      },
+      {
+        heading: "What Trimester Is 17 Weeks Pregnant?",
+        blocks: [
+          { kind: "p", text: "At 17 weeks, you're in the **second trimester**." },
+          { kind: "p", text: "The NHS organizes pregnancy into three stages:" },
+          {
+            kind: "list",
+            items: [
+              "**First trimester:** Weeks 1–12",
+              "**Second trimester:** Weeks 13–27",
+              "**Third trimester:** Week 28 onward",
+            ],
+          },
+          {
+            kind: "p",
+            text: "Some medical references use slightly different boundaries for the start of the second trimester, but week 17 falls firmly within it.",
+          },
+          {
+            kind: "p",
+            text: "The second trimester is a period of continued fetal growth and development. Some people also find that early pregnancy symptoms become less intense during this stage, although every pregnancy is different.",
+          },
+          {
+            kind: "p",
+            text: "For more information, see the [NHS week-by-week pregnancy guide](https://www.nhs.uk/best-start-in-life/pregnancy/week-by-week-guide-to-pregnancy/).",
+          },
+        ],
+      },
+      {
+        heading: "Pregnancy Weeks to Months Chart",
+        blocks: [
+          {
+            kind: "p",
+            text: "If you're trying to understand how pregnancy weeks translate into months, the following chart provides a commonly used approximate guide.",
+          },
+          {
+            kind: "table",
+            caption: "Approximate guide for converting pregnancy weeks into months",
+            head: ["Pregnancy month", "Approximate weeks"],
+            rows: [
+              ["Month 1", "Weeks 1–4"],
+              ["Month 2", "Weeks 5–8"],
+              ["Month 3", "Weeks 9–13"],
+              ["Month 4", "Weeks 14–17"],
+              ["Month 5", "Weeks 18–22"],
+              ["Month 6", "Weeks 23–27"],
+              ["Month 7", "Weeks 28–31"],
+              ["Month 8", "Weeks 32–35"],
+              ["Month 9", "Weeks 36–40"],
+            ],
+          },
+          {
+            kind: "p",
+            text: "This is a general conversion chart, not an official medical dating standard. Different resources may group weeks into months differently.",
+          },
+          {
+            kind: "p",
+            text: "The most reliable way to track pregnancy progress is to use gestational age in completed weeks and days.",
+          },
+        ],
+      },
+      {
+        heading: "What Happens at 17 Weeks Pregnant?",
+        blocks: [
+          {
+            kind: "p",
+            text: "At 17 weeks, your baby is continuing to grow, and you may begin noticing physical changes as your uterus expands.",
+          },
+          { kind: "h3", text: "Baby Development at 17 Weeks" },
+          {
+            kind: "p",
+            text: "According to the NHS, your baby is approximately 12 cm long from head to bottom at 17 weeks, roughly the size of a pomegranate.",
+          },
+          { kind: "p", text: "At this stage:" },
+          {
+            kind: "list",
+            items: [
+              "Your baby is moving inside the uterus.",
+              "The eyes can move, although the eyelids remain closed.",
+              "The mouth can open and close.",
+              "Fingernails are developing.",
+              "Your baby may respond to sounds.",
+            ],
+          },
+          {
+            kind: "p",
+            text: "You may not feel these movements yet, particularly if this is your first pregnancy.",
+          },
+          {
+            kind: "p",
+            text: "**Official source:** [NHS — 17 Weeks Pregnant](https://www.nhs.uk/best-start-in-life/pregnancy/week-by-week-guide-to-pregnancy/2nd-trimester/week-17/)",
+          },
+          { kind: "h3", text: "Common Symptoms at 17 Weeks Pregnant" },
+          { kind: "p", text: "Pregnancy symptoms vary, but some people experience:" },
+          {
+            kind: "list",
+            items: [
+              "Mild discomfort around the sides of the abdomen as the uterus grows",
+              "Bloating or constipation",
+              "Heartburn or indigestion",
+              "Breast tenderness",
+              "Headaches",
+              "Leg cramps",
+              "Changes in skin pigmentation",
+            ],
+          },
+          { kind: "p", text: "Your abdomen may also begin looking more noticeably pregnant." },
+          {
+            kind: "p",
+            text: "These changes are common, but symptoms should not be assumed harmless simply because they occur during pregnancy. Contact your healthcare professional if you have persistent or concerning symptoms.",
+          },
+        ],
+      },
+      {
+        heading: "Can You Feel Your Baby Move at 17 Weeks?",
+        blocks: [
+          {
+            kind: "p",
+            text: "Some people begin noticing early fetal movements around 17 weeks, but others won't feel them until later.",
+          },
+          {
+            kind: "p",
+            text: "The first movements may feel like gentle fluttering, bubbling, or rolling rather than distinct kicks.",
+          },
+          {
+            kind: "p",
+            text: "According to the NHS, many women first notice their baby's movements between 18 and 24 weeks.",
+          },
+          {
+            kind: "p",
+            text: "If this is your first pregnancy, you may find it difficult to recognize those sensations initially.",
+          },
+          {
+            kind: "p",
+            text: "If you've been pregnant before, you might identify early movements sooner because you already know what they can feel like.",
+          },
+          {
+            kind: "p",
+            text: "Not feeling movement at exactly 17 weeks does not automatically indicate a problem. However, contact your maternity care team if you are worried, and seek prompt advice if movements that you have already established become reduced or change significantly.",
+          },
+        ],
+      },
+      {
+        heading: "How Many Weeks Are Left at 17 Weeks Pregnant?",
+        blocks: [
+          {
+            kind: "p",
+            text: "If you're exactly 17 weeks pregnant, there are approximately **23 weeks remaining until the 40-week mark**.",
+          },
+          { kind: "p", text: "The calculation is:" },
+          { kind: "p", text: "40 weeks − 17 weeks = 23 weeks." },
+          { kind: "p", text: "That equals 161 days until the estimated due date." },
+          {
+            kind: "p",
+            text: "However, this is not a countdown to a guaranteed delivery day. Your due date is an estimate, and your baby may arrive before or after it.",
+          },
+          { kind: "h3", text: "How to Estimate Your Pregnancy Due Date" },
+          {
+            kind: "p",
+            text: "Pregnancy due dates are commonly calculated using the first day of your last menstrual period or information from an ultrasound.",
+          },
+          {
+            kind: "p",
+            text: "If you know your last menstrual period date, you can get an initial estimate using the [Pregnancy Due Date Calculator](/pregnancy-due-date-calculator).",
+          },
+          {
+            kind: "p",
+            text: "Your healthcare professional can confirm the most appropriate estimated due date using your menstrual history, ultrasound findings, and other relevant information.",
+          },
+        ],
+      },
+      {
+        heading: "What to Expect in the Coming Weeks",
+        blocks: [
+          { kind: "p", text: "After week 17, you will continue progressing through the second trimester." },
+          { kind: "h3", text: "Around 18 to 21 Weeks: Mid-Pregnancy Ultrasound" },
+          {
+            kind: "p",
+            text: "Many pregnant people are offered a detailed ultrasound around this stage to examine their baby's development.",
+          },
+          {
+            kind: "p",
+            text: "In the UK, the NHS generally offers a mid-pregnancy screening scan between 18 weeks and 21 weeks and 6 days.",
+          },
+          {
+            kind: "p",
+            text: "The scan examines your baby's anatomy and checks for certain developmental conditions. Your healthcare team can explain what the examination includes and when it is scheduled.",
+          },
+          { kind: "h3", text: "Around 18 to 24 Weeks: More Noticeable Movements" },
+          { kind: "p", text: "As your baby grows, movements may become easier to recognize." },
+          {
+            kind: "p",
+            text: "You might notice fluttering, rolling, or gentle kicks. The timing varies from person to person, so it is important not to compare your experience too closely with someone else's.",
+          },
+          {
+            kind: "p",
+            text: "If you have not felt your baby move by 24 weeks, contact your midwife or maternity care team for assessment.",
+          },
+        ],
+      },
+      {
+        heading: "Final Thoughts",
+        blocks: [
+          {
+            kind: "p",
+            text: "If you've been asking **how many months am I at 17 weeks?**, you're approximately four months pregnant and well into your second trimester.",
+          },
+          {
+            kind: "p",
+            text: "Although pregnancy month charts may differ slightly, your gestational age in weeks and days remains the most accurate way to describe how far along you are.",
+          },
+          {
+            kind: "p",
+            text: "At 17 weeks, your baby is developing rapidly, and you may soon begin noticing more movement. You also have approximately 23 weeks remaining until the standard 40-week due date.",
+          },
+          {
+            kind: "p",
+            text: "To estimate your expected delivery date, use the [Pregnancy Due Date Calculator](/pregnancy-due-date-calculator) and confirm the result with your healthcare professional.",
+          },
+        ],
+      },
+      {
+        heading: "Medical References",
+        blocks: [
+          {
+            kind: "list",
+            items: [
+              "[NHS — 17 Weeks Pregnant](https://www.nhs.uk/best-start-in-life/pregnancy/week-by-week-guide-to-pregnancy/2nd-trimester/week-17/)",
+              "[NHS — Week-by-Week Pregnancy Guide](https://www.nhs.uk/best-start-in-life/pregnancy/week-by-week-guide-to-pregnancy/)",
+              "[NHS Inform — How Your Baby Develops Week by Week](https://www.nhsinform.scot/ready-steady-baby/pregnancy/your-baby-s-development/how-your-baby-develops-week-to-week)",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Medical Disclaimer",
+        blocks: [
+          {
+            kind: "p",
+            text: "This article provides general pregnancy information and is not a substitute for advice from a qualified healthcare professional. Also read the [Disclaimer](/disclaimer).",
+          },
+        ],
+      },
+    ],
+  },
   {
     ...getPostCard("how-accurate-are-due-dates-for-pregnancy"),
     metaTitle: "How Accurate Are Due Dates for Pregnancy? Explained",

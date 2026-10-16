@@ -16,6 +16,20 @@ export type PostCard = {
 
 export const postCards: PostCard[] = [
   {
+    slug: "how-many-months-am-i-at-17-weeks",
+    title: "How Many Months Am I at 17 Weeks Pregnant?",
+    excerpt:
+      "How many months am I at 17 weeks pregnant? Learn which pregnancy month and trimester you're in, how weeks convert to months, and what to expect.",
+    toolId: "pregnancy",
+    toolLabel: "Pregnancy Due Date Calculator",
+    toolHref: "/pregnancy-due-date-calculator",
+    updatedAt: "2026-10-16",
+    image: "/blog/adult-pregnant-green-dress.jpg",
+    imageAlt: "Adult in a long green dress standing in profile",
+    imageWidth: 1280,
+    imageHeight: 996,
+  },
+  {
     slug: "how-accurate-are-due-dates-for-pregnancy",
     title: "How Accurate Are Due Dates for Pregnancy? What to Expect",
     excerpt:
