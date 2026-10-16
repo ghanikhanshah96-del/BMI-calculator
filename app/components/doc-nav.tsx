@@ -8,9 +8,18 @@ import { pageTop, type SectionLink } from "./section-nav";
 const HEADER_OFFSET = 64 + 24;
 
 /** Sticky side contents for long documents: highlights the section being read and scrolls to a section on click. */
-export default function DocNav({ items, title = "On this page" }: { items: readonly SectionLink[]; title?: string }) {
+export default function DocNav({
+  items,
+  title = "On this page",
+  className = "",
+}: {
+  items: readonly SectionLink[];
+  title?: string;
+  className?: string;
+}) {
   const [active, setActive] = useState(items[0]?.id ?? "");
   const barRef = useRef<HTMLSpanElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
   /** While a click-triggered scroll runs, scroll-spy must not override the clicked link. */
   const lockUntil = useRef(0);
 
@@ -55,6 +64,17 @@ export default function DocNav({ items, title = "On this page" }: { items: reado
     };
   }, [items]);
 
+  useEffect(() => {
+    const list = listRef.current;
+    const link = list?.querySelector<HTMLElement>(`a[href="#${CSS.escape(active)}"]`);
+    if (!list || !link) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const listTop = list.getBoundingClientRect().top;
+    const linkTop = link.getBoundingClientRect().top;
+    const next = list.scrollTop + (linkTop - listTop) - (list.clientHeight - link.clientHeight) / 2;
+    list.scrollTo({ top: Math.max(0, next), behavior: reduceMotion ? "auto" : "smooth" });
+  }, [active]);
+
   const scrollToY = (top: number) => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
@@ -64,16 +84,18 @@ export default function DocNav({ items, title = "On this page" }: { items: reado
     const target = document.getElementById(id);
     if (!target) return;
     event.preventDefault();
-    lockUntil.current = event.timeStamp + 1500;
+    const top = pageTop(target) - HEADER_OFFSET;
+    const distance = Math.abs(window.scrollY - top);
+    lockUntil.current = performance.now() + Math.min(2200, 450 + distance * 0.45);
     setActive(id);
-    scrollToY(pageTop(target) - HEADER_OFFSET);
+    scrollToY(top);
     history.replaceState(null, "", `#${id}`);
   };
 
   const activeIndex = Math.max(0, items.findIndex((item) => item.id === active));
 
   return (
-    <nav aria-label={title} className="doc-nav">
+    <nav aria-label={title} className={`doc-nav ${className}`.trim()}>
       <div className="flex items-center justify-between gap-3">
         <p className="doc-nav-title">{title}</p>
         <span className="doc-nav-count" aria-hidden="true">
@@ -83,7 +105,7 @@ export default function DocNav({ items, title = "On this page" }: { items: reado
       <div className="doc-nav-progress" aria-hidden="true">
         <span ref={barRef} />
       </div>
-      <ol className="doc-nav-list">
+      <ol ref={listRef} className="doc-nav-list">
         {items.map((item, index) => {
           const state = index === activeIndex ? "doc-nav-link-active" : index < activeIndex ? "doc-nav-link-done" : "";
           return (

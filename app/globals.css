@@ -295,12 +295,19 @@ a {
     background-size: 100% 1px;
   }
 
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition:
-      opacity 0.8s ease,
-      transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+    animation: rise-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
 
   .reveal.is-visible {
@@ -502,56 +509,6 @@ a {
   [data-tilt] {
     transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
     transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-  }
-
-  .cursor-dot,
-  .cursor-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    pointer-events: none;
-    border-radius: 9999px;
-    opacity: 0;
-    will-change: transform;
-  }
-
-  .cursor-dot {
-    width: 8px;
-    height: 8px;
-    margin: -4px 0 0 -4px;
-    background: linear-gradient(135deg, #10b981, #a3e635);
-    transition: opacity 0.2s ease, scale 0.2s ease;
-  }
-
-  .cursor-ring {
-    width: 36px;
-    height: 36px;
-    margin: -18px 0 0 -18px;
-    border: 1.5px solid rgba(16, 185, 129, 0.5);
-    transition:
-      opacity 0.25s ease,
-      scale 0.2s ease,
-      border-color 0.3s ease;
-  }
-
-  html.cursor-ready .cursor-dot,
-  html.cursor-ready .cursor-ring {
-    opacity: 1;
-  }
-
-  html.cursor-hover .cursor-dot {
-    scale: 0.65;
-  }
-
-  html.cursor-hover .cursor-ring {
-    border-color: rgba(13, 148, 136, 0.95);
-    scale: 1.45;
-  }
-
-  html.cursor-text .cursor-dot,
-  html.cursor-text .cursor-ring {
-    opacity: 0;
   }
 
   /* Repeated layout patterns, named so pages ship short class lists. */
@@ -1209,7 +1166,7 @@ a {
 
   /* Document side navigation */
   .doc-nav {
-    @apply rounded-2xl bg-white/95 p-4 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100 backdrop-blur-md;
+    @apply flex max-h-[70vh] flex-col rounded-2xl bg-white/95 p-4 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100 backdrop-blur-md lg:max-h-[calc(100dvh-18rem)];
   }
 
   .doc-nav-title {
@@ -1225,16 +1182,18 @@ a {
   }
 
   .doc-nav-progress > span {
-    @apply block h-full origin-left rounded-full bg-linear-to-r from-emerald-500 to-teal-500 transition-transform duration-150;
+    @apply block h-full origin-left rounded-full bg-linear-to-r from-emerald-500 to-teal-500 transition-transform duration-300 ease-out;
     transform: scaleX(0);
   }
 
   .doc-nav-list {
-    @apply relative mt-3 space-y-0.5 text-sm before:absolute before:inset-y-2 before:left-[1.375rem] before:w-px before:bg-emerald-100;
+    @apply relative mt-3 min-h-0 flex-1 space-y-0.5 overflow-y-auto scroll-smooth overscroll-contain pr-1 text-sm before:absolute before:inset-y-2 before:left-[1.375rem] before:w-px before:bg-emerald-100;
+    scrollbar-width: thin;
+    scrollbar-color: #a7f3d0 transparent;
   }
 
   .doc-nav-link {
-    @apply relative flex items-center gap-3 rounded-xl px-2.5 py-2 leading-5 text-slate-600 transition duration-200 hover:bg-emerald-50/80 hover:text-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-500;
+    @apply relative flex items-center gap-3 rounded-xl px-2.5 py-2 leading-5 text-slate-600 transition duration-300 ease-out hover:bg-emerald-50/80 hover:text-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-500;
   }
 
   .doc-nav-index {
@@ -1742,6 +1701,18 @@ a {
     @apply bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/25 ring-0 hover:bg-linear-to-r hover:text-white hover:ring-0;
   }
 
+  .blog-filter-count {
+    @apply ml-2 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-800 tabular-nums;
+  }
+
+  .blog-filter-active .blog-filter-count {
+    @apply bg-white/20 text-white;
+  }
+
+  .blog-results {
+    animation: rise-in 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
   .blog-search {
     @apply relative w-full max-w-md lg:ml-auto;
   }
@@ -2060,10 +2031,5 @@ textarea {
   [data-magnetic],
   [data-tilt] {
     transform: none !important;
-  }
-
-  .cursor-dot,
-  .cursor-ring {
-    display: none;
   }
 }

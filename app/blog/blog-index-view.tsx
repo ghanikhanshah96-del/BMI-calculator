@@ -104,42 +104,40 @@ function GridPostCard({ post, priority = false }: { post: PostCard; priority?: b
   );
 }
 
-const nextSteps = [
-  {
-    title: "Check a BMI result",
-    text: "Use the BMI Calculator for a height-and-weight screening number, then read the article before treating that number as body fat.",
-    href: "/bmi-calculator",
-    label: "Open the BMI Calculator",
-  },
-  {
-    title: "Add a body-fat estimate",
-    text: "The Body Fat Percentage Calculator uses tape measurements and can add context when muscle makes BMI look high.",
-    href: "/body-fat-percentage-calculator",
-    label: "Open the Body Fat Percentage Calculator",
-  },
-  {
-    title: "Browse every tool",
-    text: "Calories, macros, due date, and ovulation each have their own calculator page with instructions and limits.",
-    href: "/calculators",
-    label: "See all calculators",
-  },
-];
-
 export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
 
   const categories = useMemo(() => {
-    const seen = new Set<string>();
-    const list: string[] = [];
+    const counts = new Map<string, number>();
     for (const post of posts) {
       const label = postCategory(post);
-      if (!seen.has(label)) {
-        seen.add(label);
-        list.push(label);
-      }
+      counts.set(label, (counts.get(label) ?? 0) + 1);
     }
-    return list;
+    return [...counts.entries()].map(([label, count]) => ({ label, count }));
+  }, []);
+
+  const nextSteps = useMemo(() => {
+    const seen = new Set<string>();
+    const steps: { title: string; text: string; href: string; label: string }[] = [];
+    for (const post of posts) {
+      if (seen.has(post.toolId)) continue;
+      seen.add(post.toolId);
+      const tool = getToolLink(post.toolId);
+      steps.push({
+        title: tool.name,
+        text: tool.tagline,
+        href: post.toolHref,
+        label: `Open the ${tool.name}`,
+      });
+    }
+    steps.push({
+      title: "Browse every tool",
+      text: "Calories, macros, due date, and ovulation each have their own calculator page with instructions and limits.",
+      href: "/calculators",
+      label: "See all calculators",
+    });
+    return steps;
   }, []);
 
   const filtered = useMemo(() => {
@@ -193,16 +191,18 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
                 onClick={() => setFilter("all")}
               >
                 All
+                <span className="blog-filter-count">{posts.length}</span>
               </button>
               {categories.map((category) => (
                 <button
-                  key={category}
+                  key={category.label}
                   type="button"
-                  className={filter === category ? "blog-filter blog-filter-active" : "blog-filter"}
-                  aria-pressed={filter === category}
-                  onClick={() => setFilter(category)}
+                  className={filter === category.label ? "blog-filter blog-filter-active" : "blog-filter"}
+                  aria-pressed={filter === category.label}
+                  onClick={() => setFilter(category.label)}
                 >
-                  {category}
+                  {category.label}
+                  <span className="blog-filter-count">{category.count}</span>
                 </button>
               ))}
             </div>
@@ -225,7 +225,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
               No articles match that filter. Try another topic or clear the search.
             </p>
           ) : (
-            <div className="blog-post-grid mt-8">
+            <div key={`${filter}:${query}`} className="blog-post-grid blog-results mt-8">
               {filtered.map((post, index) => {
                 const rowStart = Math.floor(index / 3) * 3;
                 const cardsOnRow = Math.min(3, filtered.length - rowStart);

@@ -4,6 +4,7 @@ import { ChevronDown } from "./icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { postCards } from "../blog/post-cards";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
 
@@ -22,10 +23,8 @@ const groups: { id: string; title: string; links: FooterLink[] }[] = [
     id: "resources",
     title: "Resources",
     links: [
-      {
-        href: "/blog/why-bmi-is-not-accurate-for-muscular-people",
-        label: "Why BMI Is Not Accurate for Muscular People",
-      },
+      ...postCards.map((post) => ({ href: `/blog/${post.slug}`, label: post.title })),
+      { href: "/blog", label: "All articles" },
     ],
   },
   {
@@ -98,7 +97,7 @@ export default function SiteFooter() {
                   <div className={open ? "footer-panel footer-panel-open" : "footer-panel"}>
                     <ul id={panelId} className="footer-list">
                       {group.links.map((link) => (
-                        <li key={link.label}>
+                        <li key={link.href}>
                           <Link href={link.href} className="link-grow footer-link">
                             {link.label}
                           </Link>

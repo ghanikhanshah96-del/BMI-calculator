@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     path: `/blog/${post.slug}`,
     keywords: post.keywords,
     type: "article",
-    image: { url: post.image, alt: post.imageAlt, width: 1023, height: 682 },
+    image: { url: post.image, alt: post.imageAlt, width: post.imageWidth ?? 1023, height: post.imageHeight ?? 682 },
     article: { publishedTime: post.publishedAt, modifiedTime: post.updatedAt, section: post.toolLabel },
   });
 }

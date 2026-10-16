@@ -10,9 +10,25 @@ export type PostCard = {
   updatedAt: string;
   image: string;
   imageAlt: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 
 export const postCards: PostCard[] = [
+  {
+    slug: "how-accurate-are-due-dates-for-pregnancy",
+    title: "How Accurate Are Due Dates for Pregnancy? What to Expect",
+    excerpt:
+      "How accurate are due dates for pregnancy? Learn how ultrasound and last-period estimates work, why dates change, and when babies typically arrive.",
+    toolId: "pregnancy",
+    toolLabel: "Pregnancy Due Date Calculator",
+    toolHref: "/pregnancy-due-date-calculator",
+    updatedAt: "2026-10-16",
+    image: "/blog/adult-pregnant-holding-abdomen.jpg",
+    imageAlt: "Adult in a long-sleeved dress standing in profile with both hands resting on the abdomen",
+    imageWidth: 1280,
+    imageHeight: 960,
+  },
   {
     slug: "why-bmi-is-not-accurate-for-muscular-people",
     title: "Why BMI Is Not Accurate for Muscular People",

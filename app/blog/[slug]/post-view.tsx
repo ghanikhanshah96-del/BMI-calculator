@@ -178,7 +178,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
 
       <main className="page-main section-block relative z-10">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
-          <article className="min-w-0">
+          <article className="order-2 min-w-0 lg:order-1">
             <ArticleBlocks blocks={post.intro} priorityFirstFigure />
             <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
@@ -194,9 +194,9 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
               </ul>
             </section>
             <div className="space-y-6">
-              {post.sections.map((section, index) => (
-                <Reveal key={section.heading} delay={Math.min(index, 2) * 60}>
-                  <section id={sectionId(section.heading)} className="card-surface scroll-mt-28 p-6 sm:p-8">
+              {post.sections.map((section) => (
+                <Reveal key={section.heading} id={sectionId(section.heading)} className="scroll-mt-28">
+                  <section className="card-surface p-6 sm:p-8">
                     <h2 className="section-title">{section.heading}</h2>
                     <ArticleBlocks blocks={section.blocks} />
                   </section>
@@ -211,13 +211,15 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
             </div>
           </article>
 
-          <aside className="space-y-6">
-            <div className="cta-panel p-6 sm:p-7">
+          <aside className="order-1 flex flex-col gap-6 lg:sticky lg:top-24 lg:order-2 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
+            <DocNav items={contents} title="In this article" className="min-h-0 lg:flex-1" />
+            <div className="cta-panel shrink-0 p-6 sm:p-7">
               <div className="cta-glow" />
               <h2 className="text-xl text-white sm:text-2xl">Try the {post.toolLabel}</h2>
               <p className="mt-2 text-sm leading-6 text-emerald-50">
-                Use the free {post.toolLabel} to see your screening result, then read it alongside the limits explained
-                in this article.
+                {post.toolId === "pregnancy"
+                  ? `Use the free ${post.toolLabel} for an initial estimate, then read it alongside the limits explained in this article.`
+                  : `Use the free ${post.toolLabel} to see your screening result, then read it alongside the limits explained in this article.`}
               </p>
               <Link href={post.toolHref} className="group cta-button">
                 Open the {post.toolLabel}
@@ -230,10 +232,6 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
                 </Link>
                 .
               </p>
-            </div>
-
-            <div className="sticky top-24 hidden lg:block">
-              <DocNav items={contents} title="In this article" />
             </div>
           </aside>
         </div>
