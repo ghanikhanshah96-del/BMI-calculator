@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
     // Fewer candidate widths keep every <img srcset> short without hurting sharpness.
     deviceSizes: [640, 828, 1200, 1920],
     imageSizes: [96, 256, 384],
+    remotePatterns: [
+      { protocol: "https", hostname: "firebasestorage.googleapis.com", pathname: "/**" },
+      { protocol: "https", hostname: "storage.googleapis.com", pathname: "/**" },
+    ],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

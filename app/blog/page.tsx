@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import { pageMetadata } from "../lib/seo";
 import { getSiteUrl } from "../lib/site-url";
 import BlogIndexView from "./blog-index-view";
+import { listCatalogCards } from "./catalog";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = pageMetadata({
-  title: "BMI and Muscular People",
+  title: "Health articles",
   description:
-    "Read why BMI is not accurate for muscular people, how muscle mass affects the result, and which other measurements can add context.",
+    "Guides that explain how our calculators work, what the results mean, and where a single number needs more context.",
   path: "/blog",
-  keywords: ["BMI muscular people", "why BMI is not accurate", "muscle mass and BMI", "BMI vs body fat"],
-  image: {
-    url: "/blog/adult-barbell-strength-training.jpg",
-    alt: "Adult in athletic clothes lifting a barbell from the floor during strength training",
-  },
+  keywords: ["BMI", "pregnancy due date", "fitness calculators", "health articles"],
 });
 
-export default function BlogIndexPage() {
-  return <BlogIndexView siteUrl={getSiteUrl()} />;
+export default async function BlogIndexPage() {
+  const posts = await listCatalogCards();
+  return <BlogIndexView siteUrl={getSiteUrl()} posts={posts} />;
 }

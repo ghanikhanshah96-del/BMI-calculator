@@ -90,6 +90,482 @@ const waistTape: PostFigure = {
 
 export const blogPosts: BlogPost[] = [
   {
+    ...getPostCard("how-to-calculate-body-fat-percentage"),
+    metaTitle: "How to Calculate Body Fat Percentage: Easy Guide",
+    metaTitleAbsolute: true,
+    description:
+      "Learn how to calculate body fat percentage using a simple formula, body measurements, or an online calculator. Follow easy steps and understand your results.",
+    relatedSlugs: ["how-to-measure-body-fat-at-home", "why-bmi-is-not-accurate-for-muscular-people"],
+    publishedAt: "2026-10-21",
+    keywords: [
+      "how to calculate body fat percentage",
+      "body fat percentage formula",
+      "body fat calculator",
+      "calculate body fat percentage at home",
+      "body fat measurement",
+      "body fat percentage calculator online",
+      "U.S. Navy body fat method",
+      "body fat percentage accuracy",
+    ],
+    takeaways: [
+      "Body fat percentage estimates how much of your total body weight is fat, which weight alone cannot show.",
+      "If you already know your fat mass, use (fat mass ÷ total body weight) × 100.",
+      "Without fat mass, circumference measurements and a calculator can provide an estimate at home.",
+      "Calculator results are estimates, not a medical diagnosis. Focus on longer-term trends.",
+    ],
+    intro: [
+      {
+        kind: "p",
+        text: "Wondering **how to calculate body fat percentage**? You can estimate it using body measurements and an online calculator. If you already know your fat mass, you can also calculate the percentage with a simple formula.",
+      },
+      {
+        kind: "p",
+        text: "Body fat percentage shows how much of your total body weight consists of fat. Unlike body weight alone, it helps describe your body's fat and lean tissue proportions.",
+      },
+      {
+        kind: "p",
+        text: "Here's how to calculate it and understand the result. These methods provide educational estimates only and are not a substitute for professional medical advice.",
+      },
+      { kind: "figure", figure: waistTape },
+    ],
+    faqs: [
+      {
+        question: "Can I calculate body fat percentage at home?",
+        answer:
+          "Yes. You can use a measuring tape and a body fat percentage calculator to estimate your body fat at home without specialized equipment. Treat the result as an estimate.",
+      },
+      {
+        question: "Can I calculate body fat percentage using only weight?",
+        answer:
+          "No. Weight alone doesn't show how much of your body consists of fat. You need an estimate of fat mass or additional measurements such as circumferences.",
+      },
+      {
+        question: "Is body fat percentage the same as BMI?",
+        answer:
+          "No. BMI compares weight with height, while body fat percentage estimates the proportion of body weight made up of fat. They answer different questions.",
+      },
+      {
+        question: "Does a body fat calculator give an exact result?",
+        answer:
+          "No. Online calculators provide estimates, and results may differ from measurements obtained using other assessment methods such as DXA or skinfolds.",
+      },
+    ],
+    sections: [
+      {
+        heading: "How to Calculate Body Fat Percentage Using a Formula",
+        blocks: [
+          { kind: "p", text: "The basic body fat percentage formula is:" },
+          {
+            kind: "p",
+            text: "**Body Fat Percentage = (Fat Mass ÷ Total Body Weight) × 100**",
+          },
+          {
+            kind: "p",
+            text: "For example, suppose you weigh 80 kg and a body composition assessment estimates that 18 kg of your weight is fat.",
+          },
+          { kind: "p", text: "**(18 ÷ 80) × 100 = 22.5%**" },
+          { kind: "p", text: "Your estimated body fat percentage is 22.5%." },
+          {
+            kind: "p",
+            text: "This formula works when you already know your fat mass. However, a regular weighing scale only measures total weight, so you'll need another method to estimate how much of that weight is fat.",
+          },
+        ],
+      },
+      {
+        heading: "How to Calculate Body Fat Percentage Online",
+        blocks: [
+          {
+            kind: "p",
+            text: "An online body fat calculator is a convenient option if you don't know your fat mass.",
+          },
+          { kind: "h3", text: "Step 1: Open the Body Fat Calculator" },
+          {
+            kind: "p",
+            text: "Visit the [Body Fat Percentage Calculator](/body-fat-percentage-calculator). The tool estimates body fat using measurements you can take at home.",
+          },
+          { kind: "h3", text: "Step 2: Enter Your Details" },
+          {
+            kind: "p",
+            text: "Select your measurement units and enter your age and the other requested details. For adults aged 18 and older, the calculator uses the U.S. Navy circumference method.",
+          },
+          { kind: "h3", text: "Step 3: Take Your Body Measurements" },
+          {
+            kind: "p",
+            text: "Adults need the following measurements:",
+          },
+          {
+            kind: "list",
+            items: [
+              "Height",
+              "Weight",
+              "Neck circumference",
+              "Waist circumference",
+              "Hip circumference, for women",
+            ],
+          },
+          {
+            kind: "p",
+            text: "Use a flexible measuring tape and follow the calculator's measurement instructions. Keep the tape snug without pulling it too tightly.",
+          },
+          { kind: "figure", figure: homeDumbbell },
+          { kind: "h3", text: "Step 4: Calculate Your Body Fat Percentage" },
+          {
+            kind: "p",
+            text: "Click Calculate to see your estimated body fat percentage. The results also include an estimate of fat mass and lean mass.",
+          },
+          {
+            kind: "p",
+            text: "Remember that these numbers are **estimates**, not exact measurements or a medical diagnosis.",
+          },
+          {
+            kind: "p",
+            text: "**Note:** For ages 8–17, the calculator uses a different height-to-waist method and reports an estimated range. Children's results should not be interpreted using adult body fat standards.",
+          },
+        ],
+      },
+      {
+        heading: "Other Methods to Measure Body Fat Percentage",
+        blocks: [
+          {
+            kind: "p",
+            text: "There are several ways to estimate body composition besides using an online calculator.",
+          },
+          {
+            kind: "table",
+            caption: "Common body fat estimation methods and how they work",
+            head: ["Method", "How it works"],
+            rows: [
+              [
+                "Body measurements",
+                "Uses measurements such as waist, neck, and height in an estimation formula",
+              ],
+              [
+                "Skinfold calipers",
+                "Measures skinfold thickness at selected body sites",
+              ],
+              [
+                "Smart scales (BIA)",
+                "Uses bioelectrical impedance to estimate body composition",
+              ],
+              [
+                "DXA scan",
+                "Uses specialized imaging to estimate fat mass, lean tissue, and bone mineral content",
+              ],
+            ],
+          },
+          {
+            kind: "p",
+            text: "Each method has limitations. For example, smart-scale readings can be affected by hydration, while skinfold measurements depend on the person's measuring technique. Research also shows that body fat estimates from BIA devices can differ from DXA results.",
+          },
+          {
+            kind: "p",
+            text: "For a practical at-home walkthrough of tape, scale, and caliper options, see [How to Measure Body Fat at Home](/blog/how-to-measure-body-fat-at-home).",
+          },
+        ],
+      },
+      {
+        heading: "How Accurate Is a Body Fat Percentage Calculator?",
+        blocks: [
+          {
+            kind: "p",
+            text: "A body fat calculator provides an estimate based on a mathematical formula. It does not directly measure the fat inside your body.",
+          },
+          { kind: "p", text: "Results can vary because of:" },
+          {
+            kind: "list",
+            items: [
+              "Incorrect tape measurements",
+              "Differences in body shape",
+              "The estimation formula used",
+              "Inconsistent measurement technique",
+            ],
+          },
+          {
+            kind: "p",
+            text: "For more useful comparisons, take measurements at the same locations and under similar conditions each time. Focus on longer-term trends rather than treating one reading as an exact result.",
+          },
+          {
+            kind: "p",
+            text: "If you need a more detailed body composition assessment for a medical reason, speak with a qualified healthcare professional.",
+          },
+        ],
+      },
+      {
+        heading: "Conclusion",
+        blocks: [
+          {
+            kind: "p",
+            text: "Now you know how to calculate body fat percentage using a formula or body measurements.",
+          },
+          {
+            kind: "p",
+            text: "If you already know your fat mass, divide it by your total body weight and multiply by 100. Otherwise, use the FitnessCalculatorPro [Body Fat Percentage Calculator](/body-fat-percentage-calculator) to get an estimate from your measurements.",
+          },
+          {
+            kind: "p",
+            text: "Use the result as a general guide to body composition, not as a complete measure of your health. Also read our [Disclaimer](/disclaimer).",
+          },
+        ],
+      },
+      {
+        heading: "Sources",
+        blocks: [
+          {
+            kind: "p",
+            text: "These public resources explain body composition screening and the limits of single measurements:",
+          },
+          {
+            kind: "list",
+            items: [
+              "[CDC: About Body Mass Index](https://www.cdc.gov/bmi/about/index.html)",
+              "[CDC: BMI frequently asked questions](https://www.cdc.gov/bmi/faq/)",
+              "[NIDDK: Am I at a Healthy Weight?](https://www.niddk.nih.gov/health-information/weight-management/adult-overweight-obesity/am-i-healthy-weight)",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    ...getPostCard("how-to-measure-body-fat-at-home"),
+    metaTitle: "How to Measure Body Fat at Home: Easy Methods",
+    metaTitleAbsolute: true,
+    description:
+      "Learn how to measure body fat at home using a measuring tape, online calculator, smart scale, or calipers. Follow simple steps and improve accuracy.",
+    relatedSlugs: ["how-to-calculate-body-fat-percentage", "why-bmi-is-not-accurate-for-muscular-people"],
+    publishedAt: "2026-10-21",
+    keywords: [
+      "how to measure body fat at home",
+      "measure body fat at home",
+      "calculate body fat percentage at home",
+      "body fat measurement methods",
+      "body fat calculator",
+      "body fat measuring tape",
+      "U.S. Navy body fat method",
+      "body fat scale accuracy",
+    ],
+    takeaways: [
+      "You can estimate body fat at home with a measuring tape, smart scale, or skinfold calipers.",
+      "For most beginners, a tape plus an online calculator is the simplest starting point.",
+      "Home methods provide estimates. Hydration, technique, and device differences affect results.",
+      "Compare trends over weeks under similar conditions instead of relying on one reading.",
+    ],
+    intro: [
+      {
+        kind: "p",
+        text: "Wondering **how to measure body fat at home** without visiting a clinic? You can estimate your body fat percentage using a measuring tape, a smart scale, or skinfold calipers. The easiest option for most beginners is a measuring tape combined with an online body fat calculator.",
+      },
+      {
+        kind: "p",
+        text: "These methods provide estimates rather than exact measurements, but they can help you monitor changes in body composition over time. They are educational tools, not a medical diagnosis.",
+      },
+      { kind: "figure", figure: homeDumbbell },
+    ],
+    faqs: [
+      {
+        question: "Can I measure body fat at home without a scale?",
+        answer:
+          "Yes. You can use a flexible measuring tape and a circumference-based body fat calculator. Some calculators also request your body weight to estimate fat mass.",
+      },
+      {
+        question: "Can I calculate body fat using only my weight?",
+        answer:
+          "No. Weight alone cannot distinguish fat from muscle, bone, and other tissues. Additional measurements or a body composition assessment are needed.",
+      },
+      {
+        question: "Are home body fat measurements accurate?",
+        answer:
+          "They provide estimates, not exact values. Results depend on the method, formula, equipment, and measurement technique.",
+      },
+      {
+        question: "How often should I measure body fat at home?",
+        answer:
+          "Measuring every few weeks under similar conditions is generally more useful than checking daily. Small changes may reflect measurement variation rather than actual fat loss or gain.",
+      },
+    ],
+    sections: [
+      {
+        heading: "How to Measure Body Fat at Home With a Measuring Tape",
+        blocks: [
+          {
+            kind: "p",
+            text: "The U.S. Navy body fat method estimates body fat percentage using height and body circumferences. You only need a flexible measuring tape and your body measurements.",
+          },
+          { kind: "h3", text: "Step 1: Take Your Body Measurements" },
+          { kind: "p", text: "For adults, measure:" },
+          {
+            kind: "list",
+            items: [
+              "Height: Stand upright without shoes.",
+              "Neck: Measure around your neck, following the calculator's instructions.",
+              "Waist: Measure at the location specified by the calculation method, without pulling in your stomach.",
+              "Hips: For women, measure around the widest part of the hips.",
+            ],
+          },
+          {
+            kind: "p",
+            text: "Keep the tape snug against your body without squeezing the skin. Record your measurements in inches or centimeters.",
+          },
+          { kind: "figure", figure: waistTape },
+          { kind: "h3", text: "Step 2: Enter Your Measurements Into a Calculator" },
+          {
+            kind: "p",
+            text: "Open the [Body Fat Percentage Calculator](/body-fat-percentage-calculator). Select your preferred units and enter your age, weight, height, and required circumferences. The calculator uses the U.S. Navy circumference method for adults aged 18 and older.",
+          },
+          { kind: "h3", text: "Step 3: Check Your Body Fat Estimate" },
+          {
+            kind: "p",
+            text: "Click Calculate to see your estimated body fat percentage, fat mass, and lean mass. For example, a result of 25% means the formula estimates that approximately one-quarter of your total body weight is fat.",
+          },
+          {
+            kind: "p",
+            text: "Treat this as an estimate, not a precise measurement or medical diagnosis.",
+          },
+          {
+            kind: "p",
+            text: "**Note:** The calculator uses a different height-to-waist estimation method for ages 8–17. Adult measurement instructions and body fat categories should not be applied to children.",
+          },
+        ],
+      },
+      {
+        heading: "How to Measure Body Fat With a Smart Scale",
+        blocks: [
+          {
+            kind: "p",
+            text: "Smart body fat scales use bioelectrical impedance analysis (BIA) to estimate body composition.",
+          },
+          { kind: "p", text: "To use one:" },
+          {
+            kind: "list",
+            ordered: true,
+            items: [
+              "Place the scale on a firm, level surface.",
+              "Enter the personal details requested by the device.",
+              "Stand on the scale according to its instructions.",
+              "Check the estimated body fat percentage.",
+              "Record your result for future comparisons.",
+            ],
+          },
+          {
+            kind: "p",
+            text: "Smart-scale readings can change with hydration, recent exercise, and other measurement conditions. For consistent tracking, use the same device under similar conditions.",
+          },
+        ],
+      },
+      {
+        heading: "How to Measure Body Fat With Skinfold Calipers",
+        blocks: [
+          {
+            kind: "p",
+            text: "Skinfold calipers estimate body fat by measuring the thickness of skinfolds at specific body locations.",
+          },
+          {
+            kind: "p",
+            text: "The process involves gently pinching a skinfold, measuring its thickness with the calipers, and entering the readings into an appropriate body fat equation.",
+          },
+          {
+            kind: "p",
+            text: "Different equations require different measurement sites, so follow the instructions for your chosen method.",
+          },
+          {
+            kind: "p",
+            text: "Calipers can be difficult to use accurately on yourself, particularly at hard-to-reach locations. Incorrect positioning or inconsistent technique can affect the result.",
+          },
+          { kind: "figure", figure: dumbbell },
+        ],
+      },
+      {
+        heading: "Which At-Home Body Fat Measurement Method Is Best?",
+        blocks: [
+          {
+            kind: "table",
+            caption: "Comparing common at-home body fat measurement methods",
+            head: ["Method", "Equipment needed", "Main limitation"],
+            rows: [
+              [
+                "Measuring tape",
+                "Flexible tape and calculator",
+                "Depends on accurate measurements and the formula used",
+              ],
+              [
+                "Smart scale",
+                "BIA body composition scale",
+                "Readings vary with hydration and device conditions",
+              ],
+              [
+                "Skinfold calipers",
+                "Calipers and an appropriate formula",
+                "Requires practice and consistent technique",
+              ],
+            ],
+          },
+          {
+            kind: "p",
+            text: "For beginners, the measuring tape method is a practical starting point because it requires inexpensive equipment and is easy to repeat.",
+          },
+          {
+            kind: "p",
+            text: "If you already know your fat mass and want the percentage formula explained, see [How to Calculate Body Fat Percentage](/blog/how-to-calculate-body-fat-percentage).",
+          },
+        ],
+      },
+      {
+        heading: "How to Improve Body Fat Measurement Accuracy",
+        blocks: [
+          { kind: "p", text: "To make your results more consistent:" },
+          {
+            kind: "list",
+            items: [
+              "Measure at the same body locations each time.",
+              "Use the same calculator or device for comparisons.",
+              "Avoid pulling the measuring tape too tightly.",
+              "Take measurements under similar conditions.",
+              "Compare trends over several weeks rather than focusing on daily changes.",
+            ],
+          },
+          {
+            kind: "p",
+            text: "No home method can guarantee an exact body fat percentage. Techniques such as skinfold measurements and BIA can produce different estimates for the same person.",
+          },
+        ],
+      },
+      {
+        heading: "Conclusion",
+        blocks: [
+          {
+            kind: "p",
+            text: "Learning how to measure body fat at home doesn't require expensive equipment. A measuring tape and online calculator offer a simple starting point, while smart scales and skinfold calipers provide other estimation methods.",
+          },
+          {
+            kind: "p",
+            text: "For an easy circumference-based estimate, try the FitnessCalculatorPro [Body Fat Percentage Calculator](/body-fat-percentage-calculator) and track your results consistently.",
+          },
+          {
+            kind: "p",
+            text: "**Disclaimer:** Home body fat measurements are estimates and should not be used alone to assess your health or make medical decisions. Also read our site [Disclaimer](/disclaimer).",
+          },
+        ],
+      },
+      {
+        heading: "Sources",
+        blocks: [
+          {
+            kind: "p",
+            text: "Public health pages that discuss weight, body composition context, and screening limits:",
+          },
+          {
+            kind: "list",
+            items: [
+              "[CDC: About Body Mass Index](https://www.cdc.gov/bmi/about/index.html)",
+              "[CDC: BMI frequently asked questions](https://www.cdc.gov/bmi/faq/)",
+              "[NIDDK: Am I at a Healthy Weight?](https://www.niddk.nih.gov/health-information/weight-management/adult-overweight-obesity/am-i-healthy-weight)",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
     ...getPostCard("how-many-months-am-i-at-17-weeks"),
     metaTitle: "How Many Months Am I at 17 Weeks Pregnant? Explained",
     metaTitleAbsolute: true,
@@ -937,7 +1413,10 @@ export const blogPosts: BlogPost[] = [
     metaTitleAbsolute: true,
     description:
       "Find out why BMI is not accurate for muscular people, how muscle mass affects BMI results, and which other measurements can provide more context.",
-    relatedSlugs: [],
+    relatedSlugs: [
+      "how-to-calculate-body-fat-percentage",
+      "how-to-measure-body-fat-at-home",
+    ],
     publishedAt: "2026-10-10",
     keywords: [
       "why BMI is not accurate for muscular people",

@@ -20,7 +20,7 @@ import PageHero from "../components/page-hero";
 import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
-import { postCards } from "../blog/post-cards";
+import type { PostCard } from "../blog/post-cards";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 
 type SitemapItem = { href: string; label: string; description?: string; icon: IconComponent; niche?: string };
@@ -72,8 +72,14 @@ function SitemapSection({ title, intro, items }: { title: string; intro: string;
   );
 }
 
-export default function SitemapView({ siteUrl }: { siteUrl: string }) {
-  const guideItems: SitemapItem[] = postCards.map((guide) => ({
+export default function SitemapView({
+  siteUrl,
+  articles,
+}: {
+  siteUrl: string;
+  articles: PostCard[];
+}) {
+  const guideItems: SitemapItem[] = articles.map((guide) => ({
     href: `/blog/${guide.slug}`,
     label: guide.title,
     description: guide.excerpt,
@@ -129,7 +135,7 @@ export default function SitemapView({ siteUrl }: { siteUrl: string }) {
         />
       </main>
       </div>
-      <SiteFooter />
+      <SiteFooter articles={articles.map((a) => ({ slug: a.slug, title: a.title }))} />
     </div>
   );
 }

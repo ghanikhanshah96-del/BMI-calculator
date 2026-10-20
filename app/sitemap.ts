@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
-import { blogPosts } from "./blog/posts";
+import { listCatalogCards } from "./blog/catalog";
 import { getSiteUrl } from "./lib/site-url";
 import { SITE_UPDATED, toolHref, tools } from "./lib/tools";
 
-const siteUrl = getSiteUrl();
+export const revalidate = 60;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = getSiteUrl();
   const updated = new Date(SITE_UPDATED);
+  const cards = await listCatalogCards();
 
   const core: MetadataRoute.Sitemap = [
     {
@@ -30,16 +32,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.95,
   }));
 
+  const latestBlog = cards.reduce(
+    (latest, post) => (post.updatedAt > latest ? post.updatedAt : latest),
+    SITE_UPDATED,
+  );
+
   const blog: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/blog`,
-      lastModified: new Date(
-        blogPosts.reduce((latest, post) => (post.updatedAt > latest ? post.updatedAt : latest), SITE_UPDATED),
-      ),
+      lastModified: new Date(latestBlog),
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...blogPosts.map((post) => ({
+    ...cards.map((post) => ({
       url: `${siteUrl}/blog/${post.slug}`,
       lastModified: new Date(post.updatedAt),
       changeFrequency: "monthly" as const,

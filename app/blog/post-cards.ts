@@ -16,6 +16,34 @@ export type PostCard = {
 
 export const postCards: PostCard[] = [
   {
+    slug: "how-to-calculate-body-fat-percentage",
+    title: "How to Calculate Body Fat Percentage: A Simple Guide",
+    excerpt:
+      "Learn how to calculate body fat percentage using a simple formula, body measurements, or an online calculator. Follow easy steps and understand your results.",
+    toolId: "body-fat",
+    toolLabel: "Body Fat Percentage Calculator",
+    toolHref: "/body-fat-percentage-calculator",
+    updatedAt: "2026-10-21",
+    image: "/blog/clinician-waist-circumference-tape.jpg",
+    imageAlt: "Clinician holding a tape measure at the waist over clothing",
+    imageWidth: 1024,
+    imageHeight: 684,
+  },
+  {
+    slug: "how-to-measure-body-fat-at-home",
+    title: "How to Measure Body Fat at Home: 3 Simple Methods",
+    excerpt:
+      "Learn how to measure body fat at home using a measuring tape, online calculator, smart scale, or calipers. Follow simple steps and improve accuracy.",
+    toolId: "body-fat",
+    toolLabel: "Body Fat Percentage Calculator",
+    toolHref: "/body-fat-percentage-calculator",
+    updatedAt: "2026-10-21",
+    image: "/blog/adult-home-dumbbell-exercise.jpg",
+    imageAlt: "Adult sitting on an exercise mat and raising two dumbbells",
+    imageWidth: 1024,
+    imageHeight: 684,
+  },
+  {
     slug: "how-many-months-am-i-at-17-weeks",
     title: "How Many Months Am I at 17 Weeks Pregnant?",
     excerpt:

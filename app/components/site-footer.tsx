@@ -9,42 +9,55 @@ import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
 
 type FooterLink = { href: string; label: string };
+type FooterArticle = { slug: string; title: string };
 
-const groups: { id: string; title: string; links: FooterLink[] }[] = [
-  {
-    id: "tools",
-    title: "Calculators",
-    links: [
-      ...toolLinks.map((tool) => ({ href: toolHref(tool), label: tool.name })),
-      { href: "/calculators", label: "All calculators" },
-    ],
-  },
-  {
-    id: "resources",
-    title: "Resources",
-    links: [
-      ...postCards.map((post) => ({ href: `/blog/${post.slug}`, label: post.title })),
-      { href: "/blog", label: "All articles" },
-    ],
-  },
-  {
-    id: "company",
-    title: "Company",
-    links: [
-      { href: "/about-us", label: "About Us" },
-      { href: "/blog", label: "Blog" },
-      { href: "/contact-us", label: "Contact Us" },
-      { href: "/sitemap-page", label: "Sitemap" },
-      { href: "/privacy-policy", label: "Privacy Policy" },
-      { href: "/terms-and-conditions", label: "Terms and Conditions" },
-      { href: "/disclaimer", label: "Disclaimer" },
-      { href: "/editorial-policy", label: "Editorial Policy" },
-    ],
-  },
-];
+function buildGroups(articles: FooterArticle[]): { id: string; title: string; links: FooterLink[] }[] {
+  return [
+    {
+      id: "tools",
+      title: "Calculators",
+      links: [
+        ...toolLinks.map((tool) => ({ href: toolHref(tool), label: tool.name })),
+        { href: "/calculators", label: "All calculators" },
+      ],
+    },
+    {
+      id: "resources",
+      title: "Resources",
+      links: [
+        ...articles.map((post) => ({ href: `/blog/${post.slug}`, label: post.title })),
+        { href: "/blog", label: "All articles" },
+      ],
+    },
+    {
+      id: "company",
+      title: "Company",
+      links: [
+        { href: "/about-us", label: "About Us" },
+        { href: "/blog", label: "Blog" },
+        { href: "/contact-us", label: "Contact Us" },
+        { href: "/sitemap-page", label: "Sitemap" },
+        { href: "/privacy-policy", label: "Privacy Policy" },
+        { href: "/terms-and-conditions", label: "Terms and Conditions" },
+        { href: "/disclaimer", label: "Disclaimer" },
+        { href: "/editorial-policy", label: "Editorial Policy" },
+      ],
+    },
+  ];
+}
 
-export default function SiteFooter() {
+const defaultArticles: FooterArticle[] = postCards.map((p) => ({
+  slug: p.slug,
+  title: p.title,
+}));
+
+export default function SiteFooter({
+  articles = defaultArticles,
+}: {
+  articles?: FooterArticle[];
+}) {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const groups = buildGroups(articles);
 
   return (
     <footer className="site-footer">

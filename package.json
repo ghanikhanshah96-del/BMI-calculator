@@ -9,9 +9,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
+    "firebase-admin": "^14.5.0",
+    "isomorphic-dompurify": "^3.19.0",
     "jspdf": "^4.2.1",
     "next": "16.3.5",
     "react": "19.2.0",
@@ -27,6 +30,8 @@
     "eslint-config-next": "16.3.5",
     "lucide-react": "^0.468.0",
     "tailwindcss": "4.1.17",
-    "typescript": "6.0.3"
+    "tsx": "^4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5"
   }
 }

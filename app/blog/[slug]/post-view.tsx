@@ -112,7 +112,15 @@ function ArticleBlocks({ blocks, priorityFirstFigure = false }: { blocks: PostBl
   );
 }
 
-export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: string }) {
+export default function PostView({
+  siteUrl,
+  slug,
+  articles,
+}: {
+  siteUrl: string;
+  slug: string;
+  articles: { slug: string; title: string }[];
+}) {
   const post = getPostBySlug(slug);
   if (!post) return null;
   const contents = [
@@ -237,7 +245,7 @@ export default function PostView({ siteUrl, slug }: { siteUrl: string; slug: str
         </div>
       </main>
       </div>
-      <SiteFooter />
+      <SiteFooter articles={articles} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
     </div>
   );

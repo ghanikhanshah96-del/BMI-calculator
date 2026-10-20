@@ -10,7 +10,7 @@ import Reveal from "../components/reveal";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import { getToolLink } from "../lib/tool-nav";
-import { postCards as posts, type PostCard } from "./post-cards";
+import type { PostCard } from "./post-cards";
 
 function formatPostDate(iso: string) {
   const [year, month, day] = iso.split("-").map(Number);
@@ -22,7 +22,15 @@ function formatPostDate(iso: string) {
 }
 
 function postCategory(post: PostCard) {
-  return getToolLink(post.toolId).shortName;
+  try {
+    return getToolLink(post.toolId).shortName;
+  } catch {
+    return post.toolLabel || "Guide";
+  }
+}
+
+function isRemoteImage(src: string) {
+  return src.startsWith("http://") || src.startsWith("https://");
 }
 
 function SearchIcon({ className }: { className?: string }) {
@@ -49,6 +57,7 @@ function FeaturedPostCard({ post, priority = false, latest = false }: { post: Po
             sizes="(max-width: 768px) 100vw, 50vw"
             className="img-zoom object-cover"
             priority={priority}
+            unoptimized={isRemoteImage(post.image)}
           />
         </div>
         <div className="blog-featured-body">
@@ -84,6 +93,7 @@ function GridPostCard({ post, priority = false }: { post: PostCard; priority?: b
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="img-zoom object-cover"
             priority={priority}
+            unoptimized={isRemoteImage(post.image)}
           />
         </div>
         <div className="flex flex-1 flex-col p-5 sm:p-6">
@@ -104,7 +114,13 @@ function GridPostCard({ post, priority = false }: { post: PostCard; priority?: b
   );
 }
 
-export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
+export default function BlogIndexView({
+  siteUrl,
+  posts,
+}: {
+  siteUrl: string;
+  posts: PostCard[];
+}) {
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
 
@@ -115,7 +131,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
       counts.set(label, (counts.get(label) ?? 0) + 1);
     }
     return [...counts.entries()].map(([label, count]) => ({ label, count }));
-  }, []);
+  }, [posts]);
 
   const nextSteps = useMemo(() => {
     const seen = new Set<string>();
@@ -123,13 +139,17 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
     for (const post of posts) {
       if (seen.has(post.toolId)) continue;
       seen.add(post.toolId);
-      const tool = getToolLink(post.toolId);
-      steps.push({
-        title: tool.name,
-        text: tool.tagline,
-        href: post.toolHref,
-        label: `Open the ${tool.name}`,
-      });
+      try {
+        const tool = getToolLink(post.toolId);
+        steps.push({
+          title: tool.name,
+          text: tool.tagline,
+          href: post.toolHref,
+          label: `Open the ${tool.name}`,
+        });
+      } catch {
+        /* ignore unknown tool ids from remote posts */
+      }
     }
     steps.push({
       title: "Browse every tool",
@@ -138,7 +158,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
       label: "See all calculators",
     });
     return steps;
-  }, []);
+  }, [posts]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -153,7 +173,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
         post.toolLabel.toLowerCase().includes(needle)
       );
     });
-  }, [filter, query]);
+  }, [filter, query, posts]);
 
   const itemListJsonLd = {
     "@context": "https://schema.org",
@@ -261,7 +281,7 @@ export default function BlogIndexView({ siteUrl }: { siteUrl: string }) {
           </section>
         </main>
       </div>
-      <SiteFooter />
+      <SiteFooter articles={posts.map((p) => ({ slug: p.slug, title: p.title }))} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
     </div>
   );
