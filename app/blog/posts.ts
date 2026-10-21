@@ -1,4 +1,5 @@
 import { getPostCard, type PostCard } from "./post-cards";
+import { suppliedPosts } from "./supplied-posts";
 
 export type PostFigure = {
   src: string;
@@ -89,6 +90,7 @@ const waistTape: PostFigure = {
 };
 
 export const blogPosts: BlogPost[] = [
+  ...suppliedPosts,
   {
     ...getPostCard("how-to-calculate-body-fat-percentage"),
     metaTitle: "How to Calculate Body Fat Percentage: Easy Guide",

@@ -1,4 +1,5 @@
 import type { ToolId } from "../lib/tool-nav";
+import { suppliedPosts } from "./supplied-posts";
 
 export type PostCard = {
   slug: string;
@@ -15,6 +16,9 @@ export type PostCard = {
 };
 
 export const postCards: PostCard[] = [
+  ...suppliedPosts.map(({ slug, title, excerpt, toolId, toolLabel, toolHref, updatedAt, image, imageAlt, imageWidth, imageHeight }) => ({
+    slug, title, excerpt, toolId, toolLabel, toolHref, updatedAt, image, imageAlt, imageWidth, imageHeight,
+  })),
   {
     slug: "how-to-calculate-body-fat-percentage",
     title: "How to Calculate Body Fat Percentage: A Simple Guide",
