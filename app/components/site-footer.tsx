@@ -41,6 +41,7 @@ function buildGroups(articles: FooterArticle[]): { id: string; title: string; li
         { href: "/terms-and-conditions", label: "Terms and Conditions" },
         { href: "/disclaimer", label: "Disclaimer" },
         { href: "/editorial-policy", label: "Editorial Policy" },
+        { href: "/team/editorial", label: "Editorial Team" },
       ],
     },
   ];

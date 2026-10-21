@@ -17,6 +17,18 @@ import LegalLayout, { type LegalSection } from "../components/legal-layout";
 
 const sections: LegalSection[] = [
   {
+    id: "authorship",
+    title: "Authorship and responsibility",
+    icon: FileText,
+    body: [
+      <>
+        Our guides use the shared <Link href="/team/editorial" className="content-link">FitnessCalculatorPro Editorial Team</Link> byline.
+        This identifies the site as responsible for the content. It does not imply that an individual author holds a medical qualification or that an article has received clinical review.
+        Visit the team profile for our content focus and published guides.
+      </>,
+    ],
+  },
+  {
     id: "mission",
     title: "Our editorial mission",
     icon: Target,

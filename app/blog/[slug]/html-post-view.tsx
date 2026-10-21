@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Breadcrumbs from "../../components/breadcrumbs";
+import { ArticleAuthorCard, ArticleByline } from "../../components/article-author";
+import { editorialTeamRef } from "../../lib/editorial-team";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
 import SiteFooter from "../../components/site-footer";
@@ -37,7 +39,7 @@ export default function HtmlPostView({
     image: [absoluteImage(siteUrl, cover)],
     datePublished: post.publishedAt || post.date,
     dateModified: post.updatedAt || post.publishedAt || post.date,
-    author: organizationRef(siteUrl),
+    author: editorialTeamRef(siteUrl),
     publisher: organizationRef(siteUrl),
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl, name: post.title, url: postUrl },
     keywords: [post.focusKeyword, ...post.tags].filter(Boolean).join(", "),
@@ -56,6 +58,7 @@ export default function HtmlPostView({
           description={
             <>
               <p>{post.excerpt}</p>
+              <ArticleByline />
               <p className="mt-3 text-sm text-slate-500">
                 <time dateTime={post.date}>Published {post.date}</time>
                 {post.updatedAt ? (
@@ -99,6 +102,7 @@ export default function HtmlPostView({
                 </Link>
                 .
               </p>
+              <ArticleAuthorCard />
             </article>
 
             <aside className="space-y-6">
@@ -127,7 +131,7 @@ export default function HtmlPostView({
       <SiteFooter articles={articles} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }}
       />
     </div>
   );

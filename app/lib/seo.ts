@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { editorialTeam } from "./editorial-team";
+import { getSiteUrl } from "./site-url";
 
 export const SITE_NAME = "FitnessCalculatorPro.com";
 
@@ -59,6 +61,7 @@ export function pageMetadata({
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
+    ...(article ? { authors: [{ name: editorialTeam.name, url: new URL(editorialTeam.path, getSiteUrl()).href }] } : {}),
     ...(keywords ? { keywords } : {}),
     ...(isHome ? {} : { alternates: { canonical: path } }),
     openGraph: {
@@ -74,7 +77,7 @@ export function pageMetadata({
             publishedTime: article.publishedTime,
             modifiedTime: article.modifiedTime,
             section: article.section,
-            authors: [SITE_NAME],
+            authors: [new URL(editorialTeam.path, getSiteUrl()).href],
           }
         : {}),
     },

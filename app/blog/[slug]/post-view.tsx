@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "../../components/breadcrumbs";
+import { ArticleAuthorCard, ArticleByline } from "../../components/article-author";
+import { editorialTeamRef } from "../../lib/editorial-team";
 import FaqAccordion from "../../components/faq-accordion";
 import { Inline } from "../../components/content-blocks";
 import DocNav from "../../components/doc-nav";
@@ -138,7 +140,7 @@ export default function PostView({
       image: [`${siteUrl}${post.image}`],
       datePublished: post.publishedAt,
       dateModified: post.updatedAt,
-      author: organizationRef(siteUrl),
+      author: editorialTeamRef(siteUrl),
       publisher: organizationRef(siteUrl),
       mainEntityOfPage: { "@type": "WebPage", "@id": postUrl, name: post.title, url: postUrl },
       keywords: post.keywords.join(", "),
@@ -167,6 +169,7 @@ export default function PostView({
         description={
           <>
             <p>{post.excerpt}</p>
+            <ArticleByline />
             <p className="mt-3 text-sm text-slate-500">
               <time dateTime={post.publishedAt}>Published {post.publishedAt}</time>
               {" · "}
@@ -217,6 +220,7 @@ export default function PostView({
                 <FaqAccordion items={post.faqs} className="mt-5" />
               </section>
             </div>
+            <ArticleAuthorCard />
           </article>
 
           <aside className="order-1 flex flex-col gap-6 lg:sticky lg:top-24 lg:order-2 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
@@ -246,7 +250,7 @@ export default function PostView({
       </main>
       </div>
       <SiteFooter articles={articles} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
     </div>
   );
 }

@@ -62,6 +62,12 @@ export default function AboutView({ siteUrl, description }: { siteUrl: string; d
         <main className="page-main section-block relative z-10">
           <div className="doc-sections w-full">
             <section className="doc-section">
+              <h2 className="doc-section-title">Meet our editorial team</h2>
+              <p className="mt-3 text-base leading-7 text-slate-700">
+                Our calculator guides use a shared site byline. Meet the <Link href="/team/editorial" className="content-link">FitnessCalculatorPro Editorial Team</Link> to learn what that byline means, explore the topics we cover, and find our published articles.
+              </p>
+            </section>
+            <section className="doc-section">
               <h2 className="doc-section-title">Our mission</h2>
               <p className="mt-3 text-base leading-7 text-slate-700">
                 Make common fitness and health calculations clear, transparent, and useful — so you understand the

@@ -26,6 +26,7 @@ import { toolHref, toolLinks } from "../lib/tool-nav";
 type SitemapItem = { href: string; label: string; description?: string; icon: IconComponent; niche?: string };
 
 const mainPages: SitemapItem[] = [
+  { href: "/team/editorial", label: "Editorial Team", description: "Our shared author byline, content focus, and published guides", icon: BookOpenCheck },
   { href: "/", label: "Home", description: "All six calculators, how they work, and the latest guides", icon: Home },
   { href: "/calculators", label: "All Calculators", description: "Every tool grouped by goal, with tips on which result to check first", icon: LayoutGrid },
   { href: "/blog", label: "Blog", description: "Guides that explain the formula, result, and limits of each calculator", icon: BookOpen },

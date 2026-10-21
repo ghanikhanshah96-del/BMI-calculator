@@ -8,7 +8,7 @@ export default function JsonLd({ items }: { items: Schema[] }) {
         <script
           key={`${item["@type"]}-${String(item["@id"] ?? "")}`}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...item }) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...item }).replace(/</g, "\\u003c") }}
         />
       ))}
     </>
