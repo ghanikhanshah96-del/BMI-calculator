@@ -43,7 +43,7 @@ Live email messages were not sent during verification. Transport success, failur
 
 ## Blogs and images
 
-Published admin HTML uses explicit article typography for headings, links, nested bullet/numbered lists, images and horizontally scrollable tables. Heading anchors drive the same document navigation as bundled articles. On mobile, contents collapse above the article and the calculator sidebar follows the reading content. Blog listing and both article templates disable hero/footer background photos; cover images, including `/api/media/` URLs, render inside the article at their natural aspect ratio. Existing saved posts receive these presentation changes without republishing.
+Published admin HTML uses explicit article typography for headings, links, nested bullet/numbered lists, images and horizontally scrollable tables. Heading anchors drive the same document navigation as bundled articles. On mobile, contents collapse above the article and the calculator sidebar follows the reading content. Blog listing and both article templates disable hero background photos; the footer uses a plain brand gradient across all pages. Cover images, including `/api/media/` URLs, render inside the article at their natural aspect ratio. Existing saved posts receive these presentation changes without republishing.
 
 Admin blog changes use the same blogPosts collection as the public catalog. Existing bundled articles are editable through Firestore overrides. Draft/deleted overrides suppress the bundled copy; renaming also suppresses its old URL. Mutations invalidate articles, the blog and sitemaps.
 
@@ -55,7 +55,9 @@ To use Firebase Storage later, provision an authorized bucket, set MEDIA_STORAGE
 
 ### Canonical URLs and footer
 
-The footer now contains the brand, Calculators and Company columns. Article discovery stays available through the Blog link, editorial page and XML/HTML sitemaps; individual article rendering no longer fetches the entire catalog just to populate footer links.
+The footer contains the brand, Calculators and Company columns, with legal links in a separate bottom row. It shares the exact `site-container` width and responsive gutters with the navbar; the logo stays left-aligned on mobile too. Desktop groups are ordinary headings; mobile groups expose expandable controls. Footer shrink is disabled so flex layouts cannot crop the bottom links. Article discovery stays available through the Blog link, editorial page and XML/HTML sitemaps; individual article rendering no longer fetches the entire catalog just to populate footer links.
+
+Feedback controls use inline SVG stars and a close icon rather than font glyphs or literal question-mark placeholders. The same star shape is used for public cards and admin ratings. Rating names, selection, keyboard focus, saving/error states and the explicit public/private review explanation stay visible and accessible. Presentation changes do not change rating eligibility, Firestore persistence or email handling.
 
 Public canonical URLs, Open Graph URLs, XML sitemap and JSON-LD share `getSiteUrl()`. An empty public URL must resolve to `https://fitnesscalculatorpro.com`, never the current Vercel deployment host. The known `www`/HTTP variants normalize to the HTTPS apex origin. Each content page declares its own absolute canonical. `NEXT_PUBLIC_SITE_URL` should remain `https://fitnesscalculatorpro.com` in Vercel.
 

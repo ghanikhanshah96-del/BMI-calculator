@@ -250,7 +250,7 @@ export default function PostView({
         </div>
       </main>
       </div>
-      <SiteFooter showBackgroundImage={false} />
+      <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
     </div>
   );

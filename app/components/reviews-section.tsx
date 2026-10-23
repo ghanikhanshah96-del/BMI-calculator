@@ -3,6 +3,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { UserReview } from "@/app/lib/reviews";
 import { isPublicReviewRating } from "@/app/lib/review-policy";
 import { ReviewPrompt } from "@/app/components/review-prompt";
+import { ReviewStars } from "./review-icons";
+import { ChevronLeft, ChevronRight } from "./icons";
 
 export function ReviewsSection() {
   const [reviews, setReviews] = useState<UserReview[]>([]);
@@ -132,7 +134,7 @@ export function ReviewsSection() {
               aria-controls={id}
               onClick={() => move(-1)}
             >
-              &larr;
+              <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               className="review-secondary"
@@ -147,7 +149,7 @@ export function ReviewsSection() {
               aria-controls={id}
               onClick={() => move(1)}
             >
-              &rarr;
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         )}
@@ -182,15 +184,7 @@ export function ReviewsSection() {
               key={review.id}
               className="w-[min(82vw,320px)] shrink-0 rounded-xl border border-[var(--border)] bg-[var(--background)] p-5"
             >
-              <p
-                aria-label={`${review.rating} out of 5 stars`}
-                className="text-[var(--brand)]"
-              >
-                {"\u2605".repeat(review.rating)}
-                <span className="opacity-30" aria-hidden="true">
-                  {"\u2605".repeat(5 - review.rating)}
-                </span>
-              </p>
+              <ReviewStars rating={review.rating} />
               <blockquote className="mt-3 break-words text-sm leading-relaxed text-[var(--ink)]">
                 &ldquo;{review.comment}&rdquo;
               </blockquote>

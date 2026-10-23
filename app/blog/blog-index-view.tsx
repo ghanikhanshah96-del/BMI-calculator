@@ -282,7 +282,7 @@ export default function BlogIndexView({
           </section>
         </main>
       </div>
-      <SiteFooter showBackgroundImage={false} />
+      <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
     </div>
   );

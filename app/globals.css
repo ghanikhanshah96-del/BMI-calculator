@@ -733,7 +733,7 @@ a {
   }
 
   .footer-toggle {
-    @apply flex min-h-12 w-full items-center justify-between gap-3 text-left uppercase tracking-[0.18em] md:pointer-events-none md:min-h-0 md:cursor-default;
+    @apply flex min-h-12 w-full items-center justify-between gap-3 text-left uppercase tracking-[0.18em] md:hidden;
   }
 
   .footer-list {
@@ -751,7 +751,7 @@ a {
   }
 
   .footer-legal-link {
-    @apply inline-flex min-h-11 items-center text-slate-300 underline decoration-slate-500 underline-offset-4 transition hover:text-white hover:decoration-emerald-300 md:min-h-0;
+    @apply inline-flex min-h-11 items-center text-xs text-emerald-50/80 underline-offset-4 transition hover:text-white hover:underline;
   }
 
   .site-header {
@@ -766,8 +766,12 @@ a {
     @apply border-emerald-50 bg-white lg:border-transparent lg:bg-white/55;
   }
 
+  .site-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
   .header-bar {
-    @apply mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8;
+    @apply flex h-16 items-center justify-between gap-4;
   }
 
   .menu-panel {
@@ -938,7 +942,7 @@ a {
   }
 
   .site-footer {
-    @apply relative isolate mt-auto overflow-hidden pb-8 pt-12 text-white lg:pt-16;
+    @apply relative isolate mt-auto shrink-0 overflow-hidden pb-5 pt-10 text-white lg:pt-12;
     background: linear-gradient(145deg, #022c22 0%, #064e3b 46%, #0f766e 100%);
   }
 
@@ -976,7 +980,7 @@ a {
   }
 
   .footer-copy {
-    @apply mt-10 text-center text-sm text-emerald-50/80;
+    @apply text-xs leading-6 text-emerald-50/80;
   }
 
   .faq-chevron {

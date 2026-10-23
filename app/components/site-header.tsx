@@ -117,7 +117,7 @@ export default function SiteHeader({
 
   return (
     <header className={`site-header ${headerTone}`}>
-      <div className="header-bar">
+      <div className="site-container header-bar">
         <Link
           href="/"
           className="group flex min-w-0 items-center gap-3"

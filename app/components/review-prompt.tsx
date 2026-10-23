@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
 import { dismissReviewPrompt, markReviewSubmitted } from "../lib/reviews";
+import { ReviewClose, ReviewStar } from "./review-icons";
+import { CheckCircle2, Loader2 } from "./icons";
 export function ReviewPrompt({
   toolName,
   onClose,
@@ -17,6 +19,8 @@ export function ReviewPrompt({
   const [saving, setSaving] = useState(false),
     [sent, setSent] = useState(false),
     [error, setError] = useState("");
+  const [previewRating, setPreviewRating] = useState(0);
+  const ratingLabels = ["Choose a rating", "Poor", "Fair", "Good", "Very good", "Excellent"];
   useEffect(() => {
     const el = dialog.current;
     const previous = document.activeElement as HTMLElement | null;
@@ -75,13 +79,14 @@ export function ReviewPrompt({
           aria-label="Close review dialog"
           onClick={close}
           disabled={saving}
-          className="review-secondary"
+          className="review-close"
         >
-          ?
+          <ReviewClose />
         </button>
       </div>
       {sent ? (
         <div role="status">
+          <CheckCircle2 className="mt-5 h-10 w-10 text-emerald-600" />
           <p className="my-5 text-slate-600">
             Your feedback is saved and helps us improve our fitness calculators.
           </p>
@@ -90,26 +95,30 @@ export function ReviewPrompt({
           </button>
         </div>
       ) : (
-        <form onSubmit={submit}>
+        <form onSubmit={submit} aria-busy={saving}>
           <p className="mt-3 text-sm text-slate-600">
             Share your experience
             {toolName ? ` with ${toolName}` : " with FitnessCalculatorPro"}.
           </p>
           <fieldset disabled={saving} className="mt-5 space-y-4">
             <legend className="sr-only">Your review</legend>
-            <div role="group" aria-label="Star rating" className="flex gap-2">
+            <div role="group" aria-label="Star rating" className="flex flex-wrap items-center gap-1" onMouseLeave={() => setPreviewRating(0)}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   aria-label={`${star} ${star === 1 ? "star" : "stars"}`}
                   aria-pressed={rating === star}
-                  onClick={() => setRating(star)}
-                  className={`rounded-lg px-2 text-4xl focus-visible:outline-2 focus-visible:outline-emerald-700 ${star <= rating ? "text-emerald-600" : "text-slate-300"}`}
+                  onClick={() => { setRating(star); setPreviewRating(0); }}
+                  onMouseEnter={() => setPreviewRating(star)}
+                  onFocus={() => setPreviewRating(star)}
+                  onBlur={() => setPreviewRating(0)}
+                  className={`review-rating-button ${star <= (previewRating || rating) ? "text-emerald-600" : "text-slate-400"}`}
                 >
-                  ?
+                  <ReviewStar filled={star <= (previewRating || rating)} className="h-8 w-8" />
                 </button>
               ))}
+              <span aria-live="polite" className="ml-2 text-sm font-medium text-slate-600">{ratingLabels[rating]}</span>
             </div>
             <label className="block text-sm font-medium">
               Your name (optional)
@@ -142,10 +151,11 @@ export function ReviewPrompt({
             )}
             <div className="flex gap-3">
               <button
+                type="submit"
                 className="review-primary flex-1"
                 disabled={!rating || !comment.trim() || saving}
               >
-                {saving ? "Saving?" : "Send review"}
+                {saving ? <><Loader2 className="h-4 w-4 animate-spin" />Saving...</> : "Send review"}
               </button>
               <button
                 type="button"
@@ -157,9 +167,8 @@ export function ReviewPrompt({
             </div>
           </fieldset>
           <p className="mt-4 text-xs leading-5 text-slate-500">
-            Selected 4?5 star reviews may appear publicly. Ratings of 1?3 stars
-            are saved privately and a team email alert is attempted. Please
-            leave out personal and medical information.
+            Selected reviews with 4 or 5 stars may appear publicly. Reviews with
+            1 to 3 stars stay private. Please leave out personal and medical information.
           </p>
         </form>
       )}

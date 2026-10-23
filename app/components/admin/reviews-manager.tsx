@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import type { AdminReview, ReviewEdit } from "@/app/lib/reviews-repo";
+import { ReviewStar } from "../review-icons";
 import {
   AdminDialog,
   AdminIcon,
@@ -400,7 +401,7 @@ export function ReviewsManager({
                     <tr key={review.id}>
                       <td>
                         <p
-                          title={`${review.name}${review.tool ? ` ? ${review.tool}` : ""}`}
+                          title={`${review.name}${review.tool ? ` / ${review.tool}` : ""}`}
                           className="line-clamp-1 break-all font-semibold text-slate-900"
                         >
                           {review.name}
@@ -412,7 +413,7 @@ export function ReviewsManager({
                       </td>
                       <td>
                         <span className="inline-flex items-center gap-1 font-semibold text-slate-800">
-                          <span className="text-amber-500">★</span>
+                          <ReviewStar filled className="h-4 w-4 text-amber-500" />
                           {review.rating}
                         </span>
                       </td>
@@ -445,8 +446,8 @@ export function ReviewsManager({
                     {status(review)}
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
-                    <span className="font-semibold text-amber-700">
-                      ★ {review.rating}/5
+                    <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
+                      <ReviewStar filled className="h-4 w-4" />{review.rating}/5
                     </span>
                     {review.tool && (
                       <span className="max-w-24 truncate" title={review.tool}>

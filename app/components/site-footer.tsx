@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronDown } from "./icons";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
@@ -26,50 +25,39 @@ function buildGroups(): { id: string; title: string; links: FooterLink[] }[] {
         { href: "/about-us", label: "About Us" },
         { href: "/blog", label: "Blog" },
         { href: "/contact-us", label: "Contact Us" },
-        { href: "/sitemap-page", label: "Sitemap" },
-        { href: "/privacy-policy", label: "Privacy Policy" },
-        { href: "/terms-and-conditions", label: "Terms and Conditions" },
-        { href: "/disclaimer", label: "Disclaimer" },
-        { href: "/editorial-policy", label: "Editorial Policy" },
         { href: "/team/editorial", label: "Editorial Team" },
       ],
     },
   ];
 }
 
-export default function SiteFooter({
-  showBackgroundImage = true,
-}: {
-  showBackgroundImage?: boolean;
-}) {
+const legalLinks: FooterLink[] = [
+  { href: "/privacy-policy", label: "Privacy" },
+  { href: "/terms-and-conditions", label: "Terms" },
+  { href: "/disclaimer", label: "Disclaimer" },
+  { href: "/editorial-policy", label: "Editorial policy" },
+  { href: "/sitemap-page", label: "Sitemap" },
+];
+
+export default function SiteFooter() {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const groups = buildGroups();
 
   return (
     <footer className="site-footer">
-      {showBackgroundImage ? (
-        <Image
-          src="/images/footer-texture.jpg"
-          alt="Layered salad jar with fresh vegetables and grains"
-          fill
-          sizes="100vw"
-          quality={45}
-          className="-z-20 object-cover opacity-15"
-        />
-      ) : null}
       <div className="footer-overlay" />
       <div className="footer-glow" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-[1.4fr_1fr_1fr] md:gap-10">
-          <div className="text-center md:text-left">
+      <div className="site-container">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr] lg:gap-14">
+          <div className="min-w-0 md:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="group inline-flex items-center gap-3 text-left text-white no-underline"
+              className="group inline-flex min-w-0 max-w-full items-center gap-3 text-left text-white no-underline"
             >
               <BrandLogo tone="dark" />
             </Link>
-            <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-slate-300 md:mx-0 md:max-w-xs">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-emerald-50/80">
               Clear, science-based fitness and health calculators with guides to help you plan with confidence.
             </p>
           </div>
@@ -79,8 +67,9 @@ export default function SiteFooter({
               const open = openGroup === group.id;
               const panelId = `footer-group-${group.id}`;
               return (
-                <div key={group.id} className="md:block">
+                <nav key={group.id} aria-label={`Footer ${group.title}`} className="md:block">
                   <h2 className="footer-heading">
+                    <span className="hidden md:block">{group.title}</span>
                     <button
                       type="button"
                       aria-expanded={open}
@@ -106,13 +95,18 @@ export default function SiteFooter({
                       ))}
                     </ul>
                   </div>
-                </div>
+                </nav>
               );
             })}
           </div>
         </div>
 
-        <p className="footer-copy">&copy; 2026 FitnessCalculatorPro.com. All rights reserved.</p>
+        <div className="mt-8 flex flex-col gap-2 border-t border-white/15 pt-4 lg:flex-row lg:items-center lg:justify-between">
+          <p className="footer-copy">&copy; 2026 FitnessCalculatorPro.com. All rights reserved.</p>
+          <nav aria-label="Footer legal" className="flex flex-wrap gap-x-5 gap-y-1">
+            {legalLinks.map((link) => <Link key={link.href} href={link.href} className="footer-legal-link">{link.label}</Link>)}
+          </nav>
+        </div>
       </div>
     </footer>
   );

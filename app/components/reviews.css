@@ -1,6 +1,6 @@
 .review-dialog {
   margin: auto;
-  width: min(32rem, calc(100% - 2rem));
+  width: min(36rem, calc(100% - 2rem));
   max-height: 90dvh;
   overflow-y: auto;
   border: 1px solid #a7f3d0;
@@ -14,6 +14,29 @@
 .admin-dialog::backdrop {
   background: #022c2280;
 }
+.review-close,
+.review-rating-button {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+.review-close {
+  border: 1px solid #d1e5da;
+  color: #134e4a;
+  background: #f8fafc;
+}
+.review-close:hover,
+.review-rating-button:hover { background: #ecfdf5; }
+.review-close:focus-visible,
+.review-rating-button:focus-visible,
+.review-primary:focus-visible,
+.review-secondary:focus-visible { outline: 2px solid #047857; outline-offset: 3px; }
+.review-close:disabled,
+.review-rating-button:disabled { cursor: not-allowed; opacity: 0.5; }
 .review-primary,
 .review-secondary,
 .admin-btn {
