@@ -54,22 +54,26 @@ const defaultArticles: FooterArticle[] = postCards.map((p) => ({
 
 export default function SiteFooter({
   articles = defaultArticles,
+  showBackgroundImage = true,
 }: {
   articles?: FooterArticle[];
+  showBackgroundImage?: boolean;
 }) {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const groups = buildGroups(articles);
 
   return (
     <footer className="site-footer">
-      <Image
-        src="/images/footer-texture.jpg"
-        alt="Layered salad jar with fresh vegetables and grains"
-        fill
-        sizes="100vw"
-        quality={45}
-        className="-z-20 object-cover opacity-15"
-      />
+      {showBackgroundImage ? (
+        <Image
+          src="/images/footer-texture.jpg"
+          alt="Layered salad jar with fresh vegetables and grains"
+          fill
+          sizes="100vw"
+          quality={45}
+          className="-z-20 object-cover opacity-15"
+        />
+      ) : null}
       <div className="footer-overlay" />
       <div className="footer-glow" />
 

@@ -13,6 +13,7 @@ export default function PageHero({
   title,
   description,
   children,
+  showBackdrop = true,
 }: {
   image: string;
   imageAlt: string;
@@ -22,12 +23,15 @@ export default function PageHero({
   title: string;
   description?: ReactNode;
   children?: ReactNode;
+  showBackdrop?: boolean;
 }) {
   return (
     <>
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
-        <HeroBackdrop image={image} imageAlt={imageAlt} />
-      </div>
+      {showBackdrop ? (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem]" aria-hidden="true">
+          <HeroBackdrop image={image} imageAlt={imageAlt} />
+        </div>
+      ) : null}
       <div className="hero-inner relative z-10 text-left">
         <div className="mr-auto w-full max-w-none text-left">
           {children}

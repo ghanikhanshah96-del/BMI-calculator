@@ -10,6 +10,10 @@ import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { organizationRef } from "../../lib/seo";
 import type { FirestoreBlogPost } from "../../lib/firestore-blog";
+import DocNav from "../../components/doc-nav";
+import MobileArticleContents from "../../components/mobile-article-contents";
+import { articleHeadings } from "../../lib/article-headings";
+import "../article.css";
 
 const ctaLink =
   "font-semibold text-white underline decoration-white/50 underline-offset-4 hover:decoration-white";
@@ -30,7 +34,7 @@ export default function HtmlPostView({
 }) {
   const postUrl = `${siteUrl}/blog/${post.slug}`;
   const cover = post.coverImage || "/logo.png";
-  const heroLocal = cover.startsWith("http") ? "/logo.png" : cover;
+  const { html, headings } = articleHeadings(post.content);
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -50,7 +54,8 @@ export default function HtmlPostView({
       <SiteHeader activePage="blog" />
       <div className="relative isolate flex flex-1 flex-col">
         <PageHero
-          image={heroLocal}
+          showBackdrop={false}
+          image={cover}
           imageAlt={post.coverImageAlt || post.title}
           eyebrow={post.category || "Guide"}
           icon={BookOpen}
@@ -82,17 +87,18 @@ export default function HtmlPostView({
 
         <main className="page-main section-block relative z-10">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
-            <article className="min-w-0">
-              {cover.startsWith("http") ? (
+            <article className="order-1 min-w-0">
+              <MobileArticleContents items={headings} />
+              {post.coverImage ? (
                 <figure className="article-figure mb-8">
-                  {/* Storage download URL from Firebase */}
+                  {/* Both local media routes and external cover URLs use the article image slot. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={cover} alt={post.coverImageAlt || post.title} className="h-auto w-full" />
+                  <img src={cover} alt={post.coverImageAlt || post.title} fetchPriority="high" decoding="async" className="block h-auto w-full" />
                 </figure>
               ) : null}
               <div
-                className="prose prose-slate max-w-none prose-headings:text-emerald-950 prose-a:text-emerald-700"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                className="article-body card-surface p-6 sm:p-8"
+                dangerouslySetInnerHTML={{ __html: html }}
               />
               <p className="mt-10 text-sm text-slate-500">
                 This article provides general educational information and is not a substitute for
@@ -105,8 +111,9 @@ export default function HtmlPostView({
               <ArticleAuthorCard />
             </article>
 
-            <aside className="space-y-6">
-              <div className="cta-panel p-6 sm:p-7">
+            <aside className="order-2 flex flex-col gap-6 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
+              {headings.length ? <DocNav items={headings} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" /> : null}
+              <div className="cta-panel shrink-0 p-6 sm:p-7">
                 <div className="cta-glow" />
                 <h2 className="text-xl text-white sm:text-2xl">Browse calculators</h2>
                 <p className="mt-2 text-sm leading-6 text-emerald-50">
@@ -128,7 +135,7 @@ export default function HtmlPostView({
           </div>
         </main>
       </div>
-      <SiteFooter articles={articles} />
+      <SiteFooter articles={articles} showBackgroundImage={false} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }}

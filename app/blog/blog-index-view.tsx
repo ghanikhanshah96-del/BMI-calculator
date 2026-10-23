@@ -191,6 +191,7 @@ export default function BlogIndexView({
       <SiteHeader activePage="blog" />
       <div className="relative isolate flex flex-1 flex-col">
         <PageHero
+          showBackdrop={false}
           image="/blog/adult-barbell-strength-training.jpg"
           imageAlt="Adult in athletic clothes lifting a barbell from the floor during strength training"
           eyebrow="Blog"
@@ -281,7 +282,7 @@ export default function BlogIndexView({
           </section>
         </main>
       </div>
-      <SiteFooter articles={posts.map((p) => ({ slug: p.slug, title: p.title }))} />
+      <SiteFooter articles={posts.map((p) => ({ slug: p.slug, title: p.title }))} showBackgroundImage={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
     </div>
   );

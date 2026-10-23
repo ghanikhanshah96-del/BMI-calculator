@@ -43,6 +43,8 @@ Live email messages were not sent during verification. Transport success, failur
 
 ## Blogs and images
 
+Published admin HTML uses explicit article typography for headings, links, nested bullet/numbered lists, images and horizontally scrollable tables. Heading anchors drive the same document navigation as bundled articles. On mobile, contents collapse above the article and the calculator sidebar follows the reading content. Blog listing and both article templates disable hero/footer background photos; cover images, including `/api/media/` URLs, render inside the article at their natural aspect ratio. Existing saved posts receive these presentation changes without republishing.
+
 Admin blog changes use the same blogPosts collection as the public catalog. Existing bundled articles are editable through Firestore overrides. Draft/deleted overrides suppress the bundled copy; renaming also suppresses its old URL. Mutations invalidate articles, the blog and sitemaps.
 
 The Firebase project currently has no Storage bucket. MEDIA_STORAGE=firestore provides durable images without a separate bucket: uploads are validated, converted to WebP, and capped at 800,000 bytes. Bytes live in publicMedia; listing metadata lives separately in adminMedia. Public images are served through /api/media/[id].webp. These image URLs are intentionally public; do not upload private documents or medical data.

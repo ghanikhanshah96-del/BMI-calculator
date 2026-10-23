@@ -1,0 +1,74 @@
+@reference "../globals.css";
+
+/* Explicit styles for sanitized editor HTML; no optional typography plugin. */
+@layer components {
+  .article-body {
+    @apply min-w-0 text-base leading-7 text-slate-700 sm:text-[1.0625rem] sm:leading-8;
+    overflow-wrap: anywhere;
+  }
+
+  .article-body :where(p, ul, ol, blockquote, pre, figure, table) {
+    margin-block: 1.25rem;
+  }
+
+  .article-body :where(h2, h3, h4) {
+    @apply font-semibold text-emerald-950;
+    margin-block: 2.5rem 1rem;
+    line-height: 1.35;
+    scroll-margin-top: 6rem;
+  }
+
+  .article-body h2 {
+    @apply text-2xl sm:text-3xl;
+    border-top: 1px solid #d1fae5;
+    padding-top: 1.5rem;
+  }
+
+  .article-body h3 { @apply font-sans text-xl; }
+  .article-body h4 { @apply font-sans text-lg; }
+  .article-body > :first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+  .article-body > :last-child { margin-bottom: 0; }
+  .article-body :where(strong, b) { @apply font-semibold text-slate-900; }
+  .article-body a { @apply font-semibold text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900; }
+
+  .article-body ul { list-style: none; padding-left: 0; }
+  .article-body ul > li { position: relative; padding-left: 1.25rem; }
+  .article-body ul > li::before {
+    content: "";
+    position: absolute;
+    top: 0.7em;
+    left: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #34d399, #14b8a6);
+  }
+
+  .article-body ol {
+    @apply list-decimal rounded-2xl bg-slate-50/80 py-4 pr-4 pl-9 ring-1 ring-slate-900/5;
+  }
+  .article-body ol > li::marker { color: #059669; font-weight: 600; }
+  .article-body li + li { margin-top: 0.5rem; }
+  .article-body li > p { margin-block: 0.25rem; }
+  .article-body li :where(ul, ol) { margin-block: 0.75rem; }
+
+  .article-body table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    border-radius: 1rem;
+    @apply bg-white text-left text-sm ring-1 ring-emerald-900/10 sm:text-base;
+  }
+  .article-body :where(th, td) { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; min-width: 8rem; }
+  .article-body th { @apply bg-emerald-800 font-semibold text-white; }
+  .article-body tbody tr:nth-child(even) { background: #f0fdf4; }
+  .article-body caption { padding: 1rem; font-weight: 600; color: #0f172a; text-align: left; }
+
+  .article-body img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 1rem; }
+  .article-body figure { margin-inline: 0; }
+  .article-body figcaption { @apply mt-3 text-center text-sm leading-6 text-slate-500; }
+  .article-body blockquote { @apply rounded-r-xl border-l-4 border-emerald-500 bg-emerald-50 px-5 py-2; }
+  .article-body pre { @apply overflow-x-auto rounded-xl bg-slate-900 p-4 text-sm text-slate-100; }
+  .article-body hr { margin-block: 2rem; border-color: #d1fae5; }
+}

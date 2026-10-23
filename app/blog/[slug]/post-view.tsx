@@ -8,6 +8,7 @@ import { editorialTeamRef } from "../../lib/editorial-team";
 import FaqAccordion from "../../components/faq-accordion";
 import { Inline } from "../../components/content-blocks";
 import DocNav from "../../components/doc-nav";
+import MobileArticleContents from "../../components/mobile-article-contents";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
 import Reveal from "../../components/reveal";
@@ -161,6 +162,7 @@ export default function PostView({
       <SiteHeader activePage="blog" />
       <div className="relative isolate flex flex-1 flex-col">
       <PageHero
+        showBackdrop={false}
         image={post.image}
         imageAlt={post.imageAlt}
         eyebrow={post.toolLabel}
@@ -189,7 +191,8 @@ export default function PostView({
 
       <main className="page-main section-block relative z-10">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
-          <article className="order-2 min-w-0 lg:order-1">
+          <article className="order-1 min-w-0">
+            <MobileArticleContents items={contents} />
             <ArticleBlocks blocks={post.intro} priorityFirstFigure />
             <section id="takeaways-section" aria-labelledby="takeaways" className="live-frame mb-10 scroll-mt-28 p-6 sm:p-8">
               <h2 id="takeaways" className="section-title">
@@ -223,8 +226,8 @@ export default function PostView({
             <ArticleAuthorCard />
           </article>
 
-          <aside className="order-1 flex flex-col gap-6 lg:sticky lg:top-24 lg:order-2 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
-            <DocNav items={contents} title="In this article" className="min-h-0 lg:flex-1" />
+          <aside className="order-2 flex flex-col gap-6 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
+            <DocNav items={contents} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" />
             <div className="cta-panel shrink-0 p-6 sm:p-7">
               <div className="cta-glow" />
               <h2 className="text-xl text-white sm:text-2xl">Try the {post.toolLabel}</h2>
@@ -249,7 +252,7 @@ export default function PostView({
         </div>
       </main>
       </div>
-      <SiteFooter articles={articles} />
+      <SiteFooter articles={articles} showBackgroundImage={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
     </div>
   );
