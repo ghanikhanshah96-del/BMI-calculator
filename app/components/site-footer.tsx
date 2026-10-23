@@ -4,14 +4,12 @@ import { ChevronDown } from "./icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { postCards } from "../blog/post-cards";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
 
 type FooterLink = { href: string; label: string };
-type FooterArticle = { slug: string; title: string };
 
-function buildGroups(articles: FooterArticle[]): { id: string; title: string; links: FooterLink[] }[] {
+function buildGroups(): { id: string; title: string; links: FooterLink[] }[] {
   return [
     {
       id: "tools",
@@ -19,14 +17,6 @@ function buildGroups(articles: FooterArticle[]): { id: string; title: string; li
       links: [
         ...toolLinks.map((tool) => ({ href: toolHref(tool), label: tool.name })),
         { href: "/calculators", label: "All calculators" },
-      ],
-    },
-    {
-      id: "resources",
-      title: "Resources",
-      links: [
-        ...articles.map((post) => ({ href: `/blog/${post.slug}`, label: post.title })),
-        { href: "/blog", label: "All articles" },
       ],
     },
     {
@@ -47,20 +37,13 @@ function buildGroups(articles: FooterArticle[]): { id: string; title: string; li
   ];
 }
 
-const defaultArticles: FooterArticle[] = postCards.map((p) => ({
-  slug: p.slug,
-  title: p.title,
-}));
-
 export default function SiteFooter({
-  articles = defaultArticles,
   showBackgroundImage = true,
 }: {
-  articles?: FooterArticle[];
   showBackgroundImage?: boolean;
 }) {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const groups = buildGroups(articles);
+  const groups = buildGroups();
 
   return (
     <footer className="site-footer">
@@ -78,7 +61,7 @@ export default function SiteFooter({
       <div className="footer-glow" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-10">
+        <div className="grid gap-8 md:grid-cols-[1.4fr_1fr_1fr] md:gap-10">
           <div className="text-center md:text-left">
             <Link
               href="/"

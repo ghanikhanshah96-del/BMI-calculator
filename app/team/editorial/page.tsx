@@ -85,7 +85,7 @@ export default async function EditorialTeamPage() {
           </section>
         </main>
       </div>
-      <SiteFooter articles={posts.map(({ slug, title }) => ({ slug, title }))} />
+      <SiteFooter />
       <JsonLd items={[{
         "@type": "ProfilePage",
         "@id": author.url + "#webpage",

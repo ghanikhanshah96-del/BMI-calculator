@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { pageMetadata } from "../../lib/seo";
 import { getSiteUrl } from "../../lib/site-url";
-import { getAllCatalogSlugs, getCatalogEntry, listCatalogCards } from "../catalog";
+import { getAllCatalogSlugs, getCatalogEntry } from "../catalog";
 import HtmlPostView from "./html-post-view";
 import PostView from "./post-view";
 
@@ -73,14 +73,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const [entry, cards] = await Promise.all([getCatalogEntry(slug), listCatalogCards()]);
+  const entry = await getCatalogEntry(slug);
   if (!entry) notFound();
 
-  const articles = cards.map((c) => ({ slug: c.slug, title: c.title }));
-
   if (entry.kind === "firestore") {
-    return <HtmlPostView siteUrl={getSiteUrl()} post={entry.firestore} articles={articles} />;
+    return <HtmlPostView siteUrl={getSiteUrl()} post={entry.firestore} />;
   }
 
-  return <PostView siteUrl={getSiteUrl()} slug={entry.post.slug} articles={articles} />;
+  return <PostView siteUrl={getSiteUrl()} slug={entry.post.slug} />;
 }

@@ -53,6 +53,16 @@ To use Firebase Storage later, provision an authorized bucket, set MEDIA_STORAGE
 
 ## Verification
 
+### Canonical URLs and footer
+
+The footer now contains the brand, Calculators and Company columns. Article discovery stays available through the Blog link, editorial page and XML/HTML sitemaps; individual article rendering no longer fetches the entire catalog just to populate footer links.
+
+Public canonical URLs, Open Graph URLs, XML sitemap and JSON-LD share `getSiteUrl()`. An empty public URL must resolve to `https://fitnesscalculatorpro.com`, never the current Vercel deployment host. The known `www`/HTTP variants normalize to the HTTPS apex origin. Each content page declares its own absolute canonical. `NEXT_PUBLIC_SITE_URL` should remain `https://fitnesscalculatorpro.com` in Vercel.
+
+The app includes a permanent 308 redirect from `www.fitnesscalculatorpro.com` to the apex, preserving path/query. If Vercel Settings -> Domains already redirects that hostname with 307, change the platform-level redirect to permanent 308 too: a Vercel domain redirect can run before Next.js and bypass the application rule.
+
+Live inspection on 2026-10-23 found `/contact-us` and `/sitemap-page` returning 200 with one correct self-referencing canonical each, index/follow, and matching XML sitemap URLs. The supplied Search Console report last crawled them on 2026-10-16; that historical status does not prove a current tag error. After deployment, use URL Inspection -> Test Live URL and request indexing for these canonical pages if they are still unexpectedly excluded. Google's selected canonical and indexing decisions cannot be confirmed or changed through repository code alone. See https://support.google.com/webmasters/answer/7440203?hl=en#duplicate_page_with_proper_canonical_tag .
+
 ### Production sanitizer runtime
 
 Use Node.js **24.x** locally and on Vercel. `package.json` declares that runtime and `.nvmrc` matches it. Vercel selects the Node runtime from the package engine requirement; confirm the new deployment uses Node 24 in its build settings/logs.

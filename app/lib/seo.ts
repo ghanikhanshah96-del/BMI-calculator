@@ -63,11 +63,11 @@ export function pageMetadata({
     description,
     ...(article ? { authors: [{ name: editorialTeam.name, url: new URL(editorialTeam.path, getSiteUrl()).href }] } : {}),
     ...(keywords ? { keywords } : {}),
-    ...(isHome ? {} : { alternates: { canonical: path } }),
+    ...(isHome ? {} : { alternates: { canonical: new URL(path, getSiteUrl()).href } }),
     openGraph: {
       title: fullTitle,
       description,
-      ...(isHome ? {} : { url: path }),
+      ...(isHome ? {} : { url: new URL(path, getSiteUrl()).href }),
       siteName: SITE_NAME,
       locale: "en_US",
       type,

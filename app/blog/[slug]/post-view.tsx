@@ -118,11 +118,9 @@ function ArticleBlocks({ blocks, priorityFirstFigure = false }: { blocks: PostBl
 export default function PostView({
   siteUrl,
   slug,
-  articles,
 }: {
   siteUrl: string;
   slug: string;
-  articles: { slug: string; title: string }[];
 }) {
   const post = getPostBySlug(slug);
   if (!post) return null;
@@ -252,7 +250,7 @@ export default function PostView({
         </div>
       </main>
       </div>
-      <SiteFooter articles={articles} showBackgroundImage={false} />
+      <SiteFooter showBackgroundImage={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
     </div>
   );

@@ -282,7 +282,7 @@ export default function BlogIndexView({
           </section>
         </main>
       </div>
-      <SiteFooter articles={posts.map((p) => ({ slug: p.slug, title: p.title }))} showBackgroundImage={false} />
+      <SiteFooter showBackgroundImage={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
     </div>
   );

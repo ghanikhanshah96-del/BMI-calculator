@@ -26,11 +26,9 @@ function absoluteImage(siteUrl: string, image: string) {
 export default function HtmlPostView({
   siteUrl,
   post,
-  articles,
 }: {
   siteUrl: string;
   post: FirestoreBlogPost;
-  articles: { slug: string; title: string }[];
 }) {
   const postUrl = `${siteUrl}/blog/${post.slug}`;
   const cover = post.coverImage || "/logo.png";
@@ -135,7 +133,7 @@ export default function HtmlPostView({
           </div>
         </main>
       </div>
-      <SiteFooter articles={articles} showBackgroundImage={false} />
+      <SiteFooter showBackgroundImage={false} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }}

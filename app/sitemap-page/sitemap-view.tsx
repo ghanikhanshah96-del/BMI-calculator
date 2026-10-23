@@ -136,7 +136,7 @@ export default function SitemapView({
         />
       </main>
       </div>
-      <SiteFooter articles={articles.map((a) => ({ slug: a.slug, title: a.title }))} />
+      <SiteFooter />
     </div>
   );
 }

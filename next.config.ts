@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.fitnesscalculatorpro.com" }],
+        destination: "https://fitnesscalculatorpro.com/:path*",
+        permanent: true,
+      },
       { source: "/body-fat-calculator", destination: "/body-fat-percentage-calculator", permanent: true },
       { source: "/due-date-calculator", destination: "/pregnancy-due-date-calculator", permanent: true },
       { source: "/blog/bmi", destination: "/blog/why-bmi-is-not-accurate-for-muscular-people", permanent: true },
