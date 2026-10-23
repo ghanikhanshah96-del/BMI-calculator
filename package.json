@@ -2,16 +2,20 @@
   "name": "fitness-calculator-pro",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "postinstall": "node scripts/patch-next-polyfill.mjs && node scripts/prepare-admin-assets.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/patch-next-polyfill.mjs && node scripts/prepare-admin-assets.mjs",
+    "prebuild": "node scripts/check-server-runtime.mjs && node scripts/patch-next-polyfill.mjs && node scripts/prepare-admin-assets.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "icons": "node scripts/generate-icons.mjs",
-    "admin:check": "node scripts/check-admin-config.mjs"
+    "admin:check": "node scripts/check-admin-config.mjs",
+    "check:runtime": "node scripts/check-server-runtime.mjs"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^6.3.1",

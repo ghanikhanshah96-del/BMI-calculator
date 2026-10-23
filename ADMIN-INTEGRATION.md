@@ -51,6 +51,18 @@ To use Firebase Storage later, provision an authorized bucket, set MEDIA_STORAGE
 
 ## Verification
 
+### Production sanitizer runtime
+
+Use Node.js **24.x** locally and on Vercel. `package.json` declares that runtime and `.nvmrc` matches it. Vercel selects the Node runtime from the package engine requirement; confirm the new deployment uses Node 24 in its build settings/logs.
+
+The admin dashboard, blog API and media API import the blog HTML sanitizer. Its jsdom dependency includes CommonJS-to-ES-module imports (`html-encoding-sniffer` -> `@exodus/bytes`). A runtime without that support crashes during module initialization, before authentication or Firestore access, producing `ERR_REQUIRE_ESM` and a generic 500 page. This is independent of the Firebase credential values.
+
+`isomorphic-dompurify` is now explicitly externalized as one server package so Node loads its dependency graph natively. `npm run check:runtime` exercises that actual dependency and verifies HTML is still sanitized. It runs automatically before `npm run build`, so an incompatible build runtime fails clearly instead of shipping a compilation-only success. Do not disable sanitization or patch files inside `node_modules` as a workaround.
+
+After pushing the runtime/configuration changes, create a fresh Vercel deployment. Existing deployments retain their old runtime. If a project-level `NODE_OPTIONS` disables require-module support, remove that incompatible override. No Firebase, email, or admin-password changes are needed for this module-loader error.
+
+Runtime-fix verification (2026-10-23): all 41 tests, lint, TypeScript and the production build passed on Node 24.13.0. Against the compiled local production server, signed-out admin requests redirected or returned 401 as expected; authenticated dashboard, blog list/editor, media, users and reviews pages returned 200, as did the blog and media APIs. These checks used read-only Firebase access and did not send email or create content. The live deployment still needs the updated code and runtime.
+
 - npm test exercises real API handlers with mocked external services, including all review ratings, quotas, private/public filtering, email failures, moderation, permissions, revocation and both media adapters.
 - npm run lint and npm run build check lint rules, TypeScript and production route generation.
 - scripts/reviews-live-smoke.cjs runs browser and API checks against the real authorized Firebase project. It creates clearly identified temporary review, image, article, quota and user fixtures and removes them in finally. It does not send email. It requires Playwright and a running application; optional PLAYWRIGHT_MODULE, CHROMIUM_PATH and SMOKE_BASE_URL select the local tools/server.

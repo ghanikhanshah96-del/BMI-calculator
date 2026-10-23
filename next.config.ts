@@ -10,6 +10,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Load the Node DOMPurify/jsdom dependency graph natively as one package.
+  // Node 24 (declared in package.json) supports its CommonJS -> ESM imports.
+  serverExternalPackages: ["isomorphic-dompurify"],
   // The preview is opened from another device on the local network. Without this,
   // Next blocks the dev scripts, so menus, filters, and scroll effects never start.
   allowedDevOrigins: ["172.20.40.94"],
