@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { renderBlogContentHtml } from "./blog-content";
 import type { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import {
   BLOG_POSTS_COLLECTION,
@@ -38,7 +40,9 @@ function docToPost(snap: QueryDocumentSnapshot): FirestoreBlogPost | null {
     slug,
     title: String(data.title || ""),
     excerpt: String(data.excerpt || ""),
-    content: sanitizeBlogHtml(String(data.content || "")),
+    content: sanitizeBlogHtml(
+      renderBlogContentHtml(String(data.content || ""), data.contentFormat),
+    ),
     date: String(data.date || ""),
     updatedAt: data.updatedAt == null ? null : String(data.updatedAt),
     publishedAt: data.publishedAt == null ? null : String(data.publishedAt),
@@ -55,7 +59,9 @@ function docToPost(snap: QueryDocumentSnapshot): FirestoreBlogPost | null {
   };
 }
 
-export async function listPublishedFirestorePosts(): Promise<FirestoreBlogPost[]> {
+export async function listPublishedFirestorePosts(): Promise<
+  FirestoreBlogPost[]
+> {
   if (!isFirebaseConfigured()) return [];
   try {
     const snap = await getDb()
@@ -86,7 +92,30 @@ export async function getPublishedFirestorePostBySlug(
     if (snap.empty) return null;
     return docToPost(snap.docs[0]);
   } catch (error) {
-    console.error("[firestore-blog] getPublishedFirestorePostBySlug failed", error);
+    console.error(
+      "[firestore-blog] getPublishedFirestorePostBySlug failed",
+      error,
+    );
     return null;
   }
+}
+
+const managedDocuments = cache(async () => {
+  if (!isFirebaseConfigured()) return [];
+  const snap = await getDb().collection(BLOG_POSTS_COLLECTION).get();
+  return snap.docs.map(
+    (doc) =>
+      ({ id: doc.id, ...doc.data() }) as {
+        id: string;
+        slug?: string;
+        originalSlug?: string;
+      },
+  );
+});
+export async function getManagedBlogSlugs(): Promise<Set<string>> {
+  return new Set(
+    (await managedDocuments()).flatMap((doc) =>
+      [doc.slug, doc.originalSlug].filter((v): v is string => Boolean(v)),
+    ),
+  );
 }

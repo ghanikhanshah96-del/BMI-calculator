@@ -4,7 +4,8 @@ import { checkEmailDomain } from "../../../lib/email-domain";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { email?: string };
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body.email !== "string") return NextResponse.json({ ok: false, error: "Provide an email address." }, { status: 400 });
     const email = (body.email ?? "").trim();
 
     const error = validateEmailFormat(email) ?? (await checkEmailDomain(getEmailDomain(email)));

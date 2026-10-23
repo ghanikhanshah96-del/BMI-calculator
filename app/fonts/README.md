@@ -1,0 +1,1 @@
+These are the existing Latin WOFF2 fonts previously served by Next Google Fonts, now bundled locally to make builds independent of Google font requests. Font names and font data are unchanged. Each font is distributed with its SIL Open Font License from the official google/fonts repository.

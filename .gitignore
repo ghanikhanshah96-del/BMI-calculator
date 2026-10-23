@@ -10,8 +10,16 @@ build/
 dist/
 
 # Environment
-.env
-.env*.local
+.env*
+!.env.example
+
+# Firebase / Google Cloud private credentials
+*service-account*.json
+*serviceAccount*.json
+*-firebase-adminsdk-*.json
+*.pem
+*.key
+.firebase/
 
 # Logs
 npm-debug.log*
@@ -27,3 +35,10 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+
+# Generated admin editor assets
+/public/tinymce/
+
+# Local-only admin access details
+.admin-access.local.txt
+/artifacts/

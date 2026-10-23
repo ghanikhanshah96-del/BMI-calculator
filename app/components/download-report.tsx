@@ -268,6 +268,7 @@ export function ResultReportActions({
       } else {
         await downloadPdf(report);
       }
+      if (action !== "copy") window.dispatchEvent(new CustomEvent("calculator-report-downloaded", { detail: report.title }));
       setOpen(false);
     } catch {
       setError("Could not export the report. Please try again.");

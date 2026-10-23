@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import ReviewProvider from "./components/review-provider";
 import CursorEffects from "./components/cursor-effects";
+import FirebaseAnalytics from "./components/firebase-analytics";
 import RevealObserver from "./components/reveal-observer";
 import SiteJsonLd from "./components/site-json-ld";
 import SmoothScroll from "./components/smooth-scroll";
@@ -10,22 +12,23 @@ import { defaultOgImage } from "./lib/seo";
 import { getSiteUrl } from "./lib/site-url";
 import "./globals.css";
 import "./niche.css";
+import "./components/reviews.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const plusJakarta = localFont({
+  src: "./fonts/plus-jakarta-sans-latin.woff2",
+  weight: "200 800",
   variable: "--font-plus-jakarta",
-  subsets: ["latin"],
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const fraunces = localFont({
+  src: "./fonts/fraunces-latin.woff2",
   variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "400 600",
   display: "swap",
 });
 
 const siteUrl = getSiteUrl();
-const googleAnalyticsId = "G-6TVZ9XYLT7";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -91,20 +94,11 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <head>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${googleAnalyticsId}');`,
-          }}
-        />
-      </head>
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
+        <FirebaseAnalytics />
         <SiteJsonLd siteUrl={siteUrl} />
         {children}
+        <ReviewProvider />
         <RevealObserver />
         <SmoothScroll />
         <CursorEffects />

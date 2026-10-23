@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ReviewsSection } from "./components/reviews-section";
 import Link from "next/link";
 import ToolSections from "./[tool]/layouts";
 import { Inline } from "./components/content-blocks";
@@ -153,6 +154,7 @@ export default function HomeView({ siteUrl, headlineClass }: { siteUrl: string; 
         <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8 lg:pb-16">
           <ToolSections sections={homeSections} faqs={homeFaqs} actionHref="#popular-calculators" className="pt-4" />
         </div>
+        <ReviewsSection />
       </main>
 
       <SiteFooter />

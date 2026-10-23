@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       keywords: keywords.length ? keywords : undefined,
       type: "article",
       image: {
-        url: cover.startsWith("http") ? "/logo.png" : cover,
+        url: cover,
         alt: post.coverImageAlt || post.title,
         width: 1200,
         height: 630,

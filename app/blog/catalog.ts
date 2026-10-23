@@ -2,6 +2,7 @@ import { getPostCard, postCards, type PostCard } from "./post-cards";
 import { blogPosts, getPostBySlug, type BlogPost } from "./posts";
 import {
   getPublishedFirestorePostBySlug,
+  getManagedBlogSlugs,
   listPublishedFirestorePosts,
   type FirestoreBlogPost,
 } from "../lib/firestore-blog";
@@ -15,9 +16,11 @@ function categoryToToolId(category: string): ToolId {
   const c = category.toLowerCase();
   if (c.includes("bmi")) return "bmi";
   if (c.includes("body fat")) return "body-fat";
-  if (c.includes("nutrition") || c.includes("macro") || c.includes("tdee")) return "macro";
+  if (c.includes("tdee")) return "tdee";
+  if (c.includes("nutrition") || c.includes("macro")) return "macro";
   if (c.includes("ovulation")) return "ovulation";
-  return "pregnancy";
+  if (c.includes("pregnancy")) return "pregnancy";
+  return "bmi";
 }
 
 function firestoreToCard(post: FirestoreBlogPost): PostCard {
@@ -41,6 +44,8 @@ function firestoreToCard(post: FirestoreBlogPost): PostCard {
       ? "/bmi-calculator"
       : toolId === "body-fat"
         ? "/body-fat-percentage-calculator"
+        : toolId === "tdee"
+          ? "/tdee-calculator"
         : toolId === "macro"
           ? "/macro-calculator"
           : toolId === "ovulation"
@@ -65,7 +70,7 @@ function firestoreToCard(post: FirestoreBlogPost): PostCard {
 /** Published Firestore posts plus static posts not yet in Firestore (fallback). */
 export async function listCatalogEntries(): Promise<CatalogEntry[]> {
   const remote = await listPublishedFirestorePosts();
-  const remoteSlugs = new Set(remote.map((p) => p.slug));
+  const remoteSlugs = await getManagedBlogSlugs();
   const entries: CatalogEntry[] = remote.map((firestore) => ({
     kind: "firestore" as const,
     slug: firestore.slug,
@@ -102,6 +107,7 @@ export async function getCatalogEntry(slug: string): Promise<CatalogEntry | null
       firestore: remote,
     };
   }
+  if ((await getManagedBlogSlugs()).has(slug)) return null;
   const post = getPostBySlug(slug);
   if (!post) return null;
   return {

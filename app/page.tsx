@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import localFont from "next/font/local";
 import HomeView from "./home-view";
 import { pageMetadata } from "./lib/seo";
 import { getSiteUrl } from "./lib/site-url";
 
-const raleway = Raleway({
-  subsets: ["latin"],
-  weight: ["600"],
+const raleway = localFont({
+  src: "./fonts/raleway-latin.woff2",
+  weight: "600",
   display: "swap",
 });
 

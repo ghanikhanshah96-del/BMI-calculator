@@ -80,12 +80,14 @@ export default function DocNav({
     window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  const jump = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleJump = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
     const target = document.getElementById(id);
     if (!target) return;
     event.preventDefault();
     const top = pageTop(target) - HEADER_OFFSET;
     const distance = Math.abs(window.scrollY - top);
+    // This clock is read only from the click handler, never during rendering.
+    // eslint-disable-next-line react-hooks/purity
     lockUntil.current = performance.now() + Math.min(2200, 450 + distance * 0.45);
     setActive(id);
     scrollToY(top);
@@ -114,7 +116,7 @@ export default function DocNav({
                 href={`#${item.id}`}
                 aria-current={index === activeIndex ? "location" : undefined}
                 className={`doc-nav-link ${state}`}
-                onClick={(event) => jump(event, item.id)}
+                onClick={(event) => handleJump(event, item.id)}
               >
                 <span className="doc-nav-index" aria-hidden="true">
                   {index + 1}
