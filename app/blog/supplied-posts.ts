@@ -235,7 +235,7 @@ export const suppliedPosts = [
     "toolHref": "/tdee-calculator",
     "publishedAt": "2026-10-28",
     "updatedAt": "2026-10-28",
-    "image": "/blog/what-is-considered-light-exercise-tdee.webp",
+    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     "imageAlt": "Adult sitting on an exercise mat and raising two dumbbells during a light home workout",
     "imageWidth": 1024,
     "imageHeight": 684,
