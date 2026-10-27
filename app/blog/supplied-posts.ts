@@ -224,6 +224,556 @@ export const suppliedPosts = [
     ]
   },
   {
+    "slug": "what-is-considered-light-exercise-tdee",
+    "title": "What Is Considered Light Exercise TDEE? Simple Guide",
+    "excerpt": "What is considered light exercise TDEE? Learn which activities count, how the 1.375 multiplier works, and when to choose Lightly Active for calorie estimates.",
+    "description": "What is considered light exercise TDEE? Learn which activities count, how the 1.375 multiplier works, and when to choose Lightly Active for calorie estimates.",
+    "metaTitle": "What Is Considered Light Exercise TDEE? Simple Guide",
+    "metaTitleAbsolute": true,
+    "toolId": "tdee",
+    "toolLabel": "TDEE Calculator",
+    "toolHref": "/tdee-calculator",
+    "publishedAt": "2026-10-28",
+    "updatedAt": "2026-10-28",
+    "image": "/blog/what-is-considered-light-exercise-tdee.webp",
+    "imageAlt": "Adult sitting on an exercise mat and raising two dumbbells during a light home workout",
+    "imageWidth": 1024,
+    "imageHeight": 684,
+    "keywords": [
+      "what is considered light exercise tdee",
+      "lightly active TDEE",
+      "light exercise examples",
+      "TDEE activity multiplier",
+      "sedentary vs lightly active",
+      "light activity calorie calculator",
+      "maintenance calories"
+    ],
+    "relatedSlugs": [
+      "how-to-determine-activity-level-for-tdee",
+      "what-is-the-major-source-of-energy-for-the-body"
+    ],
+    "takeaways": [
+      "Lightly Active usually means light exercise about 1–3 days per week or some regular daily movement, with a common multiplier of 1.375.",
+      "Light exercise intensity is not the same as the Lightly Active TDEE category, which reflects overall weekly activity.",
+      "Choose Lightly Active from your usual routine, not from one unusually active day."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "Wondering **what is considered light exercise TDEE** when calculating your daily calorie needs? In most TDEE calculators, Lightly Active generally describes someone who does light exercise around 1–3 days per week or gets some regular physical activity without having a highly active lifestyle."
+      },
+      {
+        "kind": "p",
+        "text": "This category commonly uses an activity multiplier of 1.375 to estimate Total Daily Energy Expenditure (TDEE)."
+      },
+      {
+        "kind": "p",
+        "text": "However, your daily movement matters just as much as your workouts."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/what-is-considered-light-exercise-tdee.webp",
+          "alt": "Adult sitting on an exercise mat and raising two dumbbells during a light home workout",
+          "width": 1024,
+          "height": 684,
+          "caption": "Light exercise can include low-intensity sessions at home. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54579614508), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "What Is Considered Light Exercise TDEE?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Light exercise can include activities that require relatively little physical effort, such as:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "Walking at a comfortable, leisurely pace",
+              "Gentle stretching or beginner yoga",
+              "Easy recreational cycling",
+              "Light household chores",
+              "Low-intensity exercise sessions"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "According to the [Physical Activity Guidelines for Americans](https://odphp.health.gov/paguidelines/second-edition/), light-intensity activities include slow walking and everyday tasks requiring less effort than moderate exercise."
+          },
+          {
+            "kind": "p",
+            "text": "**Important:** Light exercise intensity and the Lightly Active TDEE category are not exactly the same. Your TDEE category reflects your overall weekly activity, including work, walking, and exercise."
+          }
+        ]
+      },
+      {
+        "heading": "What Is the Lightly Active TDEE Multiplier?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "The common activity multiplier for Lightly Active is 1.375."
+          },
+          {
+            "kind": "p",
+            "text": "The calculation is:"
+          },
+          {
+            "kind": "p",
+            "text": "TDEE = BMR × 1.375"
+          },
+          {
+            "kind": "p",
+            "text": "BMR (Basal Metabolic Rate) is an estimate of the calories your body needs at rest."
+          },
+          {
+            "kind": "p",
+            "text": "Your TDEE includes additional energy expenditure from daily activity and other bodily processes."
+          },
+          {
+            "kind": "p",
+            "text": "For comparison:"
+          },
+          {
+            "kind": "table",
+            "caption": "What Is the Lightly Active TDEE Multiplier?",
+            "head": [
+              "Activity level",
+              "Common multiplier"
+            ],
+            "rows": [
+              [
+                "Sedentary",
+                "1.2"
+              ],
+              [
+                "Lightly Active",
+                "1.375"
+              ],
+              [
+                "Moderately Active",
+                "1.55"
+              ]
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "These multipliers are estimates, not precise measurements of how many calories you burn."
+          }
+        ]
+      },
+      {
+        "heading": "How to Know If You're Lightly Active or Sedentary",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Consider your normal weekly routine."
+          },
+          {
+            "kind": "p",
+            "text": "Choose Sedentary if:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "You spend most of the day sitting.",
+              "You rarely exercise.",
+              "You have very little daily movement."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Consider Lightly Active if:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "You exercise lightly a few times per week.",
+              "You walk regularly throughout the day.",
+              "Your routine includes some movement but isn't physically demanding."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "For example, someone with a desk job who takes regular walks and does light workouts several times a week may fit the Lightly Active category."
+          },
+          {
+            "kind": "p",
+            "text": "Avoid choosing a higher activity level based on one unusually active day."
+          }
+        ]
+      },
+      {
+        "heading": "How to Calculate TDEE for Light Exercise",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "You can estimate your daily calorie needs using the FitnessCalculatorPro [TDEE Calculator](/tdee-calculator)."
+          },
+          {
+            "kind": "p",
+            "text": "Follow these steps:"
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Enter your age and sex.",
+              "Add your height and weight.",
+              "Select Lightly Active as your activity level.",
+              "Enter your body fat percentage if known (optional).",
+              "Click Calculate to view your estimated maintenance calories."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Your result is a starting estimate. Actual calorie needs can vary based on your individual metabolism and activity."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Understanding **what is considered light exercise TDEE** helps you choose a realistic activity level when estimating daily calories."
+          },
+          {
+            "kind": "p",
+            "text": "Lightly Active typically involves some regular walking or light exercise, with a commonly used multiplier of 1.375."
+          },
+          {
+            "kind": "p",
+            "text": "If this matches your usual routine, select Lightly Active in the free [TDEE Calculator](/tdee-calculator) to estimate your daily maintenance calories."
+          },
+          {
+            "kind": "h3",
+            "text": "Official References"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "[Physical Activity Guidelines for Americans, 2nd edition](https://odphp.health.gov/paguidelines/second-edition/)",
+              "[CDC — Measuring Physical Activity Intensity](https://www.cdc.gov/physical-activity-basics/measuring/index.html)"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Disclaimer: This article is for general educational purposes and is not a substitute for individualized nutritional or medical advice."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Does walking count as light exercise for TDEE?",
+        "answer": "Yes. Leisurely walking can count as light physical activity. Brisk walking may qualify as moderate-intensity exercise depending on your pace and fitness."
+      },
+      {
+        "question": "Is exercising three times a week considered lightly active?",
+        "answer": "It can be. Three light workouts per week may fit the Lightly Active category, but workout intensity and daily movement also matter."
+      },
+      {
+        "question": "What is the difference between light and moderate activity in TDEE?",
+        "answer": "Lightly Active generally involves occasional exercise or regular light movement. Moderately Active usually involves more frequent exercise combined with a more active daily routine."
+      },
+      {
+        "question": "Is the 1.375 activity multiplier accurate for everyone?",
+        "answer": "No. It is a standard estimation factor. Your actual energy expenditure may be higher or lower."
+      }
+    ]
+  },
+  {
+    "slug": "how-to-determine-activity-level-for-tdee",
+    "title": "How to Determine Activity Level for TDEE: Simple Guide",
+    "excerpt": "Learn how to determine activity level for TDEE. Compare sedentary to very active levels and choose the right multiplier for your daily calorie estimate.",
+    "description": "Learn how to determine activity level for TDEE. Compare sedentary to very active levels and choose the right multiplier for your daily calorie estimate.",
+    "metaTitle": "How to Determine Activity Level for TDEE: Easy Guide",
+    "metaTitleAbsolute": true,
+    "toolId": "tdee",
+    "toolLabel": "TDEE Calculator",
+    "toolHref": "/tdee-calculator",
+    "publishedAt": "2026-10-28",
+    "updatedAt": "2026-10-28",
+    "image": "/blog/how-to-determine-activity-level-for-tdee.webp",
+    "imageAlt": "Adult holding a dumbbell during a gym resistance-training session",
+    "imageWidth": 1280,
+    "imageHeight": 852,
+    "keywords": [
+      "how to determine activity level for tdee",
+      "TDEE activity levels",
+      "TDEE activity multiplier",
+      "sedentary vs lightly active",
+      "moderately active TDEE",
+      "daily calorie needs",
+      "maintenance calories",
+      "TDEE calculator"
+    ],
+    "relatedSlugs": [
+      "what-is-considered-light-exercise-tdee",
+      "what-is-the-major-source-of-energy-for-the-body"
+    ],
+    "takeaways": [
+      "Choose a TDEE activity level from your typical week, including work, walking, and exercise—not one unusually busy day.",
+      "Common multipliers range from 1.2 for sedentary to about 1.9 for extremely active routines.",
+      "Use the result as a starting estimate of maintenance calories and adjust if your weight trend differs over several weeks."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "Wondering **how to determine activity level for TDEE**? Look at how much you move throughout a typical week, including your workouts, job, walking, and everyday activities."
+      },
+      {
+        "kind": "p",
+        "text": "Your activity level helps estimate your Total Daily Energy Expenditure (TDEE), which is the approximate number of calories your body burns each day. Choosing the right level gives you a more useful starting estimate of your maintenance calories."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/how-to-determine-activity-level-for-tdee.webp",
+          "alt": "Adult holding a dumbbell during a gym resistance-training session",
+          "width": 1280,
+          "height": 852,
+          "caption": "Activity level depends on workouts and everyday movement. Photo by PattayaPatrol via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:DSC_6393_Bald_man_working_out_with_a_15_lb_dumbbell_looking_off_to_the_side_in_a_bright_gym.jpg), licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "How to Determine Activity Level for TDEE",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Most TDEE calculators use five activity categories, from sedentary to extremely active."
+          },
+          {
+            "kind": "p",
+            "text": "Here's how they generally compare:"
+          },
+          {
+            "kind": "table",
+            "caption": "How to Determine Activity Level for TDEE",
+            "head": [
+              "Activity level",
+              "Typical lifestyle",
+              "Common multiplier"
+            ],
+            "rows": [
+              [
+                "Sedentary",
+                "Desk job, mostly sitting, little exercise",
+                "1.2"
+              ],
+              [
+                "Lightly Active",
+                "Light exercise 1–3 days per week",
+                "1.375"
+              ],
+              [
+                "Moderately Active",
+                "Moderate exercise 3–5 days per week",
+                "1.55"
+              ],
+              [
+                "Very Active",
+                "Hard exercise 6–7 days per week",
+                "1.725"
+              ],
+              [
+                "Extremely Active",
+                "Intense training combined with a physically demanding routine",
+                "1.9"
+              ]
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "These are common activity multipliers used in TDEE estimates. Different calculators may use slightly different definitions or factors."
+          },
+          {
+            "kind": "p",
+            "text": "Your entire daily routine matters, not just how many times you visit the gym."
+          }
+        ]
+      },
+      {
+        "heading": "How to Choose the Right TDEE Activity Level",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Follow these steps to select a realistic activity category."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 1: Consider Your Daily Movement"
+          },
+          {
+            "kind": "p",
+            "text": "Think about how you spend most of your day."
+          },
+          {
+            "kind": "p",
+            "text": "If you work at a desk and sit for long periods, your activity level may be relatively low, even if you occasionally exercise."
+          },
+          {
+            "kind": "p",
+            "text": "If your job involves walking, lifting, or standing for much of the day, your total activity may be higher."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 2: Review Your Weekly Workouts"
+          },
+          {
+            "kind": "p",
+            "text": "Consider how often you exercise and how demanding those workouts are."
+          },
+          {
+            "kind": "p",
+            "text": "For example, exercising moderately four days per week may suggest a moderately active lifestyle, especially if you also move regularly throughout the day."
+          },
+          {
+            "kind": "p",
+            "text": "Workout frequency alone doesn't determine your category."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 3: Choose Your Typical Activity Level"
+          },
+          {
+            "kind": "p",
+            "text": "Base your choice on an average week rather than your busiest or most active day."
+          },
+          {
+            "kind": "p",
+            "text": "If you're between two categories, start with the one that best reflects your usual routine. You can adjust your estimate later."
+          }
+        ]
+      },
+      {
+        "heading": "How to Calculate TDEE Using Your Activity Level",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Once you know your activity category, use the free [TDEE Calculator](/tdee-calculator) to estimate your daily calorie needs."
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Enter your age and sex.",
+              "Add your height and weight.",
+              "Select your usual activity level.",
+              "Enter your body fat percentage if you know it (optional).",
+              "Click Calculate to view your estimated maintenance calories."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "The calculator uses your details to estimate resting energy needs, then adjusts the result based on your activity level."
+          },
+          {
+            "kind": "p",
+            "text": "For example, if your estimated basal metabolic rate (BMR) is 1,600 calories and you use a common moderately active multiplier of 1.55:"
+          },
+          {
+            "kind": "p",
+            "text": "**1,600 × 1.55 = 2,480 calories per day**"
+          },
+          {
+            "kind": "p",
+            "text": "This is an estimated TDEE, not an exact measurement of calories burned."
+          }
+        ]
+      },
+      {
+        "heading": "How Do You Know If Your TDEE Activity Level Is Correct?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Your estimated maintenance calories are a starting point."
+          },
+          {
+            "kind": "p",
+            "text": "If your goal is weight maintenance, you can compare your estimated calorie intake with your average weight trend over several weeks."
+          },
+          {
+            "kind": "p",
+            "text": "If your weight consistently increases or decreases while your routine stays similar, your actual energy needs may differ from the calculator's estimate."
+          },
+          {
+            "kind": "p",
+            "text": "Remember that weight changes can also reflect water fluctuations, changes in eating patterns, and other factors."
+          },
+          {
+            "kind": "p",
+            "text": "For a closer look at one common category, see [What Is Considered Light Exercise TDEE?](/blog/what-is-considered-light-exercise-tdee)."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Understanding **how to determine activity level for TDEE** starts with evaluating your entire weekly routine, not just your workouts."
+          },
+          {
+            "kind": "p",
+            "text": "Consider your job, walking, exercise frequency, and workout intensity before selecting an activity category."
+          },
+          {
+            "kind": "p",
+            "text": "Once you've chosen a realistic level, use the FitnessCalculatorPro [TDEE Calculator](/tdee-calculator) to estimate your daily maintenance calories."
+          },
+          {
+            "kind": "p",
+            "text": "Treat the result as a starting point and adjust it as your activity and individual needs change."
+          },
+          {
+            "kind": "h3",
+            "text": "Official References"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "[Physical Activity Guidelines for Americans, 2nd edition](https://odphp.health.gov/paguidelines/second-edition/)",
+              "[CDC — Measuring Physical Activity Intensity](https://www.cdc.gov/physical-activity-basics/measuring/index.html)"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Disclaimer: This article is for general educational purposes and is not a substitute for individualized nutritional or medical advice."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Is working out three days a week lightly or moderately active?",
+        "answer": "It depends on workout intensity and daily movement. Three light workouts alongside a mostly sedentary routine may fit Lightly Active, while more demanding exercise and regular movement may justify a higher category."
+      },
+      {
+        "question": "What activity level should I choose for a desk job?",
+        "answer": "Sedentary is often a reasonable starting point if you sit most of the day and do little exercise. If you walk regularly or train consistently, consider your overall weekly activity before choosing."
+      },
+      {
+        "question": "Does walking count toward TDEE activity level?",
+        "answer": "Yes. Walking contributes to daily energy expenditure, even when it isn't part of a scheduled workout."
+      },
+      {
+        "question": "Can my TDEE activity level change?",
+        "answer": "Yes. Changes in your work routine, exercise schedule, or daily movement can affect your activity level and estimated calorie needs."
+      }
+    ]
+  },
+  {
     "slug": "army-body-fat-percentage-calculator",
     "title": "Army Body Fat Percentage Calculator: How to Check the 2026 Standards",
     "excerpt": "Looking for an army body fat percentage calculator? Learn the 2026 Army waist-to-height standard, calculate your ratio, and estimate body fat separately.",
