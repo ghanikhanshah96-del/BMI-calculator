@@ -235,7 +235,7 @@ export const suppliedPosts = [
     "toolHref": "/tdee-calculator",
     "publishedAt": "2026-10-28",
     "updatedAt": "2026-10-28",
-    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+    "image": "/blog/what-is-considered-light-exercise-tdee.webp",
     "imageAlt": "Adult sitting on an exercise mat and raising two dumbbells during a light home workout",
     "imageWidth": 1024,
     "imageHeight": 684,
@@ -770,6 +770,212 @@ export const suppliedPosts = [
       {
         "question": "Can my TDEE activity level change?",
         "answer": "Yes. Changes in your work routine, exercise schedule, or daily movement can affect your activity level and estimated calorie needs."
+      }
+    ]
+  },
+  {
+    "slug": "how-often-should-you-recalculate-your-macros",
+    "title": "How Often Should You Recalculate Your Macros? A Simple Guide",
+    "excerpt": "How often should you recalculate your macros? Learn when to adjust protein, carbs, fats, and calories based on weight, activity, and fitness goals.",
+    "description": "How often should you recalculate your macros? Learn when to adjust protein, carbs, fats, and calories based on weight, activity, and fitness goals.",
+    "metaTitle": "How Often Should You Recalculate Your Macros? Guide",
+    "metaTitleAbsolute": true,
+    "toolId": "macro",
+    "toolLabel": "Macro Calculator",
+    "toolHref": "/macro-calculator",
+    "publishedAt": "2026-11-03",
+    "updatedAt": "2026-11-03",
+    "image": "/blog/how-often-should-you-recalculate-your-macros.webp",
+    "imageAlt": "Adult in athletic clothes lifting a barbell from the floor during strength training",
+    "imageWidth": 1023,
+    "imageHeight": 682,
+    "keywords": [
+      "How Often Should You Recalculate Your Macros",
+      "when to adjust macros",
+      "recalculate macros for weight loss",
+      "update macro targets",
+      "macro calculator",
+      "adjust macros for muscle gain",
+      "calorie and macro adjustments"
+    ],
+    "relatedSlugs": [
+      "what-is-the-major-source-of-energy-for-the-body",
+      "how-to-determine-activity-level-for-tdee"
+    ],
+    "takeaways": [
+      "Reviewing macros every 4–6 weeks is a reasonable starting point, but significant changes in weight, activity, or goals may mean recalculating sooner.",
+      "Avoid changing targets after a single weigh-in; several weeks of progress matter more.",
+      "Recalculate with your current stats in the Macro Calculator, then compare the new estimates with your previous targets."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "**How often should you recalculate your macros?** For most people tracking nutrition, reviewing their macro targets every 4–6 weeks is a reasonable starting point. However, you may need to recalculate sooner if your weight, activity level, or fitness goals change significantly."
+      },
+      {
+        "kind": "p",
+        "text": "Your protein, carbohydrate, and fat targets are estimates based on your body's energy needs. As those needs change, your macros may need adjusting."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/how-often-should-you-recalculate-your-macros.webp",
+          "alt": "Adult in athletic clothes lifting a barbell from the floor during strength training",
+          "width": 1023,
+          "height": 682,
+          "caption": "Strength training and body-weight changes are common reasons to review macro targets. Photo by Homedust via [Flickr](https://www.flickr.com/photo.gne?id=41851164705), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Credit: [homedust.com](https://homedust.com/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "How Often Should You Recalculate Your Macros for Weight Loss?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "During weight loss, your calorie requirements can gradually decrease as your body weight changes."
+          },
+          {
+            "kind": "p",
+            "text": "The [National Institutes of Health](https://www.niddk.nih.gov/health-information/weight-management/adult-overweight-obesity/factors-affecting-weight-loss-weight-maintenance) explains that the body generally needs fewer calories after losing weight."
+          },
+          {
+            "kind": "p",
+            "text": "Review your macros when:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "You've lost a meaningful amount of weight.",
+              "Your weight trend has stopped changing for several weeks.",
+              "Your activity level has increased or decreased.",
+              "Your current calorie target no longer seems appropriate."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Avoid changing your macros because of a single weigh-in. Daily weight fluctuations don't necessarily reflect changes in body fat."
+          }
+        ]
+      },
+      {
+        "heading": "When Should You Adjust Macros for Muscle Gain?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "If you're trying to build muscle, review your macros when your training routine or body weight changes."
+          },
+          {
+            "kind": "p",
+            "text": "For example, you may need to reassess your calorie and carbohydrate targets if you increase your training volume."
+          },
+          {
+            "kind": "p",
+            "text": "Protein needs can also depend on body weight and training demands."
+          },
+          {
+            "kind": "p",
+            "text": "However, you don't need a new macro calculation after every workout or small weight change."
+          }
+        ]
+      },
+      {
+        "heading": "How to Recalculate Your Macros",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "You can update your targets using the free [Macro Calculator](/macro-calculator)."
+          },
+          {
+            "kind": "p",
+            "text": "Follow these steps:"
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Enter your current age, sex, height, and weight.",
+              "Select your usual activity level.",
+              "Choose your goal, such as weight loss, maintenance, or muscle gain.",
+              "Select your preferred macro split.",
+              "Add your body fat percentage if known (optional).",
+              "Click Calculate to see your estimated daily calories, protein, carbohydrates, and fats."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Compare the new results with your previous targets before making changes."
+          },
+          {
+            "kind": "p",
+            "text": "Remember that calculator results are estimates, not exact nutritional requirements."
+          },
+          {
+            "kind": "p",
+            "text": "If your activity has changed, [How to Determine Activity Level for TDEE](/blog/how-to-determine-activity-level-for-tdee) can help you choose a realistic activity category first."
+          }
+        ]
+      },
+      {
+        "heading": "Do You Need to Change Your Macros Every Week?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Usually, no."
+          },
+          {
+            "kind": "p",
+            "text": "If your weight trend, training performance, and overall progress are moving in the intended direction, frequent adjustments may be unnecessary."
+          },
+          {
+            "kind": "p",
+            "text": "Before reducing calories because of a plateau, consider whether your food intake, activity, or tracking habits have changed."
+          },
+          {
+            "kind": "p",
+            "text": "A consistent trend over several weeks is more useful than reacting to one day's results."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "**How often should you recalculate your macros?** A review every 4–6 weeks is a useful starting point, but your progress and lifestyle changes matter more than the calendar."
+          },
+          {
+            "kind": "p",
+            "text": "Update your targets when your body weight, activity level, or fitness goals change enough to affect your nutritional needs."
+          },
+          {
+            "kind": "p",
+            "text": "Use a [macro calculator](/macro-calculator) to estimate updated targets, then assess how well they support your progress over time."
+          },
+          {
+            "kind": "p",
+            "text": "Disclaimer: Macro calculations provide general estimates. People with medical conditions, specialized athletic needs, or pregnancy-related nutrition requirements should seek individualized professional guidance."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Should I recalculate macros after losing 5 pounds?",
+        "answer": "Not necessarily. A small weight change may not require an immediate adjustment. Review your overall progress and recalculate if your calorie needs appear to have changed."
+      },
+      {
+        "question": "How often should I change macros for muscle gain?",
+        "answer": "Review them periodically, especially after meaningful changes in body weight, training volume, or fitness goals."
+      },
+      {
+        "question": "Should I recalculate macros if my activity level changes?",
+        "answer": "Yes. A substantial change in daily activity or exercise can affect calorie needs and may justify updated macro targets."
+      },
+      {
+        "question": "Can I keep the same macros for months?",
+        "answer": "Yes, if your goals, activity level, and progress remain relatively stable. There is no requirement to change macro targets on a fixed schedule."
       }
     ]
   },
