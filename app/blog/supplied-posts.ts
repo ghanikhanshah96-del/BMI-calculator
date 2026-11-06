@@ -980,6 +980,285 @@ export const suppliedPosts = [
     ]
   },
   {
+    "slug": "macro-split-for-beginners",
+    "title": "Macro Split for Beginners: How Much Protein, Carbs, and Fat Do You Need?",
+    "excerpt": "Learn the best starting macro split for beginners. Understand protein, carbs, and fats, calculate daily targets, and choose a split that fits your goals.",
+    "description": "Learn the best starting macro split for beginners. Understand protein, carbs, and fats, calculate daily targets, and choose a split that fits your goals.",
+    "metaTitle": "Macro Split for Beginners: Easy Guide to Your Macros",
+    "metaTitleAbsolute": true,
+    "toolId": "macro",
+    "toolLabel": "Macro Calculator",
+    "toolHref": "/macro-calculator",
+    "publishedAt": "2026-11-06",
+    "updatedAt": "2026-11-06",
+    "image": "/blog/macro-split-for-beginners.webp",
+    "imageAlt": "Adult sitting on an exercise mat and raising two dumbbells during a home workout",
+    "imageWidth": 1024,
+    "imageHeight": 684,
+    "keywords": [
+      "Macro Split for Beginners",
+      "beginner macro ratio",
+      "macros for beginners",
+      "protein carbs fat ratio",
+      "how to calculate macros",
+      "macro calculator",
+      "macros for weight loss",
+      "daily macro targets"
+    ],
+    "relatedSlugs": [
+      "how-often-should-you-recalculate-your-macros",
+      "what-is-the-major-source-of-energy-for-the-body"
+    ],
+    "takeaways": [
+      "A 50/20/30 split (carbs/protein/fat) is one beginner example that falls within adult AMDR ranges, not a required ratio.",
+      "Convert calories to grams using 4 calories per gram for protein and carbs, and 9 calories per gram for fat.",
+      "Use the Macro Calculator to estimate daily targets, then adjust if your weight, activity, or goals change."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "A **Macro Split for Beginners** is a simple way to divide your daily calories between protein, carbohydrates, and fats. If you're new to tracking macros, a starting ratio of 50% carbs, 20% protein, and 30% fat can help you understand how macronutrient targets work."
+      },
+      {
+        "kind": "p",
+        "text": "However, there is no single perfect macro ratio for everyone. Your ideal split depends on your calorie needs, activity level, and fitness goals."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/macro-split-for-beginners.webp",
+          "alt": "Adult sitting on an exercise mat and raising two dumbbells during a home workout",
+          "width": 1024,
+          "height": 684,
+          "caption": "A beginner macro split is a starting estimate for dividing calories among protein, carbohydrates, and fats. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54579614508), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "What Is a Good Macro Split for Beginners?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Macros, short for macronutrients, are the three main nutrients that provide calories:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "**Protein:** Supports muscle maintenance, growth, and tissue repair.",
+              "**Carbohydrates:** Provide energy for daily activities and exercise.",
+              "**Fats:** Support normal body functions and help absorb fat-soluble vitamins."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "For healthy adults, the [National Academies' Acceptable Macronutrient Distribution Ranges (AMDRs)](https://nap.nationalacademies.org/read/10490/chapter/8) are:"
+          },
+          {
+            "kind": "table",
+            "caption": "What Is a Good Macro Split for Beginners?",
+            "head": [
+              "Macronutrient",
+              "General adult range"
+            ],
+            "rows": [
+              [
+                "Carbohydrates",
+                "45–65% of daily calories"
+              ],
+              [
+                "Protein",
+                "10–35% of daily calories"
+              ],
+              [
+                "Fats",
+                "20–35% of daily calories"
+              ]
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "A 50/20/30 macro split falls within these ranges and can be a practical example for beginners. It isn't a required ratio or a guarantee of specific fitness results."
+          }
+        ]
+      },
+      {
+        "heading": "How to Calculate Your Macros",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Each macronutrient provides a different amount of energy:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "**Protein:** 4 calories per gram",
+              "**Carbohydrates:** 4 calories per gram",
+              "**Fat:** 9 calories per gram"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "For example, if you eat 2,000 calories daily using a 50/20/30 split:"
+          },
+          {
+            "kind": "table",
+            "caption": "How to Calculate Your Macros",
+            "head": [
+              "Macronutrient",
+              "Calories",
+              "Daily grams"
+            ],
+            "rows": [
+              [
+                "Carbs (50%)",
+                "1,000",
+                "250 g"
+              ],
+              [
+                "Protein (20%)",
+                "400",
+                "100 g"
+              ],
+              [
+                "Fat (30%)",
+                "600",
+                "About 67 g"
+              ]
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "These numbers are an example, not a personalized recommendation."
+          }
+        ]
+      },
+      {
+        "heading": "How to Find Your Macro Split Using a Calculator",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "You don't need to calculate everything manually."
+          },
+          {
+            "kind": "p",
+            "text": "Follow these steps:"
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Open the free [Macro Calculator](/macro-calculator).",
+              "Enter your age, sex, height, and weight.",
+              "Select your activity level.",
+              "Choose your goal: weight loss, maintenance, or muscle gain.",
+              "Select your preferred macro split.",
+              "Click Calculate to see your estimated daily calories, protein, carbohydrates, and fats."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "You can also enter your body fat percentage if you know it."
+          },
+          {
+            "kind": "p",
+            "text": "The calculator provides estimates based on your information, not exact nutritional requirements."
+          }
+        ]
+      },
+      {
+        "heading": "Should Your Macro Split Change Based on Your Goal?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Your macro targets may need adjusting depending on what you're trying to achieve."
+          },
+          {
+            "kind": "h3",
+            "text": "For Weight Loss"
+          },
+          {
+            "kind": "p",
+            "text": "Focus on a sustainable calorie deficit while eating enough protein and other essential nutrients."
+          },
+          {
+            "kind": "p",
+            "text": "Changing macro percentages alone doesn't guarantee weight loss."
+          },
+          {
+            "kind": "h3",
+            "text": "For Muscle Gain"
+          },
+          {
+            "kind": "p",
+            "text": "Adequate protein, sufficient calories, and resistance training are important for building muscle."
+          },
+          {
+            "kind": "p",
+            "text": "Your carbohydrate needs may also increase with more demanding training."
+          },
+          {
+            "kind": "h3",
+            "text": "For Weight Maintenance"
+          },
+          {
+            "kind": "p",
+            "text": "Choose a balanced ratio that meets your nutritional needs and supports your usual activity."
+          },
+          {
+            "kind": "p",
+            "text": "You don't need to change your macros if your current eating pattern works well."
+          },
+          {
+            "kind": "p",
+            "text": "If your weight, activity, or goals change later, [How Often Should You Recalculate Your Macros?](/blog/how-often-should-you-recalculate-your-macros) explains when an update may be useful."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "A **Macro Split for Beginners** doesn't need to be complicated. Start by understanding your calorie needs, then divide those calories between protein, carbohydrates, and fats."
+          },
+          {
+            "kind": "p",
+            "text": "A 50/20/30 ratio is one possible starting point, but the right balance depends on your goals and lifestyle."
+          },
+          {
+            "kind": "p",
+            "text": "Use the FitnessCalculatorPro [Macro Calculator](/macro-calculator) to estimate personalized daily macro targets and adjust them as your needs change."
+          },
+          {
+            "kind": "p",
+            "text": "Disclaimer: Macro targets are general estimates. People with medical conditions or specialized nutritional needs should seek individualized guidance from a qualified healthcare professional."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Is a 50/20/30 macro split good for beginners?",
+        "answer": "It can be a reasonable starting example for healthy adults because it falls within established macronutrient distribution ranges. Individual needs may differ."
+      },
+      {
+        "question": "Do I need to track macros every day?",
+        "answer": "No. Tracking can help you learn about food portions and nutrient intake, but it's not required for healthy eating."
+      },
+      {
+        "question": "Should I hit my macro targets exactly?",
+        "answer": "Not necessarily. Small daily differences are normal. Consistent eating habits and overall nutritional quality matter more than matching every target to the exact gram."
+      },
+      {
+        "question": "When should I recalculate my macros?",
+        "answer": "Recalculate when your body weight, activity level, training routine, or fitness goal changes significantly."
+      }
+    ]
+  },
+  {
     "slug": "army-body-fat-percentage-calculator",
     "title": "Army Body Fat Percentage Calculator: How to Check the 2026 Standards",
     "excerpt": "Looking for an army body fat percentage calculator? Learn the 2026 Army waist-to-height standard, calculate your ratio, and estimate body fat separately.",
