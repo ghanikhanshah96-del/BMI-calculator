@@ -1259,6 +1259,264 @@ export const suppliedPosts = [
     ]
   },
   {
+    "slug": "how-to-set-macros-after-losing-weight",
+    "title": "How to Set Macros After Losing Weight: A Simple Guide",
+    "excerpt": "Learn how to set macros after losing weight. Update your calorie needs and adjust protein, carbs, and fats for maintenance or continued weight loss.",
+    "description": "Learn how to set macros after losing weight. Update your calorie needs and adjust protein, carbs, and fats for maintenance or continued weight loss.",
+    "metaTitle": "How to Set Macros After Losing Weight: Simple Guide",
+    "metaTitleAbsolute": true,
+    "toolId": "macro",
+    "toolLabel": "Macro Calculator",
+    "toolHref": "/macro-calculator",
+    "publishedAt": "2026-11-06",
+    "updatedAt": "2026-11-06",
+    "image": "/blog/how-to-set-macros-after-losing-weight.webp",
+    "imageAlt": "Clinician holding a tape measure at the waist over clothing",
+    "imageWidth": 1024,
+    "imageHeight": 684,
+    "keywords": [
+      "How to Set Macros After Losing Weight",
+      "macros after weight loss",
+      "recalculate macros after weight loss",
+      "maintenance macros",
+      "adjust macro targets",
+      "calories after weight loss",
+      "protein carbs and fats",
+      "macro calculator"
+    ],
+    "relatedSlugs": [
+      "how-often-should-you-recalculate-your-macros",
+      "macro-split-for-beginners"
+    ],
+    "takeaways": [
+      "Recalculate calories from your current weight, activity level, and next goal before changing protein, carbs, and fats.",
+      "Maintenance calories are often higher than the deficit you used to lose weight; further loss still uses an updated, smaller target.",
+      "Treat calculator results as starting estimates and review several weeks of progress before making another change."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "Learning **how to set macros after losing weight** starts with recalculating your daily calorie needs using your current body weight, activity level, and fitness goals."
+      },
+      {
+        "kind": "p",
+        "text": "As you lose weight, your body may need fewer calories than before. However, this doesn't mean you should automatically reduce your food intake further. Your next step depends on whether you want to maintain your new weight or continue losing weight."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/how-to-set-macros-after-losing-weight.webp",
+          "alt": "Clinician holding a tape measure at the waist over clothing",
+          "width": 1024,
+          "height": 684,
+          "caption": "After weight loss, updated measurements and calorie needs can help set new macro targets. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54584433874), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "How to Set Macros After Losing Weight",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Follow these steps to update your daily protein, carbohydrate, and fat targets."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 1: Decide Your Next Goal"
+          },
+          {
+            "kind": "p",
+            "text": "First, determine what you want to achieve."
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "**Weight maintenance:** Aim to eat around your estimated maintenance calories.",
+              "**Further weight loss:** Consider an appropriate calorie deficit based on your updated needs.",
+              "**Muscle gain:** Focus on sufficient nutrition and resistance training."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Your goal determines the calorie target used to calculate your macros."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 2: Recalculate Your Daily Calories"
+          },
+          {
+            "kind": "p",
+            "text": "Your old calorie target may no longer reflect your current energy needs."
+          },
+          {
+            "kind": "p",
+            "text": "Use your updated weight and activity level to estimate how many calories you need each day."
+          },
+          {
+            "kind": "p",
+            "text": "The [NIH Body Weight Planner](https://www.niddk.nih.gov/bwp) explains how calorie needs differ during weight loss and weight maintenance."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 3: Calculate Your New Macro Targets"
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Open the free [Macro Calculator](/macro-calculator).",
+              "Enter your current age, sex, height, and weight.",
+              "Choose your usual activity level.",
+              "Select your new fitness goal.",
+              "Choose your preferred macro split.",
+              "Add your body fat percentage if known (optional).",
+              "Click Calculate to view your estimated daily calories, protein, carbohydrates, and fats."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Use these results as starting targets rather than exact requirements."
+          },
+          {
+            "kind": "p",
+            "text": "If you are choosing a split for the first time, [Macro Split for Beginners](/blog/macro-split-for-beginners) explains a simple starting example."
+          }
+        ]
+      },
+      {
+        "heading": "Example of Macros After Weight Loss",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Suppose your updated maintenance calorie estimate is 2,000 calories per day."
+          },
+          {
+            "kind": "p",
+            "text": "Using an illustrative 50% carbohydrate, 20% protein, and 30% fat split:"
+          },
+          {
+            "kind": "table",
+            "caption": "Example of Macros After Weight Loss",
+            "head": [
+              "Macronutrient",
+              "Daily target"
+            ],
+            "rows": [
+              [
+                "Carbohydrates (50%)",
+                "250 g"
+              ],
+              [
+                "Protein (20%)",
+                "100 g"
+              ],
+              [
+                "Fat (30%)",
+                "About 67 g"
+              ]
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "These amounts are calculated using 4 calories per gram for carbohydrates and protein, and 9 calories per gram for fat."
+          },
+          {
+            "kind": "p",
+            "text": "This is only an example. Your ideal calorie target and macro distribution may differ."
+          }
+        ]
+      },
+      {
+        "heading": "Should You Change Protein, Carbs, and Fats After Weight Loss?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "You may need to adjust all three, but not necessarily by the same amount."
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "**Protein:** Adequate protein supports muscle maintenance, particularly when combined with resistance training.",
+              "**Carbohydrates:** Your needs depend partly on activity level and exercise demands.",
+              "**Fats:** Dietary fat remains important for normal bodily functions and nutrient absorption."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Avoid drastically reducing one macronutrient just because you've reached a lower weight. A balanced, sustainable eating pattern matters more than following an arbitrary ratio."
+          }
+        ]
+      },
+      {
+        "heading": "How Do You Know If Your New Macros Are Working?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "After updating your targets, monitor your progress over several weeks."
+          },
+          {
+            "kind": "p",
+            "text": "If your goal is maintenance, look for a relatively stable average weight rather than expecting the scale to remain identical every day."
+          },
+          {
+            "kind": "p",
+            "text": "If your weight consistently changes in an unintended direction, reassess your estimated calories and activity level before making adjustments."
+          },
+          {
+            "kind": "p",
+            "text": "Short-term weight fluctuations do not always reflect changes in body fat."
+          },
+          {
+            "kind": "p",
+            "text": "For more on timing, see [How Often Should You Recalculate Your Macros?](/blog/how-often-should-you-recalculate-your-macros)."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Understanding **how to set macros after losing weight** means updating your calorie needs and choosing a macro split that supports your next goal."
+          },
+          {
+            "kind": "p",
+            "text": "Start with your current weight, select maintenance or continued weight loss, and calculate realistic protein, carbohydrate, and fat targets."
+          },
+          {
+            "kind": "p",
+            "text": "Then monitor your progress and make adjustments only when needed."
+          },
+          {
+            "kind": "p",
+            "text": "Disclaimer: Macro calculations provide general estimates. People with medical conditions, specialized athletic needs, or pregnancy-related nutrition requirements should seek individualized professional guidance."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to recalculate macros after losing 10 pounds?",
+        "answer": "It can be useful, especially if your weight loss has changed your calorie needs. Recalculation doesn't necessarily mean you must reduce your calories."
+      },
+      {
+        "question": "Should I increase calories after reaching my goal weight?",
+        "answer": "If you've finished a weight-loss phase, your maintenance calorie target will generally be higher than the calorie-deficit target you were using. The appropriate amount depends on your current energy needs."
+      },
+      {
+        "question": "Do I need a different macro ratio for weight maintenance?",
+        "answer": "Not necessarily. You may be able to keep a similar macro ratio while adjusting your overall calorie intake."
+      },
+      {
+        "question": "How often should I adjust my macros after weight loss?",
+        "answer": "Review your targets when your weight, activity level, or fitness goal changes meaningfully. Avoid making changes based on a single day's results."
+      }
+    ]
+  },
+  {
     "slug": "army-body-fat-percentage-calculator",
     "title": "Army Body Fat Percentage Calculator: How to Check the 2026 Standards",
     "excerpt": "Looking for an army body fat percentage calculator? Learn the 2026 Army waist-to-height standard, calculate your ratio, and estimate body fat separately.",
