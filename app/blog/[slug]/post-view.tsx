@@ -172,8 +172,6 @@ export default function PostView({
             <ArticleByline />
             <p className="mt-3 text-sm text-slate-500">
               <time dateTime={post.publishedAt}>Published {post.publishedAt}</time>
-              {" · "}
-              <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
             </p>
           </>
         }

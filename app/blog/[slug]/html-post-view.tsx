@@ -63,13 +63,7 @@ export default function HtmlPostView({
               <p>{post.excerpt}</p>
               <ArticleByline />
               <p className="mt-3 text-sm text-slate-500">
-                <time dateTime={post.date}>Published {post.date}</time>
-                {post.updatedAt ? (
-                  <>
-                    {" · "}
-                    <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
-                  </>
-                ) : null}
+                <time dateTime={post.publishedAt || post.date}>Published {post.publishedAt || post.date}</time>
               </p>
             </>
           }
