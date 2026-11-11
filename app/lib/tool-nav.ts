@@ -82,7 +82,7 @@ export const toolLinks: ToolLink[] = [
     shortName: "Ovulation",
     cluster: "pregnancy",
     icon: Sparkles,
-    tagline: "Estimate when ovulation and your fertile window may occur during your menstrual cycle each month.",
+    tagline: "Estimate your ovulation date, fertile window, peak fertility days, and upcoming cycles from your last period.",
     hint: "Fertile window",
   },
 ];

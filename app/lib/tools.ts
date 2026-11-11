@@ -3,7 +3,7 @@ import { clusters, getToolLink, toolHref, type Cluster, type ClusterId, type Too
 export { clusters, toolHref, type Cluster, type ClusterId, type ToolId };
 
 /** Bump when site-wide page content changes; used for sitemap lastModified. */
-export const SITE_UPDATED = "2026-10-02";
+export const SITE_UPDATED = "2026-11-12";
 
 export type Tool = ToolLink & {
   heroImage: string;
@@ -134,7 +134,7 @@ export const tools: Tool[] = [
     metaTitle: "Ovulation Calculator – Find Your Fertile Window",
     metaTitleAbsolute: true,
     metaDescription:
-      "Use our Ovulation Calculator to estimate your ovulation date, fertile window and most fertile days using your last period and average cycle length.",
+      "Estimate your ovulation date, fertile window, peak fertility days, and upcoming cycles using your last period and average cycle length.",
     keywords: [
       "Ovulation Calculator",
       "Ovulation Date Calculator",

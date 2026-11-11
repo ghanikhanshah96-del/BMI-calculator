@@ -41,6 +41,8 @@ export type ToolContent = {
   intro: string;
   /** Intro copy shown right below the calculator, without a heading. */
   lead?: ContentBlock[];
+  /** Optional “Please note” paragraphs. Supports `**bold**` and `[label](/path)` links. */
+  notice?: string[];
   article: ArticleSection[];
   faqs: ToolFaq[];
   sources?: ToolSource[];

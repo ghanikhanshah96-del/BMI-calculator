@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import Breadcrumbs from "../components/breadcrumbs";
 import { ArrowRight, BookOpen, Info, LayoutGrid } from "../components/icons";
 import HeroBackdrop from "../components/hero-backdrop";
+import { Inline } from "../components/content-blocks";
 import JsonLd from "../components/json-ld";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
@@ -87,11 +88,13 @@ export default function ToolView({
           </span>
           <div>
             <p className="result-notice-kicker">Please note</p>
-            <p>
-              These results are estimates to help you learn and plan. They are not a medical diagnosis, and a clinician can
-              help you decide what the number means for you.{" "}
-              <Link href="/about-us">See how the calculators work</Link>.
-            </p>
+            {(content.notice ?? [
+              "These results are estimates to help you learn and plan. They are not a medical diagnosis, and a clinician can help you decide what the number means for you. [See how the calculators work](/about-us).",
+            ]).map((paragraph) => (
+              <p key={paragraph}>
+                <Inline text={paragraph} />
+              </p>
+            ))}
             {sources.length ? (
               <p className="result-notice-sources">
                 <span className="result-notice-based">Based on</span>

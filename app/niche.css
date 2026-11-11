@@ -435,6 +435,10 @@
   color: #b45309;
 }
 
+.result-notice p + p {
+  margin-top: 0.45rem;
+}
+
 .result-notice a {
   font-weight: 650;
   color: #047857;

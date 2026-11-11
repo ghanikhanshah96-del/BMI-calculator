@@ -182,14 +182,14 @@ export default function OvulationCalculator() {
           icon={Sparkles}
           niche="ovulation"
           eyebrow="Ovulation"
-          description="Predict ovulation, your fertile days, and the next six cycles."
+          description="Estimate your ovulation date, fertile window, peak fertility days, and upcoming cycles using your last period and average cycle length."
         />
 
         <InputGroup step={1} title="Your cycle">
           <FieldShell label="First day of your last period">
             <DatePicker value={lmp} onChange={setLmp} />
           </FieldShell>
-          <FieldShell label="Average length of cycles">
+          <FieldShell label="Average cycle length">
             <CustomSelect
               value={cycleChoice}
               placeholder="Select cycle length"
@@ -207,7 +207,7 @@ export default function OvulationCalculator() {
         <ActionBar onCalculate={calculate} onClear={clear} report={report} />
 
         <ResultNote tone="info">
-          This tool estimates fertile days from cycle tracking. It should not be used as birth control.
+          Estimates are based on cycle tracking and should not be used as birth control.
         </ResultNote>
       </CalcForm>
 

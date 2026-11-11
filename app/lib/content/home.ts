@@ -65,8 +65,8 @@ export const popularCalculators: {
       id: "ovulation",
       title: "Ovulation Calculator",
       paragraphs: [
-        "Estimate your **ovulation date, fertile window, and most fertile days** based on your menstrual cycle information.",
-        "Enter the first day of your last period and your average cycle length to get a calendar-based estimate. Because ovulation can vary from one cycle to another, the result should be used as a planning estimate rather than a confirmed ovulation date.",
+        "Estimate your **ovulation date, fertile window, peak fertility days, and upcoming cycles** using your last period and average cycle length.",
+        "Enter the first day of your last period and your average cycle length to get a calendar-based estimate. Because ovulation can vary from one cycle to another, use the result as a planning guide rather than an exact prediction.",
       ],
       link: "Use the Ovulation Calculator",
     },
