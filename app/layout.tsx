@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import type { ReactNode } from "react";
 import ReviewProvider from "./components/review-provider";
 import CursorEffects from "./components/cursor-effects";
@@ -102,6 +103,15 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         />
       </head>
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-6TVZ9XYLT7" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-6TVZ9XYLT7');
+          `}
+        </Script>
         <FirebaseAnalytics />
         <SiteJsonLd siteUrl={siteUrl} />
         {children}
