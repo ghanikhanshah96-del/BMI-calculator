@@ -33,6 +33,7 @@ export default function Page() {
     <>
       <link rel="canonical" href={`${siteUrl}/`} />
       <meta property="og:url" content={`${siteUrl}/`} />
+      <meta name="google-site-verification" content="MD9KLyvnTX7n7lzBOZt_JVl3Ug7NaCmAZAbtny5cWQc" />
       <HomeView siteUrl={siteUrl} headlineClass={raleway.className} />
     </>
   );
