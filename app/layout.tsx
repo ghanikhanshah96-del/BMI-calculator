@@ -52,6 +52,7 @@ export const metadata: Metadata = {
     "health calculator",
   ],
   authors: [{ name: "FitnessCalculatorPro.com" }],
+  referrer: "no-referrer-when-downgrade",
   verification: {
     google: "lt61VQpZsjNOwJ6P-Ek_OlZWjf2mu8K10TfXODMLeZk",
   },
