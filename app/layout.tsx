@@ -112,6 +112,22 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
             gtag('config', 'G-6TVZ9XYLT7');
           `}
         </Script>
+        <Script id="hilltopads-zone-7644261" strategy="afterInteractive">
+          {`
+            (function(zzo){
+            var d = document,
+            s = d.createElement('script'),
+            l = d.currentScript || d.scripts[d.scripts.length - 1];
+
+            s.settings = zzo || {};
+            s.src = "//fond-appointment.com/bZXBV.skdYGVlJ0jYLW/cj/Sefma9EunZeUtlAkZPiTucj2ENfDLQqyfNLjpEmtUN/zuYi0-NYDyIg2/NFQz";
+            s.async = true;
+            s.referrerPolicy = 'no-referrer-when-downgrade';
+
+            l.parentNode.insertBefore(s, l);
+            })({});
+          `}
+        </Script>
         <FirebaseAnalytics />
         <SiteJsonLd siteUrl={siteUrl} />
         {children}
