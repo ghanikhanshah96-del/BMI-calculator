@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
-import HilltopAdSlot from "./hilltop-ad-slot";
 
 type FooterLink = { href: string; label: string };
 
@@ -45,9 +44,7 @@ export default function SiteFooter() {
   const groups = buildGroups();
 
   return (
-    <div className="mt-auto shrink-0">
-      <HilltopAdSlot />
-      <footer className="site-footer">
+    <footer className="site-footer">
       <div className="footer-overlay" />
       <div className="footer-glow" />
 
@@ -112,6 +109,5 @@ export default function SiteFooter() {
         </div>
       </div>
     </footer>
-    </div>
   );
 }

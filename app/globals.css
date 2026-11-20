@@ -942,7 +942,7 @@ a {
   }
 
   .hilltop-ad-band {
-    @apply shrink-0 border-t border-emerald-100 bg-slate-50 py-8;
+    @apply shrink-0 border-b border-emerald-100 bg-slate-50 py-5 sm:py-6;
   }
 
   .hilltop-ad-label {
@@ -965,7 +965,7 @@ a {
   }
 
   .site-footer {
-    @apply relative isolate overflow-hidden pb-5 pt-10 text-white lg:pt-12;
+    @apply relative isolate mt-auto shrink-0 overflow-hidden pb-5 pt-10 text-white lg:pt-12;
     background: linear-gradient(145deg, #022c22 0%, #064e3b 46%, #0f766e 100%);
   }
 

@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toolHref, toolLinks } from "../lib/tool-nav";
 import BrandLogo from "./brand-logo";
+import HilltopAdSlot from "./hilltop-ad-slot";
 
 type ActivePage =
   | "home"
@@ -116,6 +117,7 @@ export default function SiteHeader({
   const headerTone = menuOpen || scrolled ? "site-header-solid" : "site-header-clear";
 
   return (
+    <>
     <header className={`site-header ${headerTone}`}>
       <div className="site-container header-bar">
         <Link
@@ -268,5 +270,7 @@ export default function SiteHeader({
         </div>
       ) : null}
     </header>
+    <HilltopAdSlot />
+    </>
   );
 }
