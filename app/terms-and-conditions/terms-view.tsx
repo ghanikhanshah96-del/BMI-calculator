@@ -78,7 +78,7 @@ const sections: LegalSection[] = [
     title: "7. Advertising",
     icon: Sparkles,
     body: [
-      "The site may display advertisements, including from networks such as Google AdSense. An ad does not mean we endorse the advertiser, product, service, or claim. Transactions with advertisers are between you and that third party.",
+      "The site may display advertisements from third-party networks. An ad does not mean we endorse the advertiser, product, service, or claim. Transactions with advertisers are between you and that third party.",
     ],
   },
   {

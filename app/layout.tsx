@@ -95,13 +95,6 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9309280380486229"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-6TVZ9XYLT7" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">

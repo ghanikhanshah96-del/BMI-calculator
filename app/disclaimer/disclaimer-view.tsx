@@ -77,7 +77,7 @@ const sections: LegalSection[] = [
     title: "Advertising disclaimer",
     icon: Sparkles,
     body: [
-      "The site may display ads from third-party networks, including Google AdSense. An advertisement does not mean we recommend or endorse the advertiser or its claims. Advertising does not determine calculator results or editorial conclusions.",
+      "The site may display ads from third-party networks. An advertisement does not mean we recommend or endorse the advertiser or its claims. Advertising does not determine calculator results or editorial conclusions.",
     ],
   },
   {

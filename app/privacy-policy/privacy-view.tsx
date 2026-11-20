@@ -77,11 +77,11 @@ const sections: LegalSection[] = [
   },
   {
     id: "ads",
-    title: "Google AdSense and advertising",
+    title: "Advertising",
     icon: Sparkles,
     body: [
-      "We may use Google AdSense or other third-party advertising providers. Vendors, including Google, may use cookies to serve ads based on prior visits to this or other sites.",
-      "You may be able to control personalized advertising through Google’s advertising settings and other consent or privacy controls. We do not control cookies independently operated by third-party advertisers.",
+      "We may use third-party advertising providers to display ads on this site. Those vendors may use cookies or similar technologies based on visits to this or other sites.",
+      "You may be able to control personalized advertising through browser, device, or vendor privacy controls. We do not control cookies independently operated by third-party advertisers.",
     ],
   },
   {

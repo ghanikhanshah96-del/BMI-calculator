@@ -941,8 +941,31 @@ a {
     @apply block truncate font-display text-[1.05rem] font-medium leading-tight sm:text-xl;
   }
 
+  .hilltop-ad-band {
+    @apply shrink-0 border-t border-emerald-100 bg-slate-50 py-8;
+  }
+
+  .hilltop-ad-label {
+    @apply mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400;
+  }
+
+  .hilltop-ad-frame {
+    @apply relative mx-auto h-[250px] w-[300px] max-w-full overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200/80;
+  }
+
+  .hilltop-ad-frame iframe,
+  .hilltop-ad-frame > * {
+    display: block !important;
+    width: 300px !important;
+    max-width: 100% !important;
+    height: 250px !important;
+    margin: 0 auto !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+
   .site-footer {
-    @apply relative isolate mt-auto shrink-0 overflow-hidden pb-5 pt-10 text-white lg:pt-12;
+    @apply relative isolate overflow-hidden pb-5 pt-10 text-white lg:pt-12;
     background: linear-gradient(145deg, #022c22 0%, #064e3b 46%, #0f766e 100%);
   }
 
