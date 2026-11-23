@@ -8,6 +8,7 @@ import { editorialTeamRef } from "../../lib/editorial-team";
 import FaqAccordion from "../../components/faq-accordion";
 import { Inline } from "../../components/content-blocks";
 import DocNav from "../../components/doc-nav";
+import HilltopBlogAdSlot from "../../components/hilltop-blog-ad-slot";
 import MobileArticleContents from "../../components/mobile-article-contents";
 import { ArrowRight, BookOpen } from "../../components/icons";
 import PageHero from "../../components/page-hero";
@@ -223,7 +224,6 @@ export default function PostView({
           </article>
 
           <aside className="order-2 flex flex-col gap-6 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
-            <DocNav items={contents} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" />
             <div className="cta-panel shrink-0 p-6 sm:p-7">
               <div className="cta-glow" />
               <h2 className="text-xl text-white sm:text-2xl">Try the {post.toolLabel}</h2>
@@ -244,6 +244,8 @@ export default function PostView({
                 .
               </p>
             </div>
+            <HilltopBlogAdSlot />
+            <DocNav items={contents} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" />
           </aside>
         </div>
       </main>

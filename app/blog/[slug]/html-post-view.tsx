@@ -11,6 +11,7 @@ import SiteHeader from "../../components/site-header";
 import { organizationRef } from "../../lib/seo";
 import type { FirestoreBlogPost } from "../../lib/firestore-blog";
 import DocNav from "../../components/doc-nav";
+import HilltopBlogAdSlot from "../../components/hilltop-blog-ad-slot";
 import MobileArticleContents from "../../components/mobile-article-contents";
 import { articleHeadings } from "../../lib/article-headings";
 import "../article.css";
@@ -104,7 +105,6 @@ export default function HtmlPostView({
             </article>
 
             <aside className="order-2 flex flex-col gap-6 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6.5rem)] lg:self-start">
-              {headings.length ? <DocNav items={headings} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" /> : null}
               <div className="cta-panel shrink-0 p-6 sm:p-7">
                 <div className="cta-glow" />
                 <h2 className="text-xl text-white sm:text-2xl">Browse calculators</h2>
@@ -123,6 +123,8 @@ export default function HtmlPostView({
                   .
                 </p>
               </div>
+              <HilltopBlogAdSlot />
+              {headings.length ? <DocNav items={headings} title="In this article" className="hidden min-h-0 lg:flex lg:flex-1" /> : null}
             </aside>
           </div>
         </main>

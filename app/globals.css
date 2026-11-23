@@ -945,6 +945,10 @@ a {
     @apply shrink-0 border-b border-emerald-100 bg-slate-50 py-5 sm:py-6;
   }
 
+  .hilltop-blog-ad {
+    @apply shrink-0 rounded-2xl bg-white py-3 ring-1 ring-emerald-100;
+  }
+
   .hilltop-ad-label {
     @apply mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400;
   }

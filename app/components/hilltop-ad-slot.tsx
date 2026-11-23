@@ -15,15 +15,23 @@ function bodyWrapper(el: Element): HTMLElement | null {
     node = node.parentElement;
   }
   if (node.parentElement !== document.body) return null;
-  if (node.id === SLOT_MOUNT_ID || node.closest(".hilltop-ad-band")) return null;
+  if (
+    node.id === SLOT_MOUNT_ID ||
+    node.id === "hilltop-blog-ad-slot-mount" ||
+    node.closest(".hilltop-ad-band") ||
+    node.closest(".hilltop-blog-ad")
+  ) return null;
   if (node.tagName === "SCRIPT") return null;
   return node;
 }
 
 function relocateHilltopAds(mount: HTMLElement) {
+  if (mount.querySelector('iframe[src*="fond-appointment.com"]')) return;
+
   document.querySelectorAll("iframe").forEach((iframe) => {
     if (!isHilltopIframe(iframe)) return;
     if (mount.contains(iframe)) return;
+    if (iframe.closest("#hilltop-blog-ad-slot-mount, .hilltop-blog-ad")) return;
 
     const width = iframe.offsetWidth || Number(iframe.getAttribute("width")) || 0;
     const height = iframe.offsetHeight || Number(iframe.getAttribute("height")) || 0;
@@ -38,6 +46,7 @@ function relocateHilltopAds(mount: HTMLElement) {
     if (iframe.parentElement !== mount) {
       mount.appendChild(iframe);
     }
+    return;
   });
 }
 
