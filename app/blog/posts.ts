@@ -89,6 +89,15 @@ const waistTape: PostFigure = {
     "A tape measure held at the waist over clothing. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54584433874), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/).",
 };
 
+const bathroomScale: PostFigure = {
+  src: "/blog/how-to-measure-body-fat-at-home.webp",
+  alt: "Bathroom scale used for at-home body weight and body-composition checks",
+  width: 1280,
+  height: 1249,
+  caption:
+    "A bathroom scale is one of the tools people use when estimating body fat at home. Photo by Simon Speed, [CC0](https://creativecommons.org/publicdomain/zero/1.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:SalterBathroomScales.JPG).",
+};
+
 export const blogPosts: BlogPost[] = [
   ...suppliedPosts,
   {
@@ -361,7 +370,7 @@ export const blogPosts: BlogPost[] = [
         kind: "p",
         text: "These methods provide estimates rather than exact measurements, but they can help you monitor changes in body composition over time. They are educational tools, not a medical diagnosis.",
       },
-      { kind: "figure", figure: homeDumbbell },
+      { kind: "figure", figure: bathroomScale },
     ],
     faqs: [
       {

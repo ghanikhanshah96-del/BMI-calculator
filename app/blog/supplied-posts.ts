@@ -785,10 +785,10 @@ export const suppliedPosts = [
     "toolHref": "/macro-calculator",
     "publishedAt": "2026-11-03",
     "updatedAt": "2026-11-03",
-    "image": "/blog/how-often-should-you-recalculate-your-macros.webp",
-    "imageAlt": "Adult in athletic clothes lifting a barbell from the floor during strength training",
-    "imageWidth": 1023,
-    "imageHeight": 682,
+    "image": "/blog/how-often-should-you-recalculate-your-macros-planning.webp",
+    "imageAlt": "People reviewing notes and figures on paper next to laptops",
+    "imageWidth": 1920,
+    "imageHeight": 1281,
     "keywords": [
       "How Often Should You Recalculate Your Macros",
       "when to adjust macros",
@@ -819,11 +819,11 @@ export const suppliedPosts = [
       {
         "kind": "figure",
         "figure": {
-          "src": "/blog/how-often-should-you-recalculate-your-macros.webp",
-          "alt": "Adult in athletic clothes lifting a barbell from the floor during strength training",
-          "width": 1023,
-          "height": 682,
-          "caption": "Strength training and body-weight changes are common reasons to review macro targets. Photo by Homedust via [Flickr](https://www.flickr.com/photo.gne?id=41851164705), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Credit: [homedust.com](https://homedust.com/)."
+          "src": "/blog/how-often-should-you-recalculate-your-macros-planning.webp",
+          "alt": "People reviewing notes and figures on paper next to laptops",
+          "width": 1920,
+          "height": 1281,
+          "caption": "Reviewing your numbers on a regular schedule is one way to decide whether protein, carbohydrate, and fat targets still fit. Photo by [Scott Graham](https://unsplash.com/@sctgrhm) on [Unsplash](https://unsplash.com/photos/5fNmWej4tAA)."
         }
       }
     ],
@@ -991,10 +991,10 @@ export const suppliedPosts = [
     "toolHref": "/macro-calculator",
     "publishedAt": "2026-11-06",
     "updatedAt": "2026-11-06",
-    "image": "/blog/macro-split-for-beginners.webp",
-    "imageAlt": "Adult sitting on an exercise mat and raising two dumbbells during a home workout",
-    "imageWidth": 1024,
-    "imageHeight": 684,
+    "image": "/blog/macro-split-for-beginners-plate.webp",
+    "imageAlt": "Plate of chicken, rice, and vegetables showing protein, carbs, and fats",
+    "imageWidth": 1920,
+    "imageHeight": 1280,
     "keywords": [
       "Macro Split for Beginners",
       "beginner macro ratio",
@@ -1026,11 +1026,11 @@ export const suppliedPosts = [
       {
         "kind": "figure",
         "figure": {
-          "src": "/blog/macro-split-for-beginners.webp",
-          "alt": "Adult sitting on an exercise mat and raising two dumbbells during a home workout",
-          "width": 1024,
-          "height": 684,
-          "caption": "A beginner macro split is a starting estimate for dividing calories among protein, carbohydrates, and fats. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54579614508), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+          "src": "/blog/macro-split-for-beginners-plate.webp",
+          "alt": "Plate of chicken, rice, and vegetables showing protein, carbs, and fats",
+          "width": 1920,
+          "height": 1280,
+          "caption": "A plate with protein, carbohydrates, and vegetables can show how a beginner macro split looks in a real meal. Photo by [Karolina Kołodziejczak](https://unsplash.com/@rabbit_in_blue) on [Unsplash](https://unsplash.com)."
         }
       }
     ],
@@ -1270,10 +1270,10 @@ export const suppliedPosts = [
     "toolHref": "/macro-calculator",
     "publishedAt": "2026-11-06",
     "updatedAt": "2026-11-06",
-    "image": "/blog/how-to-set-macros-after-losing-weight.webp",
-    "imageAlt": "Clinician holding a tape measure at the waist over clothing",
-    "imageWidth": 1024,
-    "imageHeight": 684,
+    "image": "/blog/how-to-set-macros-after-losing-weight-bowl.webp",
+    "imageAlt": "Colorful bowl of tofu, eggs, vegetables, and grains after updating macros",
+    "imageWidth": 1920,
+    "imageHeight": 1920,
     "keywords": [
       "How to Set Macros After Losing Weight",
       "macros after weight loss",
@@ -1305,11 +1305,11 @@ export const suppliedPosts = [
       {
         "kind": "figure",
         "figure": {
-          "src": "/blog/how-to-set-macros-after-losing-weight.webp",
-          "alt": "Clinician holding a tape measure at the waist over clothing",
-          "width": 1024,
-          "height": 684,
-          "caption": "After weight loss, updated measurements and calorie needs can help set new macro targets. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54584433874), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+          "src": "/blog/how-to-set-macros-after-losing-weight-bowl.webp",
+          "alt": "Colorful bowl of tofu, eggs, vegetables, and grains after updating macros",
+          "width": 1920,
+          "height": 1920,
+          "caption": "After weight loss, calorie and macro targets often need updating around a balanced eating pattern. Photo by [Anna Pelzer](https://unsplash.com/@annapelzer) on [Unsplash](https://unsplash.com/photos/bowl-of-vegetable-salads-IGfIGP5ONV0)."
         }
       }
     ],
@@ -1528,10 +1528,10 @@ export const suppliedPosts = [
     "toolHref": "/body-fat-percentage-calculator",
     "publishedAt": "2026-11-25",
     "updatedAt": "2026-11-25",
-    "image": "/blog/how-to-measure-neck-for-body-fat-calculator.webp",
-    "imageAlt": "Flexible tape measure used for circumference-based body fat estimates",
-    "imageWidth": 1024,
-    "imageHeight": 684,
+    "image": "/blog/how-to-measure-neck-collarbones-unsplash.webp",
+    "imageAlt": "Black and white close-up of a woman's neck and collarbones",
+    "imageWidth": 1920,
+    "imageHeight": 1280,
     "keywords": [
       "How to Measure Neck for Body Fat Calculator",
       "neck measurement for body fat",
@@ -1565,11 +1565,11 @@ export const suppliedPosts = [
       {
         "kind": "figure",
         "figure": {
-          "src": "/blog/how-to-measure-neck-for-body-fat-calculator.webp",
-          "alt": "Flexible tape measure used for circumference-based body fat estimates",
-          "width": 1024,
-          "height": 684,
-          "caption": "A flexible tape measure is used for circumference-based body fat estimates, including neck measurement. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54584433874), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+          "src": "/blog/how-to-measure-neck-collarbones-unsplash.webp",
+          "alt": "Black and white close-up of a woman's neck and collarbones",
+          "width": 1920,
+          "height": 1280,
+          "caption": "Neck and collarbone landmarks used when measuring circumference for body fat estimates. Photo by [Loume Visser](https://unsplash.com/@loumevisser) on [Unsplash](https://unsplash.com/photos/a-close-up-of-a-womans-chest-O7U51lfjPtY)."
         }
       }
     ],
