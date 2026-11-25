@@ -1517,6 +1517,318 @@ export const suppliedPosts = [
     ]
   },
   {
+    "slug": "how-to-measure-neck-for-body-fat-calculator",
+    "title": "How to Measure Neck for Body Fat Calculator: Easy Steps",
+    "excerpt": "Learn how to measure neck for body fat calculator correctly. Follow Navy tape-measure guidelines, avoid common mistakes, and improve your body fat estimate.",
+    "description": "Learn how to measure neck for body fat calculator correctly. Follow Navy tape-measure guidelines, avoid common mistakes, and improve your body fat estimate.",
+    "metaTitle": "How to Measure Neck for Body Fat Calculator Correctly",
+    "metaTitleAbsolute": true,
+    "toolId": "body-fat",
+    "toolLabel": "Body Fat Percentage Calculator",
+    "toolHref": "/body-fat-percentage-calculator",
+    "publishedAt": "2026-11-25",
+    "updatedAt": "2026-11-25",
+    "image": "/blog/how-to-measure-neck-for-body-fat-calculator.webp",
+    "imageAlt": "Flexible tape measure used for circumference-based body fat estimates",
+    "imageWidth": 1024,
+    "imageHeight": 684,
+    "keywords": [
+      "How to Measure Neck for Body Fat Calculator",
+      "neck measurement for body fat",
+      "Navy body fat calculator",
+      "how to measure neck circumference",
+      "body fat tape measurement",
+      "body fat percentage calculator"
+    ],
+    "relatedSlugs": [
+      "how-to-calculate-body-fat-percentage",
+      "how-to-measure-body-fat-at-home"
+    ],
+    "takeaways": [
+      "Place a flexible tape just below the Adam's apple, keep it nearly horizontal, and do not pull it tight.",
+      "The traditional Navy method uses neck and waist for men, and neck, waist, and hips for women.",
+      "The Body Fat Percentage Calculator uses this method for adults 18 and older; ages 8–17 use a different method that does not need neck measurements."
+    ],
+    "intro": [
+      {
+        "kind": "p",
+        "text": "Knowing **how to measure neck for body fat calculator** results is important because an incorrect measurement can change your estimated body fat percentage."
+      },
+      {
+        "kind": "p",
+        "text": "The traditional U.S. Navy circumference method uses neck and waist measurements for men, and neck, waist, and hip measurements for women. To measure your neck correctly, place a flexible tape just below your Adam's apple, keep it nearly horizontal, and avoid pulling it too tight."
+      },
+      {
+        "kind": "p",
+        "text": "Here's how to take an accurate measurement at home."
+      },
+      {
+        "kind": "figure",
+        "figure": {
+          "src": "/blog/how-to-measure-neck-for-body-fat-calculator.webp",
+          "alt": "Flexible tape measure used for circumference-based body fat estimates",
+          "width": 1024,
+          "height": 684,
+          "caption": "A flexible tape measure is used for circumference-based body fat estimates, including neck measurement. Photo by Nenad Stojkovic via [Flickr](https://www.flickr.com/photos/202846129@N03/54584433874), licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": "How to Measure Neck for Body Fat Calculator Correctly",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Follow these steps based on the traditional U.S. Navy measurement procedure."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 1: Use a Flexible Measuring Tape"
+          },
+          {
+            "kind": "p",
+            "text": "Choose a non-stretchable measuring tape that can wrap comfortably around your neck."
+          },
+          {
+            "kind": "p",
+            "text": "Measure directly against your skin rather than over clothing."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 2: Stand Straight and Relax"
+          },
+          {
+            "kind": "p",
+            "text": "Stand upright with your head facing forward."
+          },
+          {
+            "kind": "p",
+            "text": "Keep your shoulders relaxed and avoid raising your chin or tensing your neck muscles."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 3: Find the Correct Measurement Position"
+          },
+          {
+            "kind": "p",
+            "text": "Place the measuring tape around your neck, just below the larynx (Adam's apple)."
+          },
+          {
+            "kind": "p",
+            "text": "Do not position the tape directly over Adam's apple."
+          },
+          {
+            "kind": "p",
+            "text": "Keep the tape as close to horizontal as your anatomy allows, with the front and back at approximately the same height."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 4: Measure Without Compressing Your Skin"
+          },
+          {
+            "kind": "p",
+            "text": "The tape should touch your skin without squeezing the underlying tissue."
+          },
+          {
+            "kind": "p",
+            "text": "Do not pull it tight to obtain a smaller measurement."
+          },
+          {
+            "kind": "h3",
+            "text": "Step 5: Repeat and Record"
+          },
+          {
+            "kind": "p",
+            "text": "Take the measurement twice to check consistency."
+          },
+          {
+            "kind": "p",
+            "text": "If the results differ, reposition the tape and measure again."
+          },
+          {
+            "kind": "p",
+            "text": "Record the measurement in inches or centimeters, depending on the units selected in your calculator."
+          },
+          {
+            "kind": "p",
+            "text": "Source: The U.S. Navy's January 2023 Body Composition Assessment Guide provides the original neck-measurement procedure."
+          }
+        ]
+      },
+      {
+        "heading": "Neck Measurement Example",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Suppose an adult measures their neck and records:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "First measurement: 15.25 inches",
+              "Second measurement: 15.25 inches"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Because both readings match, they can record 15.25 inches for their personal calculator estimate."
+          },
+          {
+            "kind": "p",
+            "text": "The historical Navy assessment procedure rounded neck measurements upward to the nearest half-inch. For general calculator use, follow the specific tool's instructions rather than automatically applying official military rounding rules."
+          }
+        ]
+      },
+      {
+        "heading": "How to Use Your Neck Measurement to Estimate Body Fat",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Once you have your measurements, open the free [Body Fat Percentage Calculator](/body-fat-percentage-calculator)."
+          },
+          {
+            "kind": "list",
+            "ordered": true,
+            "items": [
+              "Select your preferred measurement units.",
+              "Enter your sex, age, weight, and height.",
+              "Enter your neck and waist measurements.",
+              "If you're a woman, enter your hip circumference as well.",
+              "Click Calculate to view your estimated body fat percentage."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "The calculator uses the traditional U.S. Navy circumference method for adults aged 18 and older."
+          },
+          {
+            "kind": "p",
+            "text": "Important: For children and teenagers aged 8–17, this calculator uses a different height-to-waist estimation method and does not require neck measurements."
+          }
+        ]
+      },
+      {
+        "heading": "Common Neck Measurement Mistakes",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Avoid these errors when measuring:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "**Measuring too high:** Positioning the tape above the recommended location.",
+              "**Tilting the tape:** Allowing the front and back to sit at different heights.",
+              "**Pulling too tightly:** Compressing the skin and changing the measurement.",
+              "**Changing posture:** Looking upward or tightening your shoulders.",
+              "**Using different techniques:** Measuring at a different location each time."
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "Consistent technique is particularly important when comparing estimates over time."
+          }
+        ]
+      },
+      {
+        "heading": "How Accurate Is the Navy Body Fat Measurement Method?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "The Navy circumference formula provides an estimate, not a direct measurement of body fat."
+          },
+          {
+            "kind": "p",
+            "text": "A 2024 study published in Obesity Science & Practice examined body composition measurements from 1,904 active-duty U.S. Army personnel."
+          },
+          {
+            "kind": "p",
+            "text": "Researchers found that the older military circumference equations underestimated body fat compared with DXA scans by an average of approximately:"
+          },
+          {
+            "kind": "list",
+            "ordered": false,
+            "items": [
+              "4.79 percentage points in men",
+              "1.69 percentage points in women"
+            ]
+          },
+          {
+            "kind": "p",
+            "text": "These results describe the study population, not a guaranteed error margin for every person."
+          },
+          {
+            "kind": "p",
+            "text": "Accurate neck measurements can reduce avoidable input errors, but they cannot eliminate the limitations of the underlying formula."
+          }
+        ]
+      },
+      {
+        "heading": "Does the U.S. Navy Still Use Neck Measurements?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "The traditional formula remains common in online body fat calculators. However, the Navy's December 2025 Body Composition Assessment Guide uses waist, height, and weight for its updated assessment process rather than the older neck-based method."
+          },
+          {
+            "kind": "p",
+            "text": "Therefore, a traditional Navy-method calculator should be used for general fitness estimates, not as a substitute for an official military assessment."
+          }
+        ]
+      },
+      {
+        "heading": "What Should You Do After Measuring Body Fat?",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "If you're tracking body composition during weight loss, compare measurements taken using the same method and similar conditions."
+          },
+          {
+            "kind": "p",
+            "text": "Your body fat estimate can provide additional context, but it shouldn't be the only factor used to make nutrition decisions."
+          },
+          {
+            "kind": "p",
+            "text": "If you've recently lost weight and need to update your eating plan, read our guide on [how to set macros after losing weight](/blog/how-to-set-macros-after-losing-weight)."
+          }
+        ]
+      },
+      {
+        "heading": "Conclusion",
+        "blocks": [
+          {
+            "kind": "p",
+            "text": "Learning **how to measure neck for body fat calculator** results is straightforward: use a flexible tape, measure just below the Adam's apple, keep the tape level, and avoid compressing your skin."
+          },
+          {
+            "kind": "p",
+            "text": "Once you have your measurements, use the [Body Fat Percentage Calculator](/body-fat-percentage-calculator) to estimate your body composition."
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Where exactly should I measure my neck for body fat?",
+        "answer": "Measure just below the Adam's apple, with the tape nearly horizontal and your shoulders relaxed."
+      },
+      {
+        "question": "Is neck measurement different for men and women?",
+        "answer": "The traditional Navy method uses essentially the same neck-measurement location for both. However, the overall body fat calculation uses different additional measurements."
+      },
+      {
+        "question": "Should I measure my neck at its widest point?",
+        "answer": "No. For the traditional Navy circumference method, use the specified location just below the larynx rather than automatically choosing the widest part."
+      },
+      {
+        "question": "Can neck circumference alone calculate body fat?",
+        "answer": "No. The traditional method also requires height and waist circumference, plus hip circumference for women."
+      }
+    ]
+  },
+  {
     "slug": "army-body-fat-percentage-calculator",
     "title": "Army Body Fat Percentage Calculator: How to Check the 2026 Standards",
     "excerpt": "Looking for an army body fat percentage calculator? Learn the 2026 Army waist-to-height standard, calculate your ratio, and estimate body fat separately.",
